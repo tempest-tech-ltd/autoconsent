@@ -9,7 +9,10 @@ export function matches(config: any) {
   }
 }
 
-export async function executeAction(config: any, param?: any): Promise<boolean | void> {
+export async function executeAction(
+  config: any,
+  param?: any
+): Promise<boolean | void> {
   switch (config.type) {
     case "click":
       return clickAction(config);
@@ -35,6 +38,16 @@ export async function executeAction(config: any, param?: any): Promise<boolean |
       return evalAction(config);
     case "runrooted":
       return runrootedAction(config, param);
+    case "multiclick":
+      return multiclickAction(config);
+    case "ifallowall":
+      return ifAllowAllAction(config, param);
+    case "ifallownone":
+      return ifAllowNoneAction(config, param);
+    case "nop":
+      break;
+    case "runmethod":
+        throw "'runmethod' action is not supported";
     default:
       throw "Unknown action type: " + config.type;
   }
@@ -43,7 +56,7 @@ export async function executeAction(config: any, param?: any): Promise<boolean |
 const STEP_TIMEOUT = 0;
 
 function waitTimeout(timeout: number): Promise<void> {
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     setTimeout(() => {
       resolve();
     }, timeout);
@@ -55,6 +68,17 @@ async function clickAction(config: any) {
   if (result.target != null) {
     result.target.click();
   }
+  return waitTimeout(STEP_TIMEOUT);
+}
+
+async function multiclickAction(config: any) {
+  const results: any[] = Tools.find(config, true);
+  results.forEach((result) => {
+    if (result.target != null) {
+      result.target.click();
+    }
+  });
+
   return waitTimeout(STEP_TIMEOUT);
 }
 
@@ -100,27 +124,47 @@ async function runrootedAction(config: any, params: any) {
     throw new Error('Missing action in "runrooted" action');
   }
 
-    //Save root
-    let oldRoot = Tools.getBase();
+  //Save root
+  let oldRoot = Tools.getBase();
 
-    //Reset to null root
-    if(config.ignoreOldRoot === true) {
-        Tools.setBase(null);
-    }
+  //Reset to null root
+  if (config.ignoreOldRoot === true) {
+    Tools.setBase(null);
+  }
 
-    //Find new root
-    let result = Tools.find(config);
+  //Find new root
+  let result = Tools.find(config);
 
-    if (result.target !== null) {
-        //Set new root
-        Tools.setBase(result.target);
-        
-        //RUN
-        await executeAction(config.action, params);
-    }
+  if (result.target !== null) {
+    //Set new root
+    Tools.setBase(result.target);
 
-    //Set old base back
-    Tools.setBase(oldRoot);
+    //RUN
+    await executeAction(config.action, params);
+  }
+
+  //Set old base back
+  Tools.setBase(oldRoot);
+}
+
+async function ifAllowAllAction(config: any, consentTypes: any) {
+  const allTrue = !Object.values(consentTypes).includes(false);
+
+  if (allTrue) {
+    await executeAction(config.trueAction);
+  } else {
+    await executeAction(config.falseAction);
+  }
+}
+
+async function ifAllowNoneAction(config: any, consentTypes: any) {
+  const allFalse = Object.values(consentTypes).includes(false);
+
+  if (allFalse) {
+    await executeAction(config.trueAction);
+  } else {
+    await executeAction(config.falseAction);
+  }
 }
 
 async function waitCssAction(config: any) {
