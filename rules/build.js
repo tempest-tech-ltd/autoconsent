@@ -21,25 +21,47 @@ const buildAutoconsent = Promise.all(
 ).then(r => (rules.autoconsent = r));
 
 // fetch ConsentOMatic rule set and merge with our custom rules
-const consentOMaticCommit = "7d7fd2bd6bf2b662350b0eaeca74db6eba155efe";
-const consentOMaticUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/Rules.json`;
+const consentOMaticCommit = "master";
+const consentOMaticBaseUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/rules/`;
 const consentOMaticDir = path.join(__dirname, "consentomatic");
 const consentOMaticInclude = [
-  'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpressgdpr'
+  'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata'
 ]
 const buildConsentOMatic = (async () => {
   const comRules = {};
-  const allComRules = await new Promise(resolve => {
-    https.get(consentOMaticUrl, res => {
-      res.setEncoding("utf-8");
-      let content = "";
-      res.on("data", data => (content += data));
-      res.on("end", () => resolve(JSON.parse(content)));
-    });
-  });
-  consentOMaticInclude.forEach((name) => {
-    comRules[name] = allComRules[name];
-  })
+
+  await Promise.allSettled(consentOMaticInclude.map(async cmp => {
+    try {
+
+      const [cmpName, rule] = await new Promise((resolve, reject) => {
+        https.get(`${consentOMaticBaseUrl}${cmp}.json`, res => {
+          res.setEncoding("utf-8");
+          let content = "";
+          res.on("data", data => (content += data));
+          res.on("end", () => {
+            if (res.statusCode !== 200) {
+              reject(`Error with "${consentOMaticBaseUrl}${cmp}.json", status code ${res.statusCode}.`);
+              return;
+            }
+
+            const json = JSON.parse(content);
+            const { $schema, ...rest } = json;
+            const cmpName = Object.keys(rest)?.[0] ?? null;
+
+            if (cmpName) {
+              resolve([cmpName, rest[cmpName]]);
+            } else {
+              reject(`Wrong rule format for "${consentOMaticBaseUrl}${cmp}.json"`);
+            }
+          });
+        });
+      });
+
+      comRules[cmpName] = rule;
+    } catch(e) {
+      console.log('Error while getting consent-o-matic rules', e);
+    }
+  }));
   try {
     const extraRules = fs.readdirSync(consentOMaticDir);
     await Promise.all(
