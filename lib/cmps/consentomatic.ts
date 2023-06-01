@@ -41,17 +41,23 @@ export class ConsentOMaticCMP implements AutoCMP {
   }
 
   async detectCmp(): Promise<boolean> {
-    const matchResults = this.config.detectors.map(detectorConfig =>
-      matches(detectorConfig.presentMatcher)
-    )
-    return matchResults.some(r => !!r);
+    return this.config.detectors.some((detectorConfig) => {
+      const presentMatchers = Array.isArray(detectorConfig.presentMatcher)
+        ? detectorConfig.presentMatcher
+        : [detectorConfig.presentMatcher];
+
+      return presentMatchers.some(presentMatcher => !!matches(presentMatcher));
+    });
   }
 
   async detectPopup(): Promise<boolean> {
-    const matchResults = this.config.detectors.map(detectorConfig =>
-      matches(detectorConfig.showingMatcher)
-    )
-    return matchResults.some(r => !!r);
+    return this.config.detectors.some(detectorConfig => {
+      const showingMatchers = Array.isArray(detectorConfig.showingMatcher)
+        ? detectorConfig.showingMatcher
+        : [detectorConfig.showingMatcher];
+      
+        return showingMatchers.some((showingMatcher) => !!matches(showingMatcher));
+    });
   }
 
   async executeAction(method: string, param?: any) {
