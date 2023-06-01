@@ -5,6 +5,10 @@
 export default class Tools {
   static base: HTMLElement = null;
 
+  static getBase() {
+    return Tools.base;
+  }
+
   static setBase(base: HTMLElement) {
     Tools.base = base;
   }

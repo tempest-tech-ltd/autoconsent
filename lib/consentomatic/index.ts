@@ -33,6 +33,8 @@ export async function executeAction(config: any, param?: any): Promise<boolean |
       return waitAction(config);
     case "eval":
       return evalAction(config);
+    case "runrooted":
+      return runrootedAction(config, param);
     default:
       throw "Unknown action type: " + config.type;
   }
@@ -91,6 +93,34 @@ async function ifCssAction(config: any, param: any) {
       await executeAction(config.falseAction, param);
     }
   }
+}
+
+async function runrootedAction(config: any, params: any) {
+  if (!config.action) {
+    throw new Error('Missing action in "runrooted" action');
+  }
+
+    //Save root
+    let oldRoot = Tools.getBase();
+
+    //Reset to null root
+    if(config.ignoreOldRoot === true) {
+        Tools.setBase(null);
+    }
+
+    //Find new root
+    let result = Tools.find(config);
+
+    if (result.target !== null) {
+        //Set new root
+        Tools.setBase(result.target);
+        
+        //RUN
+        await executeAction(config.action, params);
+    }
+
+    //Set old base back
+    Tools.setBase(oldRoot);
 }
 
 async function waitCssAction(config: any) {
