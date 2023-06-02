@@ -44,9 +44,13 @@ export class ConsentOMaticCMP implements AutoCMP {
     return this.config.detectors.some((detectorConfig) => {
       const presentMatchers = Array.isArray(detectorConfig.presentMatcher)
         ? detectorConfig.presentMatcher
-        : [detectorConfig.presentMatcher];
+        : [detectorConfig.presentMatcher].filter(Boolean);
 
-      return presentMatchers.some(presentMatcher => !!matches(presentMatcher));
+      if (!presentMatchers.length) {
+        return false;
+      }
+
+      return presentMatchers.every(presentMatcher => !!matches(presentMatcher));
     });
   }
 
@@ -54,9 +58,13 @@ export class ConsentOMaticCMP implements AutoCMP {
     return this.config.detectors.some(detectorConfig => {
       const showingMatchers = Array.isArray(detectorConfig.showingMatcher)
         ? detectorConfig.showingMatcher
-        : [detectorConfig.showingMatcher];
+        : [detectorConfig.showingMatcher].filter(Boolean);
+
+        if (!showingMatchers.length) {
+          return true;
+        }
       
-        return showingMatchers.some((showingMatcher) => !!matches(showingMatcher));
+        return showingMatchers.every((showingMatcher) => !!matches(showingMatcher));
     });
   }
 
