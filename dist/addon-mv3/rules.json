@@ -3958,6 +3958,575 @@
     }
   ],
   "consentomatic": {
+    "oil": {
+      "detectors": [
+        {
+          "presentMatcher": {
+            "target": {
+              "selector": ".as-oil-content-overlay"
+            },
+            "type": "css"
+          },
+          "showingMatcher": {
+            "target": {
+              "selector": ".as-oil-content-overlay"
+            },
+            "type": "css"
+          }
+        }
+      ],
+      "methods": [
+        {
+          "action": {
+            "actions": [
+              {
+                "target": {
+                  "selector": ".as-js-advanced-settings"
+                },
+                "type": "click"
+              },
+              {
+                "retries": 10,
+                "target": {
+                  "selector": ".as-oil-cpc__purpose-container"
+                },
+                "type": "waitcss",
+                "waitTime": 250
+              }
+            ],
+            "type": "list"
+          },
+          "name": "OPEN_OPTIONS"
+        },
+        {
+          "action": {
+            "actions": [
+              {
+                "consents": [
+                  {
+                    "matcher": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Information storage and access",
+                          "Opbevaring af og adgang til oplysninger på din enhed"
+                        ]
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Information storage and access",
+                          "Opbevaring af og adgang til oplysninger på din enhed"
+                        ]
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "D"
+                  },
+                  {
+                    "matcher": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Personlige annoncer",
+                          "Personalisation"
+                        ]
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Personlige annoncer",
+                          "Personalisation"
+                        ]
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "E"
+                  },
+                  {
+                    "matcher": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Annoncevalg, levering og rapportering",
+                          "Ad selection, delivery, reporting"
+                        ]
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Annoncevalg, levering og rapportering",
+                          "Ad selection, delivery, reporting"
+                        ]
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "F"
+                  },
+                  {
+                    "matcher": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Personalisering af indhold",
+                          "Content selection, delivery, reporting"
+                        ]
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": [
+                          "Personalisering af indhold",
+                          "Content selection, delivery, reporting"
+                        ]
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "E"
+                  },
+                  {
+                    "matcher": {
+                      "parent": {
+                        "childFilter": {
+                          "target": {
+                            "selector": ".as-oil-cpc__purpose-header",
+                            "textFilter": [
+                              "Måling",
+                              "Measurement"
+                            ]
+                          }
+                        },
+                        "selector": ".as-oil-cpc__purpose-container"
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "childFilter": {
+                          "target": {
+                            "selector": ".as-oil-cpc__purpose-header",
+                            "textFilter": [
+                              "Måling",
+                              "Measurement"
+                            ]
+                          }
+                        },
+                        "selector": ".as-oil-cpc__purpose-container"
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "B"
+                  },
+                  {
+                    "matcher": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": "Google"
+                      },
+                      "target": {
+                        "selector": "input"
+                      },
+                      "type": "checkbox"
+                    },
+                    "toggleAction": {
+                      "parent": {
+                        "selector": ".as-oil-cpc__purpose-container",
+                        "textFilter": "Google"
+                      },
+                      "target": {
+                        "selector": ".as-oil-cpc__switch"
+                      },
+                      "type": "click"
+                    },
+                    "type": "F"
+                  }
+                ],
+                "type": "consent"
+              }
+            ],
+            "type": "list"
+          },
+          "name": "DO_CONSENT"
+        },
+        {
+          "action": {
+            "target": {
+              "selector": ".as-oil__btn-optin"
+            },
+            "type": "click"
+          },
+          "name": "SAVE_CONSENT"
+        },
+        {
+          "action": {
+            "target": {
+              "selector": "div.as-oil"
+            },
+            "type": "hide"
+          },
+          "name": "HIDE_CMP"
+        }
+      ]
+    },
+    "sourcepoint": {
+      "detectors": [
+        {
+          "presentMatcher": {
+            "parent": null,
+            "target": {
+              "selector": "[class^='sp_message_container']"
+            },
+            "type": "css"
+          },
+          "showingMatcher": {
+            "parent": null,
+            "target": {
+              "selector": "[class^='sp_message_container']"
+            },
+            "type": "css"
+          }
+        }
+      ],
+      "methods": [
+        {
+          "action": {
+            "parent": null,
+            "target": {
+              "selector": "[class^='sp_message_container'] button",
+              "textFilter": [
+                "Consent",
+                "Options"
+              ]
+            },
+            "type": "click"
+          },
+          "name": "UTILITY"
+        }
+      ]
+    },
+    "quantcast2": {
+      "detectors": [
+        {
+          "presentMatcher": [
+            {
+              "type": "css",
+              "target": {
+                "selector": "[data-tracking-opt-in-overlay]"
+              }
+            }
+          ],
+          "showingMatcher": [
+            {
+              "type": "css",
+              "target": {
+                "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-learn-more]"
+              }
+            }
+          ]
+        }
+      ],
+      "methods": [
+        {
+          "action": {
+            "type": "list",
+            "actions": [
+              {
+                "type": "click",
+                "target": {
+                  "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-learn-more]"
+                }
+              },
+              {
+                "type": "wait",
+                "waitTime": 500
+              },
+              {
+                "type": "multiclick",
+                "target": {
+                  "selector": "._1hNWKDVJf2Z0Wsp4jQFbmV"
+                }
+              }
+            ]
+          },
+          "name": "OPEN_OPTIONS"
+        },
+        {
+          "action": {
+            "type": "list",
+            "actions": [
+              {
+                "type": "foreach",
+                "target": {
+                  "childFilter": {
+                    "target": {
+                      "selector": "input"
+                    }
+                  },
+                  "selector": ":scope > div"
+                },
+                "parent": {
+                  "childFilter": {
+                    "target": {
+                      "selector": "input"
+                    }
+                  },
+                  "selector": "[data-tracking-opt-in-overlay] > div > div"
+                },
+                "action": {
+                  "type": "list",
+                  "actions": [
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Information storage and access",
+                          "Opbevare og/eller tilgå oplysninger på en enhed"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "D"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Personalization",
+                          "Vælge tilpassede annoncer",
+                          "Oprette en tilpasset annonceprofil"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "F"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Ad selection, delivery, reporting",
+                          "Vælge basisannoncer",
+                          "Måle annonceeffektivitet",
+                          "Anvende markedsundersøgelser til at generere målgruppeindsigter"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "F"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Content selection, delivery, reporting",
+                          "Oprette en tilpasset indholdsprofil",
+                          "Vælge tilpasset indhold",
+                          "Content personalization"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "E"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Measurement",
+                          "Måle indholdseffektivitet",
+                          "Udvikle og forbedre produkter",
+                          "Aktivt scanne enhedskarakteristika til identifikation"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "B"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": "div",
+                        "textFilter": [
+                          "Other Partners",
+                          "Bruge præcise geoplaceringsoplysninger"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "matcher": {
+                              "type": "checkbox",
+                              "target": {
+                                "selector": "input"
+                              }
+                            },
+                            "toggleAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": "label"
+                              }
+                            },
+                            "type": "X"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          "name": "DO_CONSENT"
+        },
+        {
+          "action": {
+            "type": "click",
+            "target": {
+              "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-save]"
+            }
+          },
+          "name": "SAVE_CONSENT"
+        },
+        {
+          "name": "HIDE_CMP"
+        },
+        {
+          "name": "UTILITY"
+        }
+      ]
+    },
     "springer": {
       "detectors": [
         {
@@ -4352,683 +4921,499 @@
         }
       ]
     },
-    "quantcast2": {
+    "sourcepointframe": {
       "detectors": [
         {
-          "presentMatcher": [
-            {
-              "type": "css",
-              "target": {
-                "selector": "[data-tracking-opt-in-overlay]"
-              }
-            }
-          ],
-          "showingMatcher": [
-            {
-              "type": "css",
-              "target": {
-                "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-learn-more]"
-              }
-            }
-          ]
-        }
-      ],
-      "methods": [
-        {
-          "action": {
-            "type": "list",
-            "actions": [
-              {
-                "type": "click",
-                "target": {
-                  "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-learn-more]"
-                }
-              },
-              {
-                "type": "wait",
-                "waitTime": 500
-              },
-              {
-                "type": "multiclick",
-                "target": {
-                  "selector": "._1hNWKDVJf2Z0Wsp4jQFbmV"
-                }
-              }
-            ]
-          },
-          "name": "OPEN_OPTIONS"
-        },
-        {
-          "action": {
-            "type": "list",
-            "actions": [
-              {
-                "type": "foreach",
-                "target": {
-                  "childFilter": {
-                    "target": {
-                      "selector": "input"
-                    }
-                  },
-                  "selector": ":scope > div"
-                },
-                "parent": {
-                  "childFilter": {
-                    "target": {
-                      "selector": "input"
-                    }
-                  },
-                  "selector": "[data-tracking-opt-in-overlay] > div > div"
-                },
-                "action": {
-                  "type": "list",
-                  "actions": [
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Information storage and access",
-                          "Opbevare og/eller tilgå oplysninger på en enhed"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "D"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Personalization",
-                          "Vælge tilpassede annoncer",
-                          "Oprette en tilpasset annonceprofil"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "F"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Ad selection, delivery, reporting",
-                          "Vælge basisannoncer",
-                          "Måle annonceeffektivitet",
-                          "Anvende markedsundersøgelser til at generere målgruppeindsigter"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "F"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Content selection, delivery, reporting",
-                          "Oprette en tilpasset indholdsprofil",
-                          "Vælge tilpasset indhold",
-                          "Content personalization"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "E"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Measurement",
-                          "Måle indholdseffektivitet",
-                          "Udvikle og forbedre produkter",
-                          "Aktivt scanne enhedskarakteristika til identifikation"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "B"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": "div",
-                        "textFilter": [
-                          "Other Partners",
-                          "Bruge præcise geoplaceringsoplysninger"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "matcher": {
-                              "type": "checkbox",
-                              "target": {
-                                "selector": "input"
-                              }
-                            },
-                            "toggleAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": "label"
-                              }
-                            },
-                            "type": "X"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          },
-          "name": "DO_CONSENT"
-        },
-        {
-          "action": {
-            "type": "click",
+          "presentMatcher": {
             "target": {
-              "selector": "[data-tracking-opt-in-overlay] [data-tracking-opt-in-save]"
-            }
-          },
-          "name": "SAVE_CONSENT"
-        },
-        {
-          "name": "HIDE_CMP"
-        },
-        {
-          "name": "UTILITY"
-        }
-      ]
-    },
-    "didomi.io": {
-      "detectors": [
-        {
-          "presentMatcher": [
-            {
-              "type": "css",
-              "target": {
-                "selector": "#didomi-host, #didomi-notice"
-              }
-            }
-          ],
-          "showingMatcher": [
-            {
-              "type": "css",
-              "target": {
-                "selector": "body.didomi-popup-open, .didomi-notice-banner"
-              }
-            }
-          ]
-        }
-      ],
-      "methods": [
-        {
-          "action": {
-            "type": "click",
-            "target": {
-              "selector": ".didomi-popup-notice-buttons .didomi-button:not(.didomi-button-highlight), .didomi-notice-banner .didomi-learn-more-button"
-            }
-          },
-          "name": "OPEN_OPTIONS"
-        },
-        {
-          "action": {
-            "type": "list",
-            "actions": [
-              {
-                "type": "waitcss",
-                "target": {
-                  "selector": "#didomi-purpose-cookies"
-                },
-                "retries": 50,
-                "waitTime": 50
-              },
-              {
-                "type": "foreach",
-                "target": {
-                  "selector": "#didomi-host .didomi-consent-popup-data-processing"
-                },
-                "action": {
-                  "type": "list",
-                  "actions": [
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Store and/or access information on a device",
-                          "Actively scan device characteristics for identification",
-                          "Use precise geolocation data",
-                          "Authentication and authorization management",
-                          "Functionality",
-                          "Stocker et/ou accéder à des informations sur un terminal",
-                          "Analyser activement les caractéristiques du terminal pour l’identification",
-                          "Lagra och/eller få åtkomst till information på en enhet",
-                          "Lagre og/eller få tilgang til informasjon på en enhet",
-                          "Velg grunnleggende annonser",
-                          "Velg personlige annonser",
-                          "Tietojen tallennus laitteelle ja/tai laitteella olevien tietojen käyttö",
-                          "Conservation et accès aux informations de géolocalisation pour réaliser des études marketing"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "D"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Create a personalised ads profile",
-                          "Apply market research to generate audience insights",
-                          "Measure ad performance",
-                          "Select basic ads",
-                          "Select personalised ads",
-                          "Storage and access to geolocation information for targeted advertising purposes",
-                          "Offer personalised advertising",
-                          "Publicité personnalisée",
-                          "Sélectionner des publicités personnalisées",
-                          "Créer un profil pour afficher un contenu personnalisé",
-                          "Promotions de nos contenus, produits et services",
-                          "Publicité ciblée par profilage (collecte, profilage et partage de données entre éditeurs partenaires)",
-                          "Cookies för anpassad marknadsföring och innehåll",
-                          "Mäta annonsprestanda",
-                          "Skapa en personanpassad annonsprofil",
-                          "Välja personanpassade annonser",
-                          "Cookies for custom marketing and content",
-                          "Opprett en personlig annonseprofil",
-                          "Måle annonseprestasjon",
-                          "Mainonta- ja kohdistusevästeet",
-                          "Mainonnan ja sen tehokkuuden mittaaminen",
-                          "Personoidun mainosprofiilin muodostaminen",
-                          "Tavallisten mainosten valinta",
-                          "Personoitujen mainosten valinta",
-                          "Cookies Publicitaires et de personnalisation",
-                          "Promotion de nos contenus, produits et services",
-                          "Conservation et accès aux informations de géolocalisation à des fins de publicité ciblée",
-                          "Publicités personnalisées de l'éditeur"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "F"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Create a personalised content profile",
-                          "Measure content performance",
-                          "Select personalised content",
-                          "Optimise navigation and suggested content",
-                          "Contact",
-                          "Personnalisation de votre service",
-                          "Sélectionner du contenu personnalisé",
-                          "Sélectionner des publicités standard",
-                          "Recommandations personnalisées de programmes",
-                          "Contenus interactifs proposés par des tiers",
-                          "Contenus cartographiques et infographiques",
-                          "Skapa en personanpassad innehållsprofil",
-                          "Välja personanpassat innehåll",
-                          "Opprette en personlig innholdsprofil",
-                          "Velge personlig innhold",
-                          "Personoidun sisältöprofiilin muodostaminen",
-                          "Personoidun sisällön valinta",
-                          "Mesurer la performance des publicités",
-                          "Promotion et personnalisation des contenus",
-                          "Personnalisation du contenu éditorial et mesure de la performance",
-                          "Mesure et analyse d'audience",
-                          "Personnalisation des contenus et des services"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "E"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Develop and improve products",
-                          "Utiliser des données de géolocalisation précises",
-                          "Développer et améliorer les produits",
-                          "Utveckla och förbättra produkter",
-                          "Utvikle og forbedre produkter",
-                          "Tuotekehitys",
-                          "Activation de l'affiliation"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "X"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Audience measurement and content performance",
-                          "Analytics",
-                          "Usage Statistics",
-                          "Live tracking of behaviours on a website for assistance and error-tracking",
-                          "Mesurer l’audience",
-                          "Réseaux sociaux",
-                          "Exploiter des études de marché afin de générer des données d’audience",
-                          "Mesurer la performance du contenu",
-                          "Mesure d'audience",
-                          "AB Testing",
-                          "Mesure d’audience et web analyse",
-                          "Cookies för analys och utveckling",
-                          "Mäta innehållsprestanda",
-                          "Måle innholdsprestasjon",
-                          "Cookies for analysis and development",
-                          "Evästeet analysointia ja kehittämistä varten",
-                          "Markkinatutkimusten soveltaminen käyttäjäymmärryksen luomiseksi",
-                          "Sisällön ja sen tehokkuuden mittaaminen",
-                          "Audience Measurement",
-                          "Elaboration de statistiques destinées à améliorer le fonctionnement des Sites et des Services",
-                          "Cookies fonctionnels et statistiques d'usage du site"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "B"
-                          }
-                        ]
-                      }
-                    },
-                    {
-                      "type": "ifcss",
-                      "target": {
-                        "selector": ".didomi-components-accordion",
-                        "textFilter": [
-                          "Contenus vidéo et audio",
-                          "Contenus cartographiques/infographiques",
-                          "Personalization",
-                          "Contenus cartographiques, infographiques et ludique",
-                          "Ces identifiants permettent d'interagir avec les plateformes vidéos.",
-                          "Activation des services interactifs proposés par des tiers",
-                          "La gestion des paiements des Services",
-                          "Nécessaires au fonctionnement du service"
-                        ]
-                      },
-                      "trueAction": {
-                        "type": "consent",
-                        "consents": [
-                          {
-                            "trueAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
-                              }
-                            },
-                            "falseAction": {
-                              "type": "click",
-                              "target": {
-                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
-                              }
-                            },
-                            "type": "A"
-                          }
-                        ]
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "click",
-                "target": {
-                  "selector": ".didomi-consent-popup-view-vendors-list-link"
-                }
-              },
-              {
-                "type": "consent",
-                "consents": [
-                  {
-                    "trueAction": {
-                      "type": "click",
-                      "target": {
-                        "selector": ".didomi-consent-popup-container-click-all .didomi-components-radio .didomi-components-radio__option:nth-child(2)"
-                      }
-                    },
-                    "falseAction": {
-                      "type": "click",
-                      "target": {
-                        "selector": ".didomi-consent-popup-container-click-all .didomi-components-radio .didomi-components-radio__option:nth-child(1)"
-                      }
-                    },
-                    "type": "X"
-                  }
-                ]
-              },
-              {
-                "type": "click",
-                "target": {
-                  "selector": ".didomi-components-button:first-child"
-                },
-                "parent": {
-                  "selector": ".didomi-consent-popup-footer .didomi-consent-popup-actions"
-                }
-              }
-            ]
-          },
-          "name": "DO_CONSENT"
-        },
-        {
-          "action": {
-            "type": "click",
-            "target": {
-              "selector": ".didomi-components-button:first-child"
+              "selector": "html.w-mod-js .privacy-container"
             },
-            "parent": {
-              "selector": ".didomi-consent-popup-footer .didomi-consent-popup-actions"
-            }
+            "type": "css"
+          },
+          "showingMatcher": {
+            "target": {
+              "selector": "html.w-mod-js .privacy-container"
+            },
+            "type": "css"
+          }
+        }
+      ],
+      "methods": [
+        {
+          "action": {
+            "actions": [
+              {
+                "falseAction": {
+                  "consents": [
+                    {
+                      "matcher": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#personalisation[value='ON']"
+                        },
+                        "type": "css"
+                      },
+                      "toggleAction": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#personalisation"
+                        },
+                        "type": "click"
+                      },
+                      "type": "E"
+                    },
+                    {
+                      "matcher": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#ad-selection-delivery-reporting[value='ON']"
+                        },
+                        "type": "css"
+                      },
+                      "toggleAction": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#ad-selection-delivery-reporting"
+                        },
+                        "type": "click"
+                      },
+                      "type": "F"
+                    },
+                    {
+                      "matcher": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#measurement[value='ON']"
+                        },
+                        "type": "css"
+                      },
+                      "toggleAction": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#measurement"
+                        },
+                        "type": "click"
+                      },
+                      "type": "B"
+                    },
+                    {
+                      "matcher": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#information-storage-andaaccess[value='ON']"
+                        },
+                        "type": "css"
+                      },
+                      "toggleAction": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#information-storage-andaaccess"
+                        },
+                        "type": "click"
+                      },
+                      "type": "D"
+                    },
+                    {
+                      "matcher": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#content-sselection-delivery-reporting[value='ON']"
+                        },
+                        "type": "css"
+                      },
+                      "toggleAction": {
+                        "target": {
+                          "selector": ".priv-purpose-container a#content-sselection-delivery-reporting"
+                        },
+                        "type": "click"
+                      },
+                      "type": "E"
+                    }
+                  ],
+                  "type": "consent"
+                },
+                "target": {
+                  "selector": ".priv-vendor-block"
+                },
+                "trueAction": {
+                  "action": {
+                    "actions": [
+                      {
+                        "target": {
+                          "selector": ".purpose-title",
+                          "textFilter": [
+                            "Opbevaring af og adgang til oplysninger",
+                            "Information storage and access"
+                          ]
+                        },
+                        "trueAction": {
+                          "falseAction": {
+                            "consents": [
+                              {
+                                "falseAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "off"
+                                  },
+                                  "type": "click"
+                                },
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.neutral.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "trueAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "on"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "D"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "target": {
+                            "selector": "a.switch-bg"
+                          },
+                          "trueAction": {
+                            "consents": [
+                              {
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.switch-bg.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "toggleAction": {
+                                  "target": {
+                                    "selector": "a.switch-bg"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "D"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "type": "ifcss"
+                        },
+                        "type": "ifcss"
+                      },
+                      {
+                        "target": {
+                          "selector": ".purpose-title",
+                          "textFilter": [
+                            "Personalisering",
+                            "Personalisation"
+                          ]
+                        },
+                        "trueAction": {
+                          "falseAction": {
+                            "consents": [
+                              {
+                                "falseAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "off"
+                                  },
+                                  "type": "click"
+                                },
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.neutral.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "trueAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "on"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "F"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "target": {
+                            "selector": "a.switch-bg"
+                          },
+                          "trueAction": {
+                            "consents": [
+                              {
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.switch-bg.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "toggleAction": {
+                                  "target": {
+                                    "selector": "a.switch-bg"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "F"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "type": "ifcss"
+                        },
+                        "type": "ifcss"
+                      },
+                      {
+                        "target": {
+                          "selector": ".purpose-title",
+                          "textFilter": [
+                            "Annoncevalg, levering og rapportering",
+                            "Ad selection, delivery, reporting"
+                          ]
+                        },
+                        "trueAction": {
+                          "falseAction": {
+                            "consents": [
+                              {
+                                "falseAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "off"
+                                  },
+                                  "type": "click"
+                                },
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.neutral.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "trueAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "on"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "F"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "target": {
+                            "selector": "a.switch-bg"
+                          },
+                          "trueAction": {
+                            "consents": [
+                              {
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.switch-bg.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "toggleAction": {
+                                  "target": {
+                                    "selector": "a.switch-bg"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "F"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "type": "ifcss"
+                        },
+                        "type": "ifcss"
+                      },
+                      {
+                        "target": {
+                          "selector": ".purpose-title",
+                          "textFilter": [
+                            "Måling",
+                            "Measurement"
+                          ]
+                        },
+                        "trueAction": {
+                          "falseAction": {
+                            "consents": [
+                              {
+                                "falseAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "off"
+                                  },
+                                  "type": "click"
+                                },
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.neutral.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "trueAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "on"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "B"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "target": {
+                            "selector": "a.switch-bg"
+                          },
+                          "trueAction": {
+                            "consents": [
+                              {
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.switch-bg.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "toggleAction": {
+                                  "target": {
+                                    "selector": "a.switch-bg"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "B"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "type": "ifcss"
+                        },
+                        "type": "ifcss"
+                      },
+                      {
+                        "target": {
+                          "selector": ".purpose-title",
+                          "textFilter": [
+                            "Indholdsvalg, levering og rapportering",
+                            "Content selection, delivery, reporting"
+                          ]
+                        },
+                        "trueAction": {
+                          "falseAction": {
+                            "consents": [
+                              {
+                                "falseAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "off"
+                                  },
+                                  "type": "click"
+                                },
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.neutral.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "trueAction": {
+                                  "parent": {
+                                    "selector": "a.neutral"
+                                  },
+                                  "target": {
+                                    "selector": "div",
+                                    "textFilter": "on"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "E"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "target": {
+                            "selector": "a.switch-bg"
+                          },
+                          "trueAction": {
+                            "consents": [
+                              {
+                                "matcher": {
+                                  "target": {
+                                    "selector": "a.switch-bg.on"
+                                  },
+                                  "type": "css"
+                                },
+                                "toggleAction": {
+                                  "target": {
+                                    "selector": "a.switch-bg"
+                                  },
+                                  "type": "click"
+                                },
+                                "type": "E"
+                              }
+                            ],
+                            "type": "consent"
+                          },
+                          "type": "ifcss"
+                        },
+                        "type": "ifcss"
+                      }
+                    ],
+                    "type": "list"
+                  },
+                  "target": {
+                    "selector": ".priv-vendor-block .accordian-parent"
+                  },
+                  "type": "foreach"
+                },
+                "type": "ifcss"
+              }
+            ],
+            "type": "list"
+          },
+          "name": "DO_CONSENT"
+        },
+        {
+          "action": {
+            "target": {
+              "selector": ".priv-save-btn"
+            },
+            "type": "click"
           },
           "name": "SAVE_CONSENT"
         },
         {
           "action": {
-            "type": "list",
-            "actions": [
-              {
-                "type": "hide",
-                "target": {
-                  "selector": "#didomi-popup"
-                },
-                "forceHide": true
-              },
-              {
-                "type": "hide",
-                "target": {
-                  "selector": "#didomi-consent-popup"
-                }
-              }
-            ]
+            "target": {
+              "selector": ".bg-overlay"
+            },
+            "type": "hide"
           },
           "name": "HIDE_CMP"
         },
         {
-          "name": "UTILITY"
+          "name": "OPEN_OPTIONS"
         }
       ]
     },
@@ -5486,6 +5871,404 @@
             "type": "click"
           },
           "name": "SAVE_CONSENT"
+        }
+      ]
+    },
+    "didomi.io": {
+      "detectors": [
+        {
+          "presentMatcher": [
+            {
+              "type": "css",
+              "target": {
+                "selector": "#didomi-host, #didomi-notice"
+              }
+            }
+          ],
+          "showingMatcher": [
+            {
+              "type": "css",
+              "target": {
+                "selector": "body.didomi-popup-open, .didomi-notice-banner"
+              }
+            }
+          ]
+        }
+      ],
+      "methods": [
+        {
+          "action": {
+            "type": "click",
+            "target": {
+              "selector": ".didomi-popup-notice-buttons .didomi-button:not(.didomi-button-highlight), .didomi-notice-banner .didomi-learn-more-button"
+            }
+          },
+          "name": "OPEN_OPTIONS"
+        },
+        {
+          "action": {
+            "type": "list",
+            "actions": [
+              {
+                "type": "waitcss",
+                "target": {
+                  "selector": "#didomi-purpose-cookies"
+                },
+                "retries": 50,
+                "waitTime": 50
+              },
+              {
+                "type": "foreach",
+                "target": {
+                  "selector": "#didomi-host .didomi-consent-popup-data-processing"
+                },
+                "action": {
+                  "type": "list",
+                  "actions": [
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Store and/or access information on a device",
+                          "Actively scan device characteristics for identification",
+                          "Use precise geolocation data",
+                          "Authentication and authorization management",
+                          "Functionality",
+                          "Stocker et/ou accéder à des informations sur un terminal",
+                          "Analyser activement les caractéristiques du terminal pour l’identification",
+                          "Lagra och/eller få åtkomst till information på en enhet",
+                          "Lagre og/eller få tilgang til informasjon på en enhet",
+                          "Velg grunnleggende annonser",
+                          "Velg personlige annonser",
+                          "Tietojen tallennus laitteelle ja/tai laitteella olevien tietojen käyttö",
+                          "Conservation et accès aux informations de géolocalisation pour réaliser des études marketing"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "D"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Create a personalised ads profile",
+                          "Apply market research to generate audience insights",
+                          "Measure ad performance",
+                          "Select basic ads",
+                          "Select personalised ads",
+                          "Storage and access to geolocation information for targeted advertising purposes",
+                          "Offer personalised advertising",
+                          "Publicité personnalisée",
+                          "Sélectionner des publicités personnalisées",
+                          "Créer un profil pour afficher un contenu personnalisé",
+                          "Promotions de nos contenus, produits et services",
+                          "Publicité ciblée par profilage (collecte, profilage et partage de données entre éditeurs partenaires)",
+                          "Cookies för anpassad marknadsföring och innehåll",
+                          "Mäta annonsprestanda",
+                          "Skapa en personanpassad annonsprofil",
+                          "Välja personanpassade annonser",
+                          "Cookies for custom marketing and content",
+                          "Opprett en personlig annonseprofil",
+                          "Måle annonseprestasjon",
+                          "Mainonta- ja kohdistusevästeet",
+                          "Mainonnan ja sen tehokkuuden mittaaminen",
+                          "Personoidun mainosprofiilin muodostaminen",
+                          "Tavallisten mainosten valinta",
+                          "Personoitujen mainosten valinta",
+                          "Cookies Publicitaires et de personnalisation",
+                          "Promotion de nos contenus, produits et services",
+                          "Conservation et accès aux informations de géolocalisation à des fins de publicité ciblée",
+                          "Publicités personnalisées de l'éditeur"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "F"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Create a personalised content profile",
+                          "Measure content performance",
+                          "Select personalised content",
+                          "Optimise navigation and suggested content",
+                          "Contact",
+                          "Personnalisation de votre service",
+                          "Sélectionner du contenu personnalisé",
+                          "Sélectionner des publicités standard",
+                          "Recommandations personnalisées de programmes",
+                          "Contenus interactifs proposés par des tiers",
+                          "Contenus cartographiques et infographiques",
+                          "Skapa en personanpassad innehållsprofil",
+                          "Välja personanpassat innehåll",
+                          "Opprette en personlig innholdsprofil",
+                          "Velge personlig innhold",
+                          "Personoidun sisältöprofiilin muodostaminen",
+                          "Personoidun sisällön valinta",
+                          "Mesurer la performance des publicités",
+                          "Promotion et personnalisation des contenus",
+                          "Personnalisation du contenu éditorial et mesure de la performance",
+                          "Mesure et analyse d'audience",
+                          "Personnalisation des contenus et des services"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "E"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Develop and improve products",
+                          "Utiliser des données de géolocalisation précises",
+                          "Développer et améliorer les produits",
+                          "Utveckla och förbättra produkter",
+                          "Utvikle og forbedre produkter",
+                          "Tuotekehitys",
+                          "Activation de l'affiliation"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "X"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Audience measurement and content performance",
+                          "Analytics",
+                          "Usage Statistics",
+                          "Live tracking of behaviours on a website for assistance and error-tracking",
+                          "Mesurer l’audience",
+                          "Réseaux sociaux",
+                          "Exploiter des études de marché afin de générer des données d’audience",
+                          "Mesurer la performance du contenu",
+                          "Mesure d'audience",
+                          "AB Testing",
+                          "Mesure d’audience et web analyse",
+                          "Cookies för analys och utveckling",
+                          "Mäta innehållsprestanda",
+                          "Måle innholdsprestasjon",
+                          "Cookies for analysis and development",
+                          "Evästeet analysointia ja kehittämistä varten",
+                          "Markkinatutkimusten soveltaminen käyttäjäymmärryksen luomiseksi",
+                          "Sisällön ja sen tehokkuuden mittaaminen",
+                          "Audience Measurement",
+                          "Elaboration de statistiques destinées à améliorer le fonctionnement des Sites et des Services",
+                          "Cookies fonctionnels et statistiques d'usage du site"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "B"
+                          }
+                        ]
+                      }
+                    },
+                    {
+                      "type": "ifcss",
+                      "target": {
+                        "selector": ".didomi-components-accordion",
+                        "textFilter": [
+                          "Contenus vidéo et audio",
+                          "Contenus cartographiques/infographiques",
+                          "Personalization",
+                          "Contenus cartographiques, infographiques et ludique",
+                          "Ces identifiants permettent d'interagir avec les plateformes vidéos.",
+                          "Activation des services interactifs proposés par des tiers",
+                          "La gestion des paiements des Services",
+                          "Nécessaires au fonctionnement du service"
+                        ]
+                      },
+                      "trueAction": {
+                        "type": "consent",
+                        "consents": [
+                          {
+                            "trueAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(2)"
+                              }
+                            },
+                            "falseAction": {
+                              "type": "click",
+                              "target": {
+                                "selector": ":scope > .didomi-consent-popup-data-processing__buttons .didomi-components-radio__option:nth-child(1)"
+                              }
+                            },
+                            "type": "A"
+                          }
+                        ]
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "click",
+                "target": {
+                  "selector": ".didomi-consent-popup-view-vendors-list-link"
+                }
+              },
+              {
+                "type": "consent",
+                "consents": [
+                  {
+                    "trueAction": {
+                      "type": "click",
+                      "target": {
+                        "selector": ".didomi-consent-popup-container-click-all .didomi-components-radio .didomi-components-radio__option:nth-child(2)"
+                      }
+                    },
+                    "falseAction": {
+                      "type": "click",
+                      "target": {
+                        "selector": ".didomi-consent-popup-container-click-all .didomi-components-radio .didomi-components-radio__option:nth-child(1)"
+                      }
+                    },
+                    "type": "X"
+                  }
+                ]
+              },
+              {
+                "type": "click",
+                "target": {
+                  "selector": ".didomi-components-button:first-child"
+                },
+                "parent": {
+                  "selector": ".didomi-consent-popup-footer .didomi-consent-popup-actions"
+                }
+              }
+            ]
+          },
+          "name": "DO_CONSENT"
+        },
+        {
+          "action": {
+            "type": "click",
+            "target": {
+              "selector": ".didomi-components-button:first-child"
+            },
+            "parent": {
+              "selector": ".didomi-consent-popup-footer .didomi-consent-popup-actions"
+            }
+          },
+          "name": "SAVE_CONSENT"
+        },
+        {
+          "action": {
+            "type": "list",
+            "actions": [
+              {
+                "type": "hide",
+                "target": {
+                  "selector": "#didomi-popup"
+                },
+                "forceHide": true
+              },
+              {
+                "type": "hide",
+                "target": {
+                  "selector": "#didomi-consent-popup"
+                }
+              }
+            ]
+          },
+          "name": "HIDE_CMP"
+        },
+        {
+          "name": "UTILITY"
         }
       ]
     },
@@ -6626,257 +7409,6 @@
         },
         {
           "name": "UTILITY"
-        }
-      ]
-    },
-    "oil": {
-      "detectors": [
-        {
-          "presentMatcher": {
-            "target": {
-              "selector": ".as-oil-content-overlay"
-            },
-            "type": "css"
-          },
-          "showingMatcher": {
-            "target": {
-              "selector": ".as-oil-content-overlay"
-            },
-            "type": "css"
-          }
-        }
-      ],
-      "methods": [
-        {
-          "action": {
-            "actions": [
-              {
-                "target": {
-                  "selector": ".as-js-advanced-settings"
-                },
-                "type": "click"
-              },
-              {
-                "retries": 10,
-                "target": {
-                  "selector": ".as-oil-cpc__purpose-container"
-                },
-                "type": "waitcss",
-                "waitTime": 250
-              }
-            ],
-            "type": "list"
-          },
-          "name": "OPEN_OPTIONS"
-        },
-        {
-          "action": {
-            "actions": [
-              {
-                "consents": [
-                  {
-                    "matcher": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Information storage and access",
-                          "Opbevaring af og adgang til oplysninger på din enhed"
-                        ]
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Information storage and access",
-                          "Opbevaring af og adgang til oplysninger på din enhed"
-                        ]
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "D"
-                  },
-                  {
-                    "matcher": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Personlige annoncer",
-                          "Personalisation"
-                        ]
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Personlige annoncer",
-                          "Personalisation"
-                        ]
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "E"
-                  },
-                  {
-                    "matcher": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Annoncevalg, levering og rapportering",
-                          "Ad selection, delivery, reporting"
-                        ]
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Annoncevalg, levering og rapportering",
-                          "Ad selection, delivery, reporting"
-                        ]
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "F"
-                  },
-                  {
-                    "matcher": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Personalisering af indhold",
-                          "Content selection, delivery, reporting"
-                        ]
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": [
-                          "Personalisering af indhold",
-                          "Content selection, delivery, reporting"
-                        ]
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "E"
-                  },
-                  {
-                    "matcher": {
-                      "parent": {
-                        "childFilter": {
-                          "target": {
-                            "selector": ".as-oil-cpc__purpose-header",
-                            "textFilter": [
-                              "Måling",
-                              "Measurement"
-                            ]
-                          }
-                        },
-                        "selector": ".as-oil-cpc__purpose-container"
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "childFilter": {
-                          "target": {
-                            "selector": ".as-oil-cpc__purpose-header",
-                            "textFilter": [
-                              "Måling",
-                              "Measurement"
-                            ]
-                          }
-                        },
-                        "selector": ".as-oil-cpc__purpose-container"
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "B"
-                  },
-                  {
-                    "matcher": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": "Google"
-                      },
-                      "target": {
-                        "selector": "input"
-                      },
-                      "type": "checkbox"
-                    },
-                    "toggleAction": {
-                      "parent": {
-                        "selector": ".as-oil-cpc__purpose-container",
-                        "textFilter": "Google"
-                      },
-                      "target": {
-                        "selector": ".as-oil-cpc__switch"
-                      },
-                      "type": "click"
-                    },
-                    "type": "F"
-                  }
-                ],
-                "type": "consent"
-              }
-            ],
-            "type": "list"
-          },
-          "name": "DO_CONSENT"
-        },
-        {
-          "action": {
-            "target": {
-              "selector": ".as-oil__btn-optin"
-            },
-            "type": "click"
-          },
-          "name": "SAVE_CONSENT"
-        },
-        {
-          "action": {
-            "target": {
-              "selector": "div.as-oil"
-            },
-            "type": "hide"
-          },
-          "name": "HIDE_CMP"
         }
       ]
     }
