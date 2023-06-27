@@ -1,0 +1,12 @@
+{
+    "name": "nike.com",
+    "runContext": {
+        "urlPattern": "^https://www\\.nike\\.com/"
+      },
+    "cosmetic": true,
+    "prehideSelectors": ["div.cookie-dialog-base"],
+    "detectCmp": [{ "exists": "div.cookie-dialog-base" }],
+    "detectPopup": [{ "visible": "div.cookie-dialog-base" }],
+    "optIn": [{ "click": "div.cookie-dialog-base button.dialog-actions-accept-btn" }],
+    "optOut": [{ "click": "div.cookie-dialog-base button.dialog-actions-decline-btn" }]
+}
