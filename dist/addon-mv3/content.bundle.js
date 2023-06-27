@@ -1629,7 +1629,7 @@
             await this.executeAction("OPEN_OPTIONS");
             await this.executeAction("HIDE_CMP");
             await this.executeAction("DO_CONSENT", []);
-            await this.executeAction("SAVE_CONSENT");
+            await this.executeAction("SAVE_CONSENT", []);
             return true;
         }
         async optIn() {
@@ -1637,7 +1637,7 @@
             await this.executeAction("OPEN_OPTIONS");
             await this.executeAction("HIDE_CMP");
             await this.executeAction("DO_CONSENT", ['D', 'A', 'B', 'E', 'F', 'X']);
-            await this.executeAction("SAVE_CONSENT");
+            await this.executeAction("SAVE_CONSENT", ['D', 'A', 'B', 'E', 'F', 'X']);
             return true;
         }
         async openCmp() {
