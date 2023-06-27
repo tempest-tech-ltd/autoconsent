@@ -1,7 +1,7 @@
 {
     "name": "aliexpress.com",
     "runContext": {
-        "urlPattern": "^https://(.*\\.)?aliexpress\\.com/"
+        "urlPattern": "^https://([a-z0-9-]+\\.)?aliexpress\\.com/"
       },
     "cosmetic": true,
     "prehideSelectors": [".global-gdpr-container"],
