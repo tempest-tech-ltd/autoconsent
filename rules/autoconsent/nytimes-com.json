@@ -1,0 +1,24 @@
+{
+    "name": "nytimes",
+    "runContext": {
+        "urlPattern": "^https://nytimes.com"
+    },
+    "cosmetic": true,
+    "prehideSelectors": ["div.gdpr.shown"],
+    "detectCmp": [
+        {
+            "exists": "div.gdpr"
+        }
+    ],
+    "detectPopup": [{ "visible": "div.gdpr.shown" }],
+    "optIn": [
+        {
+            "click": "div.gdpr.shown button[data-testid=\"GDPR-accept\"]"
+        }
+    ],
+    "optOut": [
+        {
+            "click": "div.gdpr.shown button[data-testid=\"GDPR-reject\"]"
+        }
+    ]
+}
