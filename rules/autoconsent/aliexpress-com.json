@@ -1,12 +1,51 @@
 {
-    "name": "aliexpress.com",
-    "runContext": {
-        "urlPattern": "^https://([a-z0-9-]+\\.)?aliexpress\\.com/"
+  "name": "aliexpress.com",
+  "runContext": {
+    "urlPattern": "^https://([a-z0-9-]+\\.)?aliexpress\\.com/"
+  },
+  "cosmetic": true,
+  "prehideSelectors": [".global-gdpr-container"],
+  "detectCmp": [{ "exists": ".global-gdpr-container" }],
+  "detectPopup": [{ "visible": ".global-gdpr-container" }],
+  "optIn": [
+    {
+      "click": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-accept\"]"
+    }
+  ],
+  "optOut": [
+    {
+      "if": {
+        "visible": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-reject\"]"
       },
-    "cosmetic": true,
-    "prehideSelectors": [".global-gdpr-container"],
-    "detectCmp": [{ "exists": ".global-gdpr-container" }],
-    "detectPopup": [{ "visible": ".global-gdpr-container" }],
-    "optIn": [{ "click": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-accept\"]" }],
-    "optOut": [{ "click": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-reject\"]" }]
+      "then": [
+        {
+          "click": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-reject\"]"
+        }
+      ],
+      "else": [
+        {
+          "click": "div.global-gdpr-container div.global-gdpr-btn-wrap button[data-role=\"gdpr-more\"]"
+        },
+        {
+          "click": ".gdpr-dialog-wrap .gdpr-content .gdpr-dialog-switcher.switcher-on[data-val=\"analytics\"]",
+          "optional": true
+        },
+        {
+          "click": ".gdpr-dialog-wrap .gdpr-content .gdpr-dialog-switcher.switcher-on[data-val=\"personalization\"]",
+          "optional": true
+        },
+        {
+          "click": ".gdpr-dialog-wrap .gdpr-content .gdpr-dialog-switcher.switcher-on[data-val=\"marketing\"]",
+          "optional": true
+        },
+        {
+          "click": ".gdpr-dialog-wrap .gdpr-content .gdpr-dialog-switcher.switcher-on[data-val=\"social\"]",
+          "optional": true
+        },
+        {
+          "click": ".gdpr-dialog-wrap .gdpr-dialog-btn-group button[data-role=\"gdpr-dialog-save\"]"
+        }
+      ]
+    }
+  ]
 }
