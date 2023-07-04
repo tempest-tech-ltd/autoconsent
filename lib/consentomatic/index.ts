@@ -151,9 +151,9 @@ async function ifAllowAllAction(config: any, consentTypes: any) {
   const allTrue = !Object.values(consentTypes).includes(false);
 
   if (allTrue) {
-    await executeAction(config.trueAction);
+    await executeAction(config.trueAction, consentTypes);
   } else {
-    await executeAction(config.falseAction);
+    await executeAction(config.falseAction, consentTypes);
   }
 }
 
@@ -161,9 +161,9 @@ async function ifAllowNoneAction(config: any, consentTypes: any) {
   const allFalse = Object.values(consentTypes).includes(false);
 
   if (allFalse) {
-    await executeAction(config.trueAction);
+    await executeAction(config.trueAction, consentTypes);
   } else {
-    await executeAction(config.falseAction);
+    await executeAction(config.falseAction, consentTypes);
   }
 }
 
