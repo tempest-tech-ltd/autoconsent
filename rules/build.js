@@ -25,7 +25,7 @@ const consentOMaticCommit = "master";
 const consentOMaticBaseUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/rules/`;
 const consentOMaticDir = path.join(__dirname, "consentomatic");
 const consentOMaticInclude = [
-  'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata', 'sourcepoint_frame', 'sourcepoint', 'instagram', 'facebook'
+  'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata', 'sourcepoint_frame', 'sourcepoint', 'instagram', 'facebook', 'twitch.tv'
 ]
 const buildConsentOMatic = (async () => {
   const comRules = {};
