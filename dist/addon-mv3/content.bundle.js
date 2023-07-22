@@ -441,8 +441,9 @@
             return true;
         }
         async test() {
-            // TODO: find out how to test TrustArc
-            return true;
+            //Test JS variable to check the user's preference
+            //PrefCookie = undefined means no consent is set, PrefCookie = '0' means consent is set to required only 
+            return await doEval("window && window.truste && window.truste.eu.bindMap.prefCookie === '0'");
         }
     }
 
@@ -820,6 +821,9 @@
         constructor() {
             super("Onetrust");
             this.prehideSelectors = ["#onetrust-banner-sdk,#onetrust-consent-sdk,.onetrust-pc-dark-filter,.js-consent-banner"];
+            this.runContext = {
+                urlPattern: '^(?!.*https://www\\.nba\\.com/)'
+            };
         }
         get hasSelfTest() {
             return true;
@@ -1462,19 +1466,19 @@
     async function ifAllowAllAction(config, consentTypes) {
         const allTrue = !Object.values(consentTypes).includes(false);
         if (allTrue) {
-            await executeAction(config.trueAction);
+            await executeAction(config.trueAction, consentTypes);
         }
         else {
-            await executeAction(config.falseAction);
+            await executeAction(config.falseAction, consentTypes);
         }
     }
     async function ifAllowNoneAction(config, consentTypes) {
         const allFalse = Object.values(consentTypes).includes(false);
         if (allFalse) {
-            await executeAction(config.trueAction);
+            await executeAction(config.trueAction, consentTypes);
         }
         else {
-            await executeAction(config.falseAction);
+            await executeAction(config.falseAction, consentTypes);
         }
     }
     async function waitCssAction(config) {
