@@ -1,0 +1,13 @@
+{
+    "name": "ecosia.org",
+    "runContext": {
+      "urlPattern": "^https://(www\\.)?ecosia\\.org/"
+    },
+    "cosmetic": true,
+    "prehideSelectors": [".banner.cookie-notice"],
+    "detectCmp": [{ "exists": ".banner.cookie-notice" }],
+    "detectPopup": [{ "visible": ".banner.cookie-notice" }],
+    "optIn": [{ "click": ".banner.cookie-notice button.cookie-consent__action:nth-child(3)" }],
+    "optOut": [{ "click": ".banner.cookie-notice button.cookie-consent__action:nth-child(2)" }]
+  }
+  
