@@ -2,7 +2,7 @@ import { enableLogs } from "../lib/config";
 import { BackgroundMessage, ContentScriptMessage, DevtoolsMessage, ReportMessage } from "../lib/messages";
 import { Config, RuleBundle } from "../lib/types";
 import { manifestVersion, storageGet, storageRemove, storageSet } from "./mv-compat";
-import { showOptOutStatus } from "./utils";
+import { initConfig, showOptOutStatus } from "./utils";
 
 /**
  * Mapping of tabIds to Port connections to open devtools panels.
@@ -17,31 +17,6 @@ async function loadRules() {
   storageSet({
     rules: await res.json(),
   });
-}
-
-async function initConfig() {
-  console.log('init sw');
-  const storedConfig = await storageGet('config');
-  console.log('storedConfig', storedConfig);
-  if (!storedConfig) {
-    console.log('init config');
-    const defaultConfig: Config = {
-      enabled: true,
-      autoAction: 'optOut', // if falsy, the extension will wait for an explicit user signal before opting in/out
-      disabledCmps: [],
-      enablePrehide: true,
-      enableCosmeticRules: true,
-      detectRetries: 20,
-    };
-    await storageSet({
-      config: defaultConfig,
-    });
-  } else if (typeof storedConfig.enableCosmeticRules === 'undefined') { // upgrade from old versions
-    storedConfig.enableCosmeticRules = true;
-    await storageSet({
-      config: storedConfig,
-    });
-  }
 }
 
 async function evalInTab(tabId: number, frameId: number, code: string): Promise<chrome.scripting.InjectionResult<boolean>[]> {
