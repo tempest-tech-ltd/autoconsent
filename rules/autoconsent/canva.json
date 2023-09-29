@@ -19,7 +19,4 @@
     }   
   ],
   "test": [
-    { "eval": "!document.cookie.includes('gtm_fpc_engagement_event')" }
-  ]
-}
  
