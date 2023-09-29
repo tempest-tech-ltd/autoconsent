@@ -22,15 +22,10 @@ export async function buildAutoconsentRules() {
 
 export async function buildConsentOMaticRules() {
   // fetch ConsentOMatic rule set and merge with our custom rules
-  const consentOMaticCommit = "7d7fd2bd6bf2b662350b0eaeca74db6eba155efe";
+  const consentOMaticCommit = "master";
   const consentOMaticUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/Rules.json`;
   const consentOMaticInclude = [
-    "didomi.io",
-    "oil",
-    "optanon",
-    "quantcast2",
-    "springer",
-    "wordpressgdpr",
+    'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata', 'sourcepoint_frame', 'sourcepoint', 'instagram', 'facebook', 'twitch.tv'
   ];
   const comRules = {};
   const allComRules = await new Promise((resolve) => {
