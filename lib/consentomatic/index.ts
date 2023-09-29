@@ -47,7 +47,7 @@ export async function executeAction(
     case "nop":
       break;
     case "runmethod":
-        throw "'runmethod' action is not supported";
+      throw "'runmethod' action is not supported";
     default:
       throw "Unknown action type: " + config.type;
   }
@@ -125,7 +125,7 @@ async function runrootedAction(config: any, params: any) {
   }
 
   //Save root
-  let oldRoot = Tools.getBase();
+  const oldRoot = Tools.getBase();
 
   //Reset to null root
   if (config.ignoreOldRoot === true) {
@@ -133,7 +133,7 @@ async function runrootedAction(config: any, params: any) {
   }
 
   //Find new root
-  let result = Tools.find(config);
+  const result = Tools.find(config);
 
   if (result.target !== null) {
     //Set new root
@@ -168,7 +168,7 @@ async function ifAllowNoneAction(config: any, consentTypes: any) {
 }
 
 async function waitCssAction(config: any) {
-  await new Promise<void>(resolve => {
+  await new Promise<void>((resolve) => {
     let numRetries = config.retries || 10;
     const waitTime = config.waitTime || 250;
     const checkCss = () => {
@@ -228,8 +228,10 @@ async function slideAction(config: any) {
       yDiff = 0;
     }
 
-    const screenX = window.screenX + targetBounds.left + targetBounds.width / 2.0;
-    const screenY = window.screenY + targetBounds.top + targetBounds.height / 2.0;
+    const screenX =
+      window.screenX + targetBounds.left + targetBounds.width / 2.0;
+    const screenY =
+      window.screenY + targetBounds.top + targetBounds.height / 2.0;
     const clientX = targetBounds.left + targetBounds.width / 2.0;
     const clientY = targetBounds.top + targetBounds.height / 2.0;
 
@@ -305,7 +307,7 @@ async function closeAction() {
 
 async function evalAction(config: any): Promise<boolean> {
   console.log("eval!", config.code);
-  return new Promise(resolve => {
+  return new Promise((resolve) => {
     try {
       if (config.async) {
         window.eval(config.code);
