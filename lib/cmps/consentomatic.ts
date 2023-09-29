@@ -24,7 +24,7 @@ export class ConsentOMaticCMP implements AutoCMP {
   isCosmetic = false;
 
   constructor(public name: string, public config: ConsentOMaticConfig) {
-    config.methods.forEach(methodConfig => {
+    config.methods.forEach((methodConfig) => {
       if (methodConfig.action) {
         this.methods.set(methodConfig.name, methodConfig.action);
       }
@@ -50,21 +50,25 @@ export class ConsentOMaticCMP implements AutoCMP {
         return false;
       }
 
-      return presentMatchers.every(presentMatcher => !!matches(presentMatcher));
+      return presentMatchers.every(
+        (presentMatcher) => !!matches(presentMatcher)
+      );
     });
   }
 
   async detectPopup(): Promise<boolean> {
-    return this.config.detectors.some(detectorConfig => {
+    return this.config.detectors.some((detectorConfig) => {
       const showingMatchers = Array.isArray(detectorConfig.showingMatcher)
         ? detectorConfig.showingMatcher
         : [detectorConfig.showingMatcher].filter(Boolean);
 
-        if (!showingMatchers.length) {
-          return true;
-        }
-      
-        return showingMatchers.every((showingMatcher) => !!matches(showingMatcher));
+      if (!showingMatchers.length) {
+        return true;
+      }
+
+      return showingMatchers.every(
+        (showingMatcher) => !!matches(showingMatcher)
+      );
     });
   }
 
@@ -88,8 +92,8 @@ export class ConsentOMaticCMP implements AutoCMP {
     await this.executeAction("HIDE_CMP");
     await this.executeAction("OPEN_OPTIONS");
     await this.executeAction("HIDE_CMP");
-    await this.executeAction("DO_CONSENT", ['D', 'A', 'B', 'E', 'F', 'X']);
-    await this.executeAction("SAVE_CONSENT", ['D', 'A', 'B', 'E', 'F', 'X']);
+    await this.executeAction("DO_CONSENT", ["D", "A", "B", "E", "F", "X"]);
+    await this.executeAction("SAVE_CONSENT", ["D", "A", "B", "E", "F", "X"]);
     return true;
   }
   async openCmp(): Promise<boolean> {
