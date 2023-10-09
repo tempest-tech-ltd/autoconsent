@@ -1,0 +1,58 @@
+diff --git a/.github/workflows/asana.yml b/.github/workflows/asana.yml
+index d7d3e28..7694f0d 100644
+--- a/.github/workflows/asana.yml
++++ b/.github/workflows/asana.yml
+@@ -1,12 +1,5 @@
+ name: 'asana sync'
+-on:
+-  pull_request_target:
+-    types:
+-      - opened
+-      - edited
+-      - closed
+-      - reopened
+-      - synchronize
++on: workflow_dispatch
+ 
+ jobs:
+   sync:
+diff --git a/rules/build.mjs b/rules/build.mjs
+index 3ec0748..db9367e 100644
+--- a/rules/build.mjs
++++ b/rules/build.mjs
+@@ -2,9 +2,9 @@
+ import fs from "fs";
+ import path from "path";
+ import https from "https";
+-import { fileURLToPath } from 'url';
++import { fileURLToPath } from "url";
+ 
+-export const rulesDir = path.dirname(fileURLToPath(import.meta.url))
++export const rulesDir = path.dirname(fileURLToPath(import.meta.url));
+ 
+ async function readFileJSON(filePath) {
+   const data = await fs.promises.readFile(filePath, "utf-8");
+@@ -22,7 +22,7 @@ export async function buildAutoconsentRules() {
+ 
+ export async function buildConsentOMaticRules() {
+   // fetch ConsentOMatic rule set and merge with our custom rules
+-  const consentOMaticCommit = "7d7fd2bd6bf2b662350b0eaeca74db6eba155efe";
++  const consentOMaticCommit = "master";
+   const consentOMaticUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/Rules.json`;
+   const consentOMaticInclude = [
+     "didomi.io",
+@@ -30,7 +30,13 @@ export async function buildConsentOMaticRules() {
+     "optanon",
+     "quantcast2",
+     "springer",
+-    "wordpressgdpr",
++    "wordpress_gdpr",
++    "sirdata",
++    "sourcepoint_frame",
++    "sourcepoint",
++    "instagram",
++    "facebook",
++    "twitch.tv",
+   ];
+   const comRules = {};
+   const allComRules = await new Promise((resolve) => {
