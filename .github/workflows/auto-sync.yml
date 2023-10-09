@@ -22,7 +22,7 @@ jobs:
       with:
         # optional: set the branch to checkout,
         # sync action checks out your 'target_sync_branch' anyway
-        ref: auto-sync-target
+        ref: auto-sync
         # REQUIRED if your upstream repo is private (see wiki)
         persist-credentials: false
 
@@ -32,7 +32,7 @@ jobs:
       id: sync
       uses: aormsby/Fork-Sync-With-Upstream-action@v3.4
       with:
-        target_sync_branch: my-branch
+        target_sync_branch: auto-sync-target
         # REQUIRED 'target_repo_token' exactly like this!
         target_repo_token: ${{ secrets.GITHUB_TOKEN }}
         upstream_sync_branch: main
@@ -40,7 +40,7 @@ jobs:
         #upstream_repo_access_token: ${{ secrets.UPSTREAM_REPO_SECRET }}
 
         # Set test_mode true to run tests instead of the true action!!
-        test_mode: true
+        test_mode: false
       
     # Step 3: Display a sample message based on the sync output var 'has_new_commits'
     - name: New commits found
@@ -53,3 +53,9 @@ jobs:
       
     - name: Show value of 'has_new_commits'
       run: echo ${{ steps.sync.outputs.has_new_commits }}
+
+    - name: Create new synchronized branch
+      run: git checkout -b synchronized-branch
+
+    - name: Apply Tempest patches
+      run: git apply patches/patches.patch
