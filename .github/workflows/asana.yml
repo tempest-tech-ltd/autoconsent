@@ -1,5 +1,12 @@
 name: 'asana sync'
-on: workflow_dispatch
+on:
+  pull_request_target:
+    types:
+      - opened
+      - edited
+      - closed
+      - reopened
+      - synchronize
 
 jobs:
   sync:

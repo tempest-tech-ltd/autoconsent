@@ -2,9 +2,9 @@
 import fs from "fs";
 import path from "path";
 import https from "https";
-import { fileURLToPath } from "url";
+import { fileURLToPath } from 'url';
 
-export const rulesDir = path.dirname(fileURLToPath(import.meta.url));
+export const rulesDir = path.dirname(fileURLToPath(import.meta.url))
 
 async function readFileJSON(filePath) {
   const data = await fs.promises.readFile(filePath, "utf-8");
@@ -22,7 +22,7 @@ export async function buildAutoconsentRules() {
 
 export async function buildConsentOMaticRules() {
   // fetch ConsentOMatic rule set and merge with our custom rules
-  const consentOMaticCommit = "master";
+  const consentOMaticCommit = "7d7fd2bd6bf2b662350b0eaeca74db6eba155efe";
   const consentOMaticUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/Rules.json`;
   const consentOMaticInclude = [
     "didomi.io",
@@ -30,13 +30,7 @@ export async function buildConsentOMaticRules() {
     "optanon",
     "quantcast2",
     "springer",
-    "wordpress_gdpr",
-    "sirdata",
-    "sourcepoint_frame",
-    "sourcepoint",
-    "instagram",
-    "facebook",
-    "twitch.tv",
+    "wordpressgdpr",
   ];
   const comRules = {};
   const allComRules = await new Promise((resolve) => {
