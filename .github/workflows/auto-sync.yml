@@ -53,3 +53,9 @@ jobs:
       
     - name: Show value of 'has_new_commits'
       run: echo ${{ steps.sync.outputs.has_new_commits }}
+
+    - name: Create new synchronized branch
+      run: git checkout -b synchronized-branch
+
+    - name: Apply Tempest patches
+      run: git apply patches/patches.patch
