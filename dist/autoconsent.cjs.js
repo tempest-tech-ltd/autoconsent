@@ -1,1 +1,2233 @@
-"use strict";Object.defineProperty(exports,"__esModule",{value:!0});function t(){return crypto&&void 0!==crypto.randomUUID?crypto.randomUUID():Math.random().toString()}class e{constructor(t,e=1e3){this.id=t,this.promise=new Promise(((t,e)=>{this.resolve=t,this.reject=e})),this.timer=window.setTimeout((()=>{this.reject(new Error("timeout"))}),e)}}const n={pending:new Map,sendContentMessage:null};function o(t="autoconsent-css-rules"){const e=`style#${t}`,n=document.querySelector(e);if(n&&n instanceof HTMLStyleElement)return n;{const e=document.head||document.getElementsByTagName("head")[0]||document.documentElement,n=document.createElement("style");return n.id=t,e.appendChild(n),n}}function i(t,e,n="display"){const o="opacity"===n?"opacity: 0":"display: none",i=`${e.join(",")} { ${o} !important; z-index: -1 !important; pointer-events: none !important; } `;return t instanceof HTMLStyleElement&&(t.innerText+=i,e.length>0)}async function s(t,e,n){const o=await t();return!o&&e>0?new Promise((o=>{setTimeout((async()=>{o(s(t,e-1,n))}),n)})):Promise.resolve(o)}function r(t){if(!t)return!1;if(null!==t.offsetParent)return!0;{const e=window.getComputedStyle(t);if("fixed"===e.position&&"none"!==e.display)return!0}return!1}function c(o){return function(o){const i=t();n.sendContentMessage({type:"eval",id:i,code:o});const s=new e(i);return n.pending.set(s.id,s),s.promise}(o).catch((t=>!1))}function a(t,e=!1){let n=[];return n="string"==typeof t?Array.from(document.querySelectorAll(t)):t,n.length>0&&(e?n.forEach((t=>t.click())):n[0].click()),n.length>0}function u(t){return null!==document.querySelector(t)}function l(t,e){const n=document.querySelectorAll(t),o=new Array(n.length);return n.forEach(((t,e)=>{o[e]=r(t)})),"none"===e?o.every((t=>!t)):0!==o.length&&("any"===e?o.some((t=>t)):o.every((t=>t)))}function p(t,e=1e4){return s((()=>null!==document.querySelector(t)),Math.ceil(e/200),200)}async function d(t,e=1e4,n=!1){return await p(t,e),a(t,n)}function h(t){return new Promise((e=>{setTimeout((()=>{e(!0)}),t)}))}const m={main:!0,frame:!1,urlPattern:""};class f{constructor(t){this.runContext=m,this.name=t}get hasSelfTest(){throw new Error("Not Implemented")}get isIntermediate(){throw new Error("Not Implemented")}get isCosmetic(){throw new Error("Not Implemented")}checkRunContext(){const t={...m,...this.runContext},e=window.top===window;return!(e&&!t.main)&&(!(!e&&!t.frame)&&!(t.urlPattern&&!window.location.href.match(t.urlPattern)))}detectCmp(){throw new Error("Not Implemented")}async detectPopup(){return!1}optOut(){throw new Error("Not Implemented")}optIn(){throw new Error("Not Implemented")}openCmp(){throw new Error("Not Implemented")}async test(){return Promise.resolve(!0)}}async function y(t){const e=[];if(t.exists&&e.push(u(t.exists)),t.visible&&e.push(l(t.visible,t.check)),t.eval){const n=c(t.eval);e.push(n)}var n,r;if(t.waitFor&&e.push(p(t.waitFor,t.timeout)),t.waitForVisible&&e.push(function(t,e=1e4,n="any"){return s((()=>l(t,n)),Math.ceil(e/200),200)}(t.waitForVisible,t.timeout,t.check)),t.click&&e.push(a(t.click,t.all)),t.waitForThenClick&&e.push(d(t.waitForThenClick,t.timeout,t.all)),t.wait&&e.push(h(t.wait)),t.hide&&e.push((n=t.hide,r=t.method,i(o(),n,r))),t.if){if(!t.if.exists&&!t.if.visible)return console.error("invalid conditional rule",t.if),!1;await y(t.if)?e.push(w(t.then)):t.else&&e.push(w(t.else))}if(0===e.length)return!1;return(await Promise.all(e)).reduce(((t,e)=>t&&e),!0)}async function w(t){for(const e of t){if(!await y(e)&&!e.optional)return!1}return!0}class g extends f{constructor(t){super(t.name),this.config=t,this.runContext=t.runContext||m}get hasSelfTest(){return!!this.config.test}get isIntermediate(){return!!this.config.intermediate}get isCosmetic(){return!!this.config.cosmetic}get prehideSelectors(){return this.config.prehideSelectors}async detectCmp(){return!!this.config.detectCmp&&async function(t){const e=t.map((t=>y(t)));return(await Promise.all(e)).every((t=>!!t))}(this.config.detectCmp)}async detectPopup(){return!!this.config.detectPopup&&w(this.config.detectPopup)}async optOut(){return!!this.config.optOut&&w(this.config.optOut)}async optIn(){return!!this.config.optIn&&w(this.config.optIn)}async openCmp(){return!!this.config.openCmp&&w(this.config.openCmp)}async test(){return this.hasSelfTest?w(this.config.test):super.test()}}function b(t){return new g(t)}const C=[new class extends f{constructor(){super("TrustArc-top"),this.prehideSelectors=[".trustarc-banner-container",".truste_popframe,.truste_overlay,.truste_box_overlay,#truste-consent-track"],this.runContext={main:!0,frame:!1},this._shortcutButton=null,this._optInDone=!1}get hasSelfTest(){return!1}get isIntermediate(){return!this._optInDone&&!this._shortcutButton}get isCosmetic(){return!1}async detectCmp(){const t=u("#truste-show-consent,#truste-consent-track");return t&&(this._shortcutButton=document.querySelector("#truste-consent-required")),t}async detectPopup(){return l("#truste-consent-content,#trustarc-banner-overlay,#truste-consent-track","all")}openFrame(){a("#truste-show-consent")}async optOut(){return this._shortcutButton?(this._shortcutButton.click(),!0):(i(o(),[".truste_popframe",".truste_overlay",".truste_box_overlay","#truste-consent-track"]),a("#truste-show-consent"),setTimeout((()=>{o().remove()}),1e4),!0)}async optIn(){return this._optInDone=!0,a("#truste-consent-button")}async openCmp(){return!0}async test(){return await c("window && window.truste && window.truste.eu.bindMap.prefCookie === '0'")}},new class extends f{constructor(){super("TrustArc-frame"),this.runContext={main:!1,frame:!0,urlPattern:"^https://consent-pref\\.trustarc\\.com/\\?"}}get hasSelfTest(){return!1}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return!0}async detectPopup(){return l("#defaultpreferencemanager","any")&&l(".mainContent","any")}async navigateToSettings(){return await s((async()=>u(".shp")||l(".advance","any")||u(".switch span:first-child")),10,500),u(".shp")&&a(".shp"),await p(".prefPanel",5e3),l(".advance","any")&&a(".advance"),await s((()=>l(".switch span:first-child","any")),5,1e3)}async optOut(){return await s((()=>"complete"===document.readyState),20,100),await p(".mainContent[aria-hidden=false]",5e3),!!a(".rejectAll")||(u(".prefPanel")&&await p('.prefPanel[style="visibility: visible;"]',3e3),a("#catDetails0")?(a(".submit"),!0):(a(".required")||(await this.navigateToSettings(),a(".switch span:nth-child(1):not(.active)",!0),a(".submit"),p("#gwt-debug-close_id",3e5).then((()=>{a("#gwt-debug-close_id")}))),!0))}async optIn(){return a(".call")||(await this.navigateToSettings(),a(".switch span:nth-child(2)",!0),a(".submit"),p("#gwt-debug-close_id",3e5).then((()=>{a("#gwt-debug-close_id")}))),!0}},new class extends f{constructor(){super("Cybotcookiebot"),this.prehideSelectors=["#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookieoverlay"]}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u("#CybotCookiebotDialogBodyLevelButtonPreferences")}async detectPopup(){return u("#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookiebanner")}async optOut(){return a(".cookie-alert-extended-detail-link")?(await p(".cookie-alert-configuration",2e3),a(".cookie-alert-configuration-input:checked",!0),a(".cookie-alert-extended-button-secondary"),!0):u("#dtcookie-container")?a(".h-dtcookie-decline"):(a(".cookiebot__button--settings")||a("#CybotCookiebotDialogBodyButtonDecline")||(a(".cookiebanner__link--details"),a('.CybotCookiebotDialogBodyLevelButton:checked:enabled,input[id*="CybotCookiebotDialogBodyLevelButton"]:checked:enabled',!0),a("#CybotCookiebotDialogBodyButtonDecline"),a("input[id^=CybotCookiebotDialogBodyLevelButton]:checked",!0),u("#CybotCookiebotDialogBodyButtonAcceptSelected")?a("#CybotCookiebotDialogBodyButtonAcceptSelected"):a("#CybotCookiebotDialogBodyLevelButtonAccept,#CybotCookiebotDialogBodyButtonAccept,#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection",!0),await c("window.CookieConsent.hasResponse !== true")&&(await c("window.Cookiebot.dialog.submitConsent()"),await h(500)),u("#cb-confirmedSettings")&&await c("endCookieProcess()")),!0)}async optIn(){return u("#dtcookie-container")?a(".h-dtcookie-accept"):(a(".CybotCookiebotDialogBodyLevelButton:not(:checked):enabled",!0),a("#CybotCookiebotDialogBodyLevelButtonAccept"),a("#CybotCookiebotDialogBodyButtonAccept"),!0)}async test(){return c("window.CookieConsent.declined === true")}},new class extends f{constructor(){super("Sourcepoint-frame"),this.prehideSelectors=["div[id^='sp_message_container_'],.message-overlay","#sp_privacy_manager_container"],this.ccpaNotice=!1,this.ccpaPopup=!1,this.runContext={main:!1,frame:!0}}get hasSelfTest(){return!1}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){const t=new URL(location.href);return t.searchParams.has("message_id")&&"ccpa-notice.sp-prod.net"===t.hostname?(this.ccpaNotice=!0,!0):"ccpa-pm.sp-prod.net"===t.hostname?(this.ccpaPopup=!0,!0):("/index.html"===t.pathname||"/privacy-manager/index.html"===t.pathname)&&(t.searchParams.has("message_id")||t.searchParams.has("requestUUID")||t.searchParams.has("consentUUID"))}async detectPopup(){return!!this.ccpaNotice||(this.ccpaPopup?await p(".priv-save-btn",2e3):(await p(".sp_choice_type_11,.sp_choice_type_12,.sp_choice_type_13,.sp_choice_type_ACCEPT_ALL",2e3),!u(".sp_choice_type_9")))}async optIn(){return await p(".sp_choice_type_11,.sp_choice_type_ACCEPT_ALL",2e3),!!a(".sp_choice_type_11")||!!a(".sp_choice_type_ACCEPT_ALL")}isManagerOpen(){return"/privacy-manager/index.html"===location.pathname}async optOut(){if(this.ccpaPopup){const t=document.querySelectorAll(".priv-purpose-container .sp-switch-arrow-block a.neutral.on .right");for(const e of t)a([e]);const e=document.querySelectorAll(".priv-purpose-container .sp-switch-arrow-block a.switch-bg.on");for(const t of e)a([t]);return a(".priv-save-btn")}if(!this.isManagerOpen()){if(!await p(".sp_choice_type_12,.sp_choice_type_13"))return!1;if(!u(".sp_choice_type_12"))return a(".sp_choice_type_13");a(".sp_choice_type_12"),await s((()=>this.isManagerOpen()),200,100)}await p(".type-modal",2e4);try{const t=".sp_choice_type_REJECT_ALL",e=".reject-toggle",n=await Promise.race([p(t,2e3).then((t=>t?0:-1)),p(e,2e3).then((t=>t?1:-1)),p(".pm-features",2e3).then((t=>t?2:-1))]);if(0===n)return await h(1e3),a(t);1===n?a(e):2===n&&(await p(".pm-features",1e4),a(".checked > span",!0),a(".chevron"))}catch(t){}return a(".sp_choice_type_SAVE_AND_EXIT")}},new class extends f{get hasSelfTest(){return this.apiAvailable}get isIntermediate(){return!1}get isCosmetic(){return!1}constructor(){super("consentmanager.net"),this.prehideSelectors=["#cmpbox,#cmpbox2"],this.apiAvailable=!1}async detectCmp(){return this.apiAvailable=await c('window.__cmp && typeof __cmp("getCMPData") === "object"'),!!this.apiAvailable||u("#cmpbox")}async detectPopup(){return this.apiAvailable?(await h(500),await c("!__cmp('consentStatus').userChoiceExists")):l("#cmpbox .cmpmore","any")}async optOut(){return await h(500),this.apiAvailable?await c("__cmp('setConsent', 0)"):!!a(".cmpboxbtnno")||(u(".cmpwelcomeprpsbtn")?(a(".cmpwelcomeprpsbtn > a[aria-checked=true]",!0),a(".cmpboxbtnsave"),!0):(a(".cmpboxbtncustom"),await p(".cmptblbox",2e3),a(".cmptdchoice > a[aria-checked=true]",!0),a(".cmpboxbtnyescustomchoices"),!0))}async optIn(){return this.apiAvailable?await c("__cmp('setConsent', 1)"):a(".cmpboxbtnyes")}async test(){if(this.apiAvailable)return await c("__cmp('consentStatus').userChoiceExists")}},new class extends f{constructor(){super("Evidon")}get hasSelfTest(){return!1}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u("#_evidon_banner")}async detectPopup(){return l("#_evidon_banner","any")}async optOut(){return a("#_evidon-decline-button")||(i(o(),["#evidon-prefdiag-overlay","#evidon-prefdiag-background"]),a("#_evidon-option-button"),await p("#evidon-prefdiag-overlay",5e3),a("#evidon-prefdiag-decline")),!0}async optIn(){return a("#_evidon-accept-button")}},new class extends f{constructor(){super("Onetrust"),this.prehideSelectors=["#onetrust-banner-sdk,#onetrust-consent-sdk,.onetrust-pc-dark-filter,.js-consent-banner"],this.runContext={urlPattern:"^(?!.*https://www\\.nba\\.com/)"}}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u("#onetrust-banner-sdk")}async detectPopup(){return l("#onetrust-banner-sdk","all")}async optOut(){return u("#onetrust-pc-btn-handler")?a("#onetrust-pc-btn-handler"):a(".ot-sdk-show-settings,button.js-cookie-settings"),await p("#onetrust-consent-sdk",2e3),await h(1e3),a("#onetrust-consent-sdk input.category-switch-handler:checked,.js-editor-toggle-state:checked",!0),await h(1e3),await p(".save-preference-btn-handler,.js-consent-save",2e3),a(".save-preference-btn-handler,.js-consent-save"),await s((()=>l("#onetrust-banner-sdk","none")),10,500),!0}async optIn(){return a("#onetrust-accept-btn-handler,.js-accept-cookies")}async test(){return await c("window.OnetrustActiveGroups.split(',').filter(s => s.length > 0).length <= 1")}},new class extends f{constructor(){super("Klaro"),this.prehideSelectors=[".klaro"],this.settingsOpen=!1}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u(".klaro > .cookie-modal")?(this.settingsOpen=!0,!0):u(".klaro > .cookie-notice")}async detectPopup(){return l(".klaro > .cookie-notice,.klaro > .cookie-modal","any")}async optOut(){return!!a(".klaro .cn-decline")||(this.settingsOpen||(a(".klaro .cn-learn-more"),await p(".klaro > .cookie-modal",2e3),this.settingsOpen=!0),!!a(".klaro .cn-decline")||(a(".cm-purpose:not(.cm-toggle-all) > input:not(.half-checked)",!0),a(".cm-btn-accept")))}async optIn(){return!!a(".klaro .cm-btn-accept-all")||(this.settingsOpen?(a(".cm-purpose:not(.cm-toggle-all) > input.half-checked",!0),a(".cm-btn-accept")):a(".klaro .cookie-notice .cm-btn-success"))}async test(){return await c("klaro.getManager().config.services.every(c => c.required || !klaro.getManager().consents[c.name])")}},new class extends f{constructor(){super("Uniconsent")}get prehideSelectors(){return[".unic",".modal:has(.unic)"]}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u(".unic .unic-box,.unic .unic-bar")}async detectPopup(){return l(".unic .unic-box,.unic .unic-bar","any")}async optOut(){if(await p(".unic button",1e3),document.querySelectorAll(".unic button").forEach((t=>{const e=t.textContent;(e.includes("Manage Options")||e.includes("Optionen verwalten"))&&t.click()})),await p(".unic input[type=checkbox]",1e3)){await p(".unic button",1e3),document.querySelectorAll(".unic input[type=checkbox]").forEach((t=>{t.checked&&t.click()}));for(const t of document.querySelectorAll(".unic button")){const e=t.textContent;for(const n of["Confirm Choices","Save Choices","Auswahl speichern"])if(e.includes(n))return t.click(),await h(500),!0}}return!1}async optIn(){return d(".unic #unic-agree")}async test(){await h(1e3);return!u(".unic .unic-box,.unic .unic-bar")}},new class extends f{constructor(){super("Conversant"),this.prehideSelectors=[".cmp-root"]}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u(".cmp-root .cmp-receptacle")}async detectPopup(){return l(".cmp-root .cmp-receptacle","any")}async optOut(){if(!await d(".cmp-main-button:not(.cmp-main-button--primary)"))return!1;if(!await p(".cmp-view-tab-tabs"))return!1;await d(".cmp-view-tab-tabs > :first-child"),await d(".cmp-view-tab-tabs > .cmp-view-tab--active:first-child");for(const t of Array.from(document.querySelectorAll(".cmp-accordion-item"))){t.querySelector(".cmp-accordion-item-title").click(),await s((()=>!!t.querySelector(".cmp-accordion-item-content.cmp-active")),10,50);const e=t.querySelector(".cmp-accordion-item-content.cmp-active");e.querySelectorAll(".cmp-toggle-actions .cmp-toggle-deny:not(.cmp-toggle-deny--active)").forEach((t=>t.click())),e.querySelectorAll(".cmp-toggle-actions .cmp-toggle-checkbox:not(.cmp-toggle-checkbox--active)").forEach((t=>t.click()))}return await a(".cmp-main-button:not(.cmp-main-button--primary)"),!0}async optIn(){return d(".cmp-main-button.cmp-main-button--primary")}async test(){return document.cookie.includes("cmp-data=0")}},new class extends f{constructor(){super("tiktok.com"),this.runContext={urlPattern:"tiktok"}}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}getShadowRoot(){const t=document.querySelector("tiktok-cookie-banner");return t?t.shadowRoot:null}async detectCmp(){return u("tiktok-cookie-banner")}async detectPopup(){return r(this.getShadowRoot().querySelector(".tiktok-cookie-banner"))}async optOut(){const t=this.getShadowRoot().querySelector(".button-wrapper button:first-child");return!!t&&(t.click(),!0)}async optIn(){const t=this.getShadowRoot().querySelector(".button-wrapper button:last-child");return!!t&&(t.click(),!0)}async test(){const t=document.cookie.match(/cookie-consent=([^;]+)/);if(!t)return!1;const e=JSON.parse(decodeURIComponent(t[1]));return Object.values(e).every((t=>"boolean"!=typeof t||!1===t))}},new class extends f{constructor(){super("airbnb"),this.runContext={urlPattern:"^https://(www\\.)?airbnb\\.[^/]+/"},this.prehideSelectors=["div[data-testid=main-cookies-banner-container]",'div:has(> div:first-child):has(> div:last-child):has(> section [data-testid="strictly-necessary-cookies"])']}get hasSelfTest(){return!0}get isIntermediate(){return!1}get isCosmetic(){return!1}async detectCmp(){return u("div[data-testid=main-cookies-banner-container]")}async detectPopup(){return l("div[data-testid=main-cookies-banner-container","any")}async optOut(){let t;for(await d("div[data-testid=main-cookies-banner-container] button._snbhip0");t=document.querySelector("[data-testid=modal-container] button[aria-checked=true]:not([disabled])");)t.click();return d("button[data-testid=save-btn]")}async optIn(){return d("div[data-testid=main-cookies-banner-container] button._148dgdpk")}async test(){return await s((()=>!!document.cookie.match("OptanonAlertBoxClosed")),20,200)}}];class k{static getBase(){return k.base}static setBase(t){k.base=t}static findElement(t,e=null,n=!1){let o=null;return o=null!=e?Array.from(e.querySelectorAll(t.selector)):null!=k.base?Array.from(k.base.querySelectorAll(t.selector)):Array.from(document.querySelectorAll(t.selector)),null!=t.textFilter&&(o=o.filter((e=>{const n=e.textContent.toLowerCase();if(Array.isArray(t.textFilter)){let e=!1;for(const o of t.textFilter)if(-1!==n.indexOf(o.toLowerCase())){e=!0;break}return e}if(null!=t.textFilter)return-1!==n.indexOf(t.textFilter.toLowerCase())}))),null!=t.styleFilters&&(o=o.filter((e=>{const n=window.getComputedStyle(e);let o=!0;for(const e of t.styleFilters){const t=n[e.option];o=e.negated?o&&t!==e.value:o&&t===e.value}return o}))),null!=t.displayFilter&&(o=o.filter((e=>t.displayFilter?0!==e.offsetHeight:0===e.offsetHeight))),null!=t.iframeFilter&&(o=o.filter((()=>t.iframeFilter?window.location!==window.parent.location:window.location===window.parent.location))),null!=t.childFilter&&(o=o.filter((e=>{const n=k.base;k.setBase(e);const o=k.find(t.childFilter);return k.setBase(n),null!=o.target}))),n?o:(o.length>1&&console.warn("Multiple possible targets: ",o,t,e),o[0])}static find(t,e=!1){const n=[];if(null!=t.parent){const o=k.findElement(t.parent,null,e);if(null!=o){if(o instanceof Array)return o.forEach((o=>{const i=k.findElement(t.target,o,e);i instanceof Array?i.forEach((t=>{n.push({parent:o,target:t})})):n.push({parent:o,target:i})})),n;{const i=k.findElement(t.target,o,e);i instanceof Array?i.forEach((t=>{n.push({parent:o,target:t})})):n.push({parent:o,target:i})}}}else{const o=k.findElement(t.target,null,e);o instanceof Array?o.forEach((t=>{n.push({parent:null,target:t})})):n.push({parent:null,target:o})}return 0===n.length&&n.push({parent:null,target:null}),e?n:(1!==n.length&&console.warn("Multiple results found, even though multiple false",n),n[0])}}function v(t){const e=k.find(t);return"css"===t.type?!!e.target:"checkbox"===t.type?!!e.target&&e.target.checked:void 0}async function _(t,e){switch(t.type){case"click":return async function(t){const e=k.find(t);null!=e.target&&e.target.click();return S(0)}(t);case"list":return async function(t,e){for(const n of t.actions)await _(n,e)}(t,e);case"consent":return async function(t,e){for(const n of t.consents){const t=-1!==e.indexOf(n.type);if(n.matcher&&n.toggleAction){v(n.matcher)!==t&&await _(n.toggleAction)}else t?await _(n.trueAction):await _(n.falseAction)}}(t,e);case"ifcss":return async function(t,e){k.find(t).target?t.falseAction&&await _(t.falseAction,e):t.trueAction&&await _(t.trueAction,e)}(t,e);case"waitcss":return async function(t){await new Promise((e=>{let n=t.retries||10;const o=t.waitTime||250,i=()=>{const s=k.find(t);(t.negated&&s.target||!t.negated&&!s.target)&&n>0?(n-=1,setTimeout(i,o)):e()};i()}))}(t);case"foreach":return async function(t,e){const n=k.find(t,!0),o=k.base;for(const o of n)o.target&&(k.setBase(o.target),await _(t.action,e));k.setBase(o)}(t,e);case"hide":return async function(t){const e=k.find(t);e.target&&e.target.classList.add("Autoconsent-Hidden")}(t);case"slide":return async function(t){const e=k.find(t),n=k.find(t.dragTarget);if(e.target){const t=e.target.getBoundingClientRect(),o=n.target.getBoundingClientRect();let i=o.top-t.top,s=o.left-t.left;"y"===this.config.axis.toLowerCase()&&(s=0),"x"===this.config.axis.toLowerCase()&&(i=0);const r=window.screenX+t.left+t.width/2,c=window.screenY+t.top+t.height/2,a=t.left+t.width/2,u=t.top+t.height/2,l=document.createEvent("MouseEvents");l.initMouseEvent("mousedown",!0,!0,window,0,r,c,a,u,!1,!1,!1,!1,0,e.target);const p=document.createEvent("MouseEvents");p.initMouseEvent("mousemove",!0,!0,window,0,r+s,c+i,a+s,u+i,!1,!1,!1,!1,0,e.target);const d=document.createEvent("MouseEvents");d.initMouseEvent("mouseup",!0,!0,window,0,r+s,c+i,a+s,u+i,!1,!1,!1,!1,0,e.target),e.target.dispatchEvent(l),await this.waitTimeout(10),e.target.dispatchEvent(p),await this.waitTimeout(10),e.target.dispatchEvent(d)}}(t);case"close":return async function(){window.close()}();case"wait":return async function(t){await S(t.waitTime)}(t);case"eval":return async function(t){return console.log("eval!",t.code),new Promise((e=>{try{t.async?(window.eval(t.code),setTimeout((()=>{e(window.eval("window.__consentCheckResult"))}),t.timeout||250)):e(window.eval(t.code))}catch(n){console.warn("eval error",n,t.code),e(!1)}}))}(t);case"runrooted":return async function(t,e){if(!t.action)throw new Error('Missing action in "runrooted" action');let n=k.getBase();!0===t.ignoreOldRoot&&k.setBase(null);let o=k.find(t);null!==o.target&&(k.setBase(o.target),await _(t.action,e));k.setBase(n)}(t,e);case"multiclick":return async function(t){return k.find(t,true).forEach((t=>{null!=t.target&&t.target.click()})),S(0)}(t);case"ifallowall":return async function(t,e){Object.values(e).includes(!1)?await _(t.falseAction,e):await _(t.trueAction,e)}(t,e);case"ifallownone":return async function(t,e){Object.values(e).includes(!1)?await _(t.trueAction,e):await _(t.falseAction,e)}(t,e);case"nop":break;case"runmethod":throw"'runmethod' action is not supported";default:throw"Unknown action type: "+t.type}}k.base=null;function S(t){return new Promise((e=>{setTimeout((()=>{e()}),t)}))}class A{constructor(t,e){this.name=t,this.config=e,this.methods=new Map,this.runContext=m,this.isCosmetic=!1,e.methods.forEach((t=>{t.action&&this.methods.set(t.name,t.action)})),this.hasSelfTest=!1}get isIntermediate(){return!1}checkRunContext(){return!0}async detectCmp(){return this.config.detectors.some((t=>{const e=Array.isArray(t.presentMatcher)?t.presentMatcher:[t.presentMatcher].filter(Boolean);return!!e.length&&e.every((t=>!!v(t)))}))}async detectPopup(){return this.config.detectors.some((t=>{const e=Array.isArray(t.showingMatcher)?t.showingMatcher:[t.showingMatcher].filter(Boolean);return!e.length||e.every((t=>!!v(t)))}))}async executeAction(t,e){return!this.methods.has(t)||_(this.methods.get(t),e)}async optOut(){return await this.executeAction("HIDE_CMP"),await this.executeAction("OPEN_OPTIONS"),await this.executeAction("HIDE_CMP"),await this.executeAction("DO_CONSENT",[]),await this.executeAction("SAVE_CONSENT",[]),!0}async optIn(){return await this.executeAction("HIDE_CMP"),await this.executeAction("OPEN_OPTIONS"),await this.executeAction("HIDE_CMP"),await this.executeAction("DO_CONSENT",["D","A","B","E","F","X"]),await this.executeAction("SAVE_CONSENT",["D","A","B","E","F","X"]),!0}async openCmp(){return await this.executeAction("HIDE_CMP"),await this.executeAction("OPEN_OPTIONS"),!0}async test(){return!0}}exports.createAutoCMP=b,exports.default=class{constructor(e,o=null,i=null){if(this.id=t(),this.rules=[],this.foundCmp=null,this.state={lifecycle:"loading",prehideOn:!1,findCmpAttempts:0,detectedCmps:[],detectedPopups:[],selfTest:null},n.sendContentMessage=e,this.sendContentMessage=e,this.rules=[...C],this.updateState({lifecycle:"loading"}),o)this.initialize(o,i);else{i&&this.parseRules(i);e({type:"init",url:window.location.href}),this.updateState({lifecycle:"waitingForInitResponse"})}}initialize(t,e){if(this.config=t,t.enabled){if(e&&this.parseRules(e),this.rules=function(t,e){return t.filter((t=>(!e.disabledCmps||!e.disabledCmps.includes(t.name))&&(e.enableCosmeticRules||!t.isCosmetic)))}(this.rules,t),t.enablePrehide)if(document.documentElement)this.prehideElements();else{const t=()=>{window.removeEventListener("DOMContentLoaded",t),this.prehideElements()};window.addEventListener("DOMContentLoaded",t)}if("loading"===document.readyState){const t=()=>{window.removeEventListener("DOMContentLoaded",t),this.start()};window.addEventListener("DOMContentLoaded",t)}else this.start();this.updateState({lifecycle:"initialized"})}}parseRules(t){Object.keys(t.consentomatic).forEach((e=>{this.addConsentomaticCMP(e,t.consentomatic[e])})),t.autoconsent.forEach((t=>{this.addCMP(t)}))}addCMP(t){this.rules.push(b(t))}addConsentomaticCMP(t,e){this.rules.push(new A(`com_${t}`,e))}start(){window.requestIdleCallback?window.requestIdleCallback((()=>this._start()),{timeout:500}):this._start()}async _start(){this.updateState({lifecycle:"started"});const t=await this.findCmp(this.config.detectRetries);if(this.updateState({detectedCmps:t.map((t=>t.name))}),0===t.length)return this.config.enablePrehide&&this.undoPrehide(),this.updateState({lifecycle:"nothingDetected"}),!1;this.updateState({lifecycle:"cmpDetected"});let e=await this.detectPopups(t.filter((t=>!t.isCosmetic)));if(0===e.length&&(e=await this.detectPopups(t.filter((t=>t.isCosmetic)))),0===e.length)return this.config.enablePrehide&&this.undoPrehide(),!1;if(this.updateState({lifecycle:"openPopupDetected"}),e.length>1){const t={msg:"Found multiple CMPs, check the detection rules.",cmps:e.map((t=>t.name))};this.sendContentMessage({type:"autoconsentError",details:t})}return this.foundCmp=e[0],"optOut"===this.config.autoAction?await this.doOptOut():"optIn"!==this.config.autoAction||await this.doOptIn()}async findCmp(t){this.updateState({findCmpAttempts:this.state.findCmpAttempts+1});const e=[];for(const t of this.rules)try{if(!t.checkRunContext())continue;await t.detectCmp()&&(this.sendContentMessage({type:"cmpDetected",url:location.href,cmp:t.name}),e.push(t))}catch(t){}return 0===e.length&&t>0?new Promise((e=>{setTimeout((async()=>{const n=this.findCmp(t-1);e(n)}),500)})):e}async detectPopups(t){const e=[],n=t.map((t=>this.waitForPopup(t).then((n=>{n&&(this.updateState({detectedPopups:this.state.detectedPopups.concat([t.name])}),this.sendContentMessage({type:"popupFound",cmp:t.name,url:location.href}),e.push(t))})).catch((()=>null))));return await Promise.all(n),e}async doOptOut(){let t;return this.updateState({lifecycle:"runningOptOut"}),t=!!this.foundCmp&&await this.foundCmp.optOut(),this.config.enablePrehide&&this.undoPrehide(),this.sendContentMessage({type:"optOutResult",cmp:this.foundCmp?this.foundCmp.name:"none",result:t,scheduleSelfTest:this.foundCmp&&this.foundCmp.hasSelfTest,url:location.href}),t&&!this.foundCmp.isIntermediate?(this.sendContentMessage({type:"autoconsentDone",cmp:this.foundCmp.name,isCosmetic:this.foundCmp.isCosmetic,url:location.href}),this.updateState({lifecycle:"done"})):this.updateState({lifecycle:t?"optOutSucceeded":"optOutFailed"}),t}async doOptIn(){let t;return this.updateState({lifecycle:"runningOptIn"}),t=!!this.foundCmp&&await this.foundCmp.optIn(),this.config.enablePrehide&&this.undoPrehide(),this.sendContentMessage({type:"optInResult",cmp:this.foundCmp?this.foundCmp.name:"none",result:t,scheduleSelfTest:!1,url:location.href}),t&&!this.foundCmp.isIntermediate?(this.sendContentMessage({type:"autoconsentDone",cmp:this.foundCmp.name,isCosmetic:this.foundCmp.isCosmetic,url:location.href}),this.updateState({lifecycle:"done"})):this.updateState({lifecycle:t?"optInSucceeded":"optInFailed"}),t}async doSelfTest(){let t;return t=!!this.foundCmp&&await this.foundCmp.test(),this.sendContentMessage({type:"selfTestResult",cmp:this.foundCmp?this.foundCmp.name:"none",result:t,url:location.href}),this.updateState({selfTest:t}),t}async waitForPopup(t,e=5,n=500){const o=await t.detectPopup();return!o&&e>0?new Promise((o=>setTimeout((()=>o(this.waitForPopup(t,e-1,n))),n))):o}prehideElements(){const t=this.rules.reduce(((t,e)=>e.prehideSelectors?[...t,...e.prehideSelectors]:t),["#didomi-popup,.didomi-popup-container,.didomi-popup-notice,.didomi-consent-popup-preferences,#didomi-notice,.didomi-popup-backdrop,.didomi-screen-medium"]);return this.updateState({prehideOn:!0}),function(t){return i(o("autoconsent-prehide"),t,"opacity")}(t)}undoPrehide(){return this.updateState({prehideOn:!1}),function(){const t=o("autoconsent-prehide");return t&&t.remove(),!!t}()}updateState(t){Object.assign(this.state,t),this.sendContentMessage({type:"report",instanceId:this.id,url:window.location.href,mainFrame:window.top===window.self,state:this.state})}async receiveMessageCallback(t){switch(t.type){case"initResp":this.initialize(t.config,t.rules);break;case"optIn":await this.doOptIn();break;case"optOut":await this.doOptOut();break;case"selfTest":await this.doSelfTest();break;case"evalResp":!function(t,e){const o=n.pending.get(t);o?(n.pending.delete(t),o.timer&&window.clearTimeout(o.timer),o.resolve(e)):console.warn("no eval #",t)}(t.id,t.result)}}},exports.rules=C;
+var __defProp = Object.defineProperty;
+var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+var __getOwnPropNames = Object.getOwnPropertyNames;
+var __hasOwnProp = Object.prototype.hasOwnProperty;
+var __export = (target, all) => {
+  for (var name in all)
+    __defProp(target, name, { get: all[name], enumerable: true });
+};
+var __copyProps = (to, from, except, desc) => {
+  if (from && typeof from === "object" || typeof from === "function") {
+    for (let key of __getOwnPropNames(from))
+      if (!__hasOwnProp.call(to, key) && key !== except)
+        __defProp(to, key, { get: () => from[key], enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable });
+  }
+  return to;
+};
+var __toCommonJS = (mod) => __copyProps(__defProp({}, "__esModule", { value: true }), mod);
+
+// lib/web.ts
+var web_exports = {};
+__export(web_exports, {
+  default: () => AutoConsent
+});
+module.exports = __toCommonJS(web_exports);
+
+// lib/consentomatic/tools.ts
+var _Tools = class _Tools {
+  static getBase() {
+    return _Tools.base;
+  }
+  static setBase(base) {
+    _Tools.base = base;
+  }
+  static findElement(options, parent = null, multiple = false) {
+    let possibleTargets = null;
+    if (parent != null) {
+      possibleTargets = Array.from(parent.querySelectorAll(options.selector));
+    } else {
+      if (_Tools.base != null) {
+        possibleTargets = Array.from(
+          _Tools.base.querySelectorAll(options.selector)
+        );
+      } else {
+        possibleTargets = Array.from(
+          document.querySelectorAll(options.selector)
+        );
+      }
+    }
+    if (options.textFilter != null) {
+      possibleTargets = possibleTargets.filter((possibleTarget) => {
+        const textContent = possibleTarget.textContent.toLowerCase();
+        if (Array.isArray(options.textFilter)) {
+          let foundText = false;
+          for (const text of options.textFilter) {
+            if (textContent.indexOf(text.toLowerCase()) !== -1) {
+              foundText = true;
+              break;
+            }
+          }
+          return foundText;
+        } else if (options.textFilter != null) {
+          return textContent.indexOf(options.textFilter.toLowerCase()) !== -1;
+        }
+      });
+    }
+    if (options.styleFilters != null) {
+      possibleTargets = possibleTargets.filter((possibleTarget) => {
+        const styles = window.getComputedStyle(possibleTarget);
+        let keep = true;
+        for (const styleFilter of options.styleFilters) {
+          const option = styles[styleFilter.option];
+          if (styleFilter.negated) {
+            keep = keep && option !== styleFilter.value;
+          } else {
+            keep = keep && option === styleFilter.value;
+          }
+        }
+        return keep;
+      });
+    }
+    if (options.displayFilter != null) {
+      possibleTargets = possibleTargets.filter((possibleTarget) => {
+        if (options.displayFilter) {
+          return possibleTarget.offsetHeight !== 0;
+        } else {
+          return possibleTarget.offsetHeight === 0;
+        }
+      });
+    }
+    if (options.iframeFilter != null) {
+      possibleTargets = possibleTargets.filter(() => {
+        if (options.iframeFilter) {
+          return window.location !== window.parent.location;
+        } else {
+          return window.location === window.parent.location;
+        }
+      });
+    }
+    if (options.childFilter != null) {
+      possibleTargets = possibleTargets.filter((possibleTarget) => {
+        const oldBase = _Tools.base;
+        _Tools.setBase(possibleTarget);
+        const childResults = _Tools.find(options.childFilter);
+        _Tools.setBase(oldBase);
+        return childResults.target != null;
+      });
+    }
+    if (multiple) {
+      return possibleTargets;
+    } else {
+      if (possibleTargets.length > 1) {
+        console.warn(
+          "Multiple possible targets: ",
+          possibleTargets,
+          options,
+          parent
+        );
+      }
+      return possibleTargets[0];
+    }
+  }
+  static find(options, multiple = false) {
+    const results = [];
+    if (options.parent != null) {
+      const parent = _Tools.findElement(options.parent, null, multiple);
+      if (parent != null) {
+        if (parent instanceof Array) {
+          parent.forEach((p) => {
+            const targets = _Tools.findElement(options.target, p, multiple);
+            if (targets instanceof Array) {
+              targets.forEach((target) => {
+                results.push({
+                  parent: p,
+                  target
+                });
+              });
+            } else {
+              results.push({
+                parent: p,
+                target: targets
+              });
+            }
+          });
+          return results;
+        } else {
+          const targets = _Tools.findElement(options.target, parent, multiple);
+          if (targets instanceof Array) {
+            targets.forEach((target) => {
+              results.push({
+                parent,
+                target
+              });
+            });
+          } else {
+            results.push({
+              parent,
+              target: targets
+            });
+          }
+        }
+      }
+    } else {
+      const targets = _Tools.findElement(options.target, null, multiple);
+      if (targets instanceof Array) {
+        targets.forEach((target) => {
+          results.push({
+            parent: null,
+            target
+          });
+        });
+      } else {
+        results.push({
+          parent: null,
+          target: targets
+        });
+      }
+    }
+    if (results.length === 0) {
+      results.push({
+        parent: null,
+        target: null
+      });
+    }
+    if (multiple) {
+      return results;
+    } else {
+      if (results.length !== 1) {
+        console.warn(
+          "Multiple results found, even though multiple false",
+          results
+        );
+      }
+      return results[0];
+    }
+  }
+};
+_Tools.base = null;
+var Tools = _Tools;
+
+// lib/consentomatic/index.ts
+function matches(config) {
+  const result = Tools.find(config);
+  if (config.type === "css") {
+    return !!result.target;
+  } else if (config.type === "checkbox") {
+    return !!result.target && result.target.checked;
+  }
+}
+async function executeAction(config, param) {
+  switch (config.type) {
+    case "click":
+      return clickAction(config);
+    case "list":
+      return listAction(config, param);
+    case "consent":
+      return consentAction(config, param);
+    case "ifcss":
+      return ifCssAction(config, param);
+    case "waitcss":
+      return waitCssAction(config);
+    case "foreach":
+      return forEachAction(config, param);
+    case "hide":
+      return hideAction(config);
+    case "slide":
+      return slideAction(config);
+    case "close":
+      return closeAction();
+    case "wait":
+      return waitAction(config);
+    case "eval":
+      return evalAction(config);
+    case "runrooted":
+      return runrootedAction(config, param);
+    case "multiclick":
+      return multiclickAction(config);
+    case "ifallowall":
+      return ifAllowAllAction(config, param);
+    case "ifallownone":
+      return ifAllowNoneAction(config, param);
+    case "nop":
+      break;
+    case "runmethod":
+      throw "'runmethod' action is not supported";
+    default:
+      throw "Unknown action type: " + config.type;
+  }
+}
+var STEP_TIMEOUT = 0;
+function waitTimeout(timeout) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, timeout);
+  });
+}
+async function clickAction(config) {
+  const result = Tools.find(config);
+  if (result.target != null) {
+    result.target.click();
+  }
+  return waitTimeout(STEP_TIMEOUT);
+}
+async function multiclickAction(config) {
+  const results = Tools.find(config, true);
+  results.forEach((result) => {
+    if (result.target != null) {
+      result.target.click();
+    }
+  });
+  return waitTimeout(STEP_TIMEOUT);
+}
+async function listAction(config, param) {
+  for (const action of config.actions) {
+    await executeAction(action, param);
+  }
+}
+async function consentAction(config, consentTypes) {
+  for (const consentConfig of config.consents) {
+    const shouldEnable = consentTypes.indexOf(consentConfig.type) !== -1;
+    if (consentConfig.matcher && consentConfig.toggleAction) {
+      const isEnabled = matches(consentConfig.matcher);
+      if (isEnabled !== shouldEnable) {
+        await executeAction(consentConfig.toggleAction);
+      }
+    } else {
+      if (shouldEnable) {
+        await executeAction(consentConfig.trueAction);
+      } else {
+        await executeAction(consentConfig.falseAction);
+      }
+    }
+  }
+}
+async function ifCssAction(config, param) {
+  const result = Tools.find(config);
+  if (!result.target) {
+    if (config.trueAction) {
+      await executeAction(config.trueAction, param);
+    }
+  } else {
+    if (config.falseAction) {
+      await executeAction(config.falseAction, param);
+    }
+  }
+}
+async function runrootedAction(config, params) {
+  if (!config.action) {
+    throw new Error('Missing action in "runrooted" action');
+  }
+  const oldRoot = Tools.getBase();
+  if (config.ignoreOldRoot === true) {
+    Tools.setBase(null);
+  }
+  const result = Tools.find(config);
+  if (result.target !== null) {
+    Tools.setBase(result.target);
+    await executeAction(config.action, params);
+  }
+  Tools.setBase(oldRoot);
+}
+async function ifAllowAllAction(config, consentTypes) {
+  const allTrue = !Object.values(consentTypes).includes(false);
+  if (allTrue) {
+    await executeAction(config.trueAction, consentTypes);
+  } else {
+    await executeAction(config.falseAction, consentTypes);
+  }
+}
+async function ifAllowNoneAction(config, consentTypes) {
+  const allFalse = Object.values(consentTypes).includes(false);
+  if (allFalse) {
+    await executeAction(config.trueAction, consentTypes);
+  } else {
+    await executeAction(config.falseAction, consentTypes);
+  }
+}
+async function waitCssAction(config) {
+  await new Promise((resolve) => {
+    let numRetries = config.retries || 10;
+    const waitTime = config.waitTime || 250;
+    const checkCss = () => {
+      const result = Tools.find(config);
+      if (config.negated && result.target || !config.negated && !result.target) {
+        if (numRetries > 0) {
+          numRetries -= 1;
+          setTimeout(checkCss, waitTime);
+        } else {
+          resolve();
+        }
+      } else {
+        resolve();
+      }
+    };
+    checkCss();
+  });
+}
+async function forEachAction(config, param) {
+  const results = Tools.find(config, true);
+  const oldBase = Tools.base;
+  for (const result of results) {
+    if (result.target) {
+      Tools.setBase(result.target);
+      await executeAction(config.action, param);
+    }
+  }
+  Tools.setBase(oldBase);
+}
+async function hideAction(config) {
+  const result = Tools.find(config);
+  if (result.target) {
+    result.target.classList.add("Autoconsent-Hidden");
+  }
+}
+async function slideAction(config) {
+  const result = Tools.find(config);
+  const dragResult = Tools.find(config.dragTarget);
+  if (result.target) {
+    const targetBounds = result.target.getBoundingClientRect();
+    const dragTargetBounds = dragResult.target.getBoundingClientRect();
+    let yDiff = dragTargetBounds.top - targetBounds.top;
+    let xDiff = dragTargetBounds.left - targetBounds.left;
+    if (this.config.axis.toLowerCase() === "y") {
+      xDiff = 0;
+    }
+    if (this.config.axis.toLowerCase() === "x") {
+      yDiff = 0;
+    }
+    const screenX = window.screenX + targetBounds.left + targetBounds.width / 2;
+    const screenY = window.screenY + targetBounds.top + targetBounds.height / 2;
+    const clientX = targetBounds.left + targetBounds.width / 2;
+    const clientY = targetBounds.top + targetBounds.height / 2;
+    const mouseDown = document.createEvent("MouseEvents");
+    mouseDown.initMouseEvent(
+      "mousedown",
+      true,
+      true,
+      window,
+      0,
+      screenX,
+      screenY,
+      clientX,
+      clientY,
+      false,
+      false,
+      false,
+      false,
+      0,
+      result.target
+    );
+    const mouseMove = document.createEvent("MouseEvents");
+    mouseMove.initMouseEvent(
+      "mousemove",
+      true,
+      true,
+      window,
+      0,
+      screenX + xDiff,
+      screenY + yDiff,
+      clientX + xDiff,
+      clientY + yDiff,
+      false,
+      false,
+      false,
+      false,
+      0,
+      result.target
+    );
+    const mouseUp = document.createEvent("MouseEvents");
+    mouseUp.initMouseEvent(
+      "mouseup",
+      true,
+      true,
+      window,
+      0,
+      screenX + xDiff,
+      screenY + yDiff,
+      clientX + xDiff,
+      clientY + yDiff,
+      false,
+      false,
+      false,
+      false,
+      0,
+      result.target
+    );
+    result.target.dispatchEvent(mouseDown);
+    await this.waitTimeout(10);
+    result.target.dispatchEvent(mouseMove);
+    await this.waitTimeout(10);
+    result.target.dispatchEvent(mouseUp);
+  }
+}
+async function waitAction(config) {
+  await waitTimeout(config.waitTime);
+}
+async function closeAction() {
+  window.close();
+}
+async function evalAction(config) {
+  console.log("eval!", config.code);
+  return new Promise((resolve) => {
+    try {
+      if (config.async) {
+        window.eval(config.code);
+        setTimeout(() => {
+          resolve(window.eval("window.__consentCheckResult"));
+        }, config.timeout || 250);
+      } else {
+        resolve(window.eval(config.code));
+      }
+    } catch (e) {
+      console.warn("eval error", e, config.code);
+      resolve(false);
+    }
+  });
+}
+
+// lib/config.ts
+var enableLogs = false;
+
+// lib/utils.ts
+function getStyleElement(styleOverrideElementId = "autoconsent-css-rules") {
+  const styleSelector = `style#${styleOverrideElementId}`;
+  const existingElement = document.querySelector(styleSelector);
+  if (existingElement && existingElement instanceof HTMLStyleElement) {
+    return existingElement;
+  } else {
+    const parent = document.head || document.getElementsByTagName("head")[0] || document.documentElement;
+    const css = document.createElement("style");
+    css.id = styleOverrideElementId;
+    parent.appendChild(css);
+    return css;
+  }
+}
+function hideElements(styleEl, selectors, method = "display") {
+  const hidingSnippet = method === "opacity" ? `opacity: 0` : `display: none`;
+  const rule = `${selectors.join(
+    ","
+  )} { ${hidingSnippet} !important; z-index: -1 !important; pointer-events: none !important; } `;
+  if (styleEl instanceof HTMLStyleElement) {
+    styleEl.innerText += rule;
+    return selectors.length > 0;
+  }
+  return false;
+}
+async function waitFor(predicate, maxTimes, interval) {
+  const result = await predicate();
+  if (!result && maxTimes > 0) {
+    return new Promise((resolve) => {
+      setTimeout(async () => {
+        resolve(waitFor(predicate, maxTimes - 1, interval));
+      }, interval);
+    });
+  }
+  return Promise.resolve(result);
+}
+function isElementVisible(elem) {
+  if (!elem) {
+    return false;
+  }
+  if (elem.offsetParent !== null) {
+    return true;
+  } else {
+    const css = window.getComputedStyle(elem);
+    if (css.position === "fixed" && css.display !== "none") {
+      return true;
+    }
+  }
+  return false;
+}
+
+// lib/rule-executors.ts
+function click(selector, all = false) {
+  const elem = elementSelector(selector);
+  enableLogs && console.log("[click]", selector, all, elem);
+  if (elem.length > 0) {
+    if (all) {
+      elem.forEach((e) => e.click());
+    } else {
+      elem[0].click();
+    }
+  }
+  return elem.length > 0;
+}
+function elementExists(selector) {
+  const exists = elementSelector(selector).length > 0;
+  return exists;
+}
+function elementVisible(selector, check) {
+  const elem = elementSelector(selector);
+  const results = new Array(elem.length);
+  elem.forEach((e, i) => {
+    results[i] = isElementVisible(e);
+  });
+  if (check === "none") {
+    return results.every((r) => !r);
+  } else if (results.length === 0) {
+    return false;
+  } else if (check === "any") {
+    return results.some((r) => r);
+  }
+  return results.every((r) => r);
+}
+function waitForElement(selector, timeout = 1e4) {
+  const interval = 200;
+  const times = Math.ceil(timeout / interval);
+  return waitFor(
+    () => elementSelector(selector).length > 0,
+    times,
+    interval
+  );
+}
+function waitForVisible(selector, timeout = 1e4, check = "any") {
+  const interval = 200;
+  const times = Math.ceil(timeout / interval);
+  return waitFor(
+    () => elementVisible(selector, check),
+    times,
+    interval
+  );
+}
+async function waitForThenClick2(selector, timeout = 1e4, all = false) {
+  await waitForElement(selector, timeout);
+  return click(selector, all);
+}
+function wait(ms) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, ms);
+  });
+}
+function hide(selectors, method) {
+  const styleEl = getStyleElement();
+  return hideElements(styleEl, selectors, method);
+}
+function prehide(selectors) {
+  const styleEl = getStyleElement("autoconsent-prehide");
+  enableLogs && console.log("[prehide]", styleEl, location.href);
+  return hideElements(styleEl, selectors, "opacity");
+}
+function undoPrehide() {
+  const existingElement = getStyleElement("autoconsent-prehide");
+  enableLogs && console.log("[undoprehide]", existingElement, location.href);
+  if (existingElement) {
+    existingElement.remove();
+  }
+  return !!existingElement;
+}
+function querySingleReplySelector(selector, parent = document) {
+  if (selector.startsWith("aria/")) {
+    return [];
+  }
+  if (selector.startsWith("xpath/")) {
+    const xpath = selector.slice(6);
+    const result = document.evaluate(xpath, parent, null, XPathResult.ANY_TYPE, null);
+    let node = null;
+    const elements = [];
+    while (node = result.iterateNext()) {
+      elements.push(node);
+    }
+    return elements;
+  }
+  if (selector.startsWith("text/")) {
+    return [];
+  }
+  if (selector.startsWith("pierce/")) {
+    return [];
+  }
+  if (parent.shadowRoot) {
+    return Array.from(parent.shadowRoot.querySelectorAll(selector));
+  }
+  return Array.from(parent.querySelectorAll(selector));
+}
+function querySelectorChain(selectors) {
+  let parent = document;
+  let matches2;
+  for (const selector of selectors) {
+    matches2 = querySingleReplySelector(selector, parent);
+    if (matches2.length === 0) {
+      return [];
+    }
+    parent = matches2[0];
+  }
+  return matches2;
+}
+function elementSelector(selector) {
+  if (typeof selector === "string") {
+    return querySingleReplySelector(selector);
+  }
+  return querySelectorChain(selector);
+}
+
+// lib/random.ts
+function getRandomID() {
+  if (crypto && typeof crypto.randomUUID !== "undefined") {
+    return crypto.randomUUID();
+  }
+  return Math.random().toString();
+}
+
+// lib/eval-handler.ts
+var Deferred = class {
+  constructor(id, timeout = 1e3) {
+    this.id = id;
+    this.promise = new Promise((resolve, reject) => {
+      this.resolve = resolve;
+      this.reject = reject;
+    });
+    this.timer = window.setTimeout(() => {
+      this.reject(new Error("timeout"));
+    }, timeout);
+  }
+};
+var evalState = {
+  pending: /* @__PURE__ */ new Map(),
+  sendContentMessage: null
+};
+function requestEval(code) {
+  const id = getRandomID();
+  evalState.sendContentMessage({
+    type: "eval",
+    id,
+    code
+  });
+  const deferred = new Deferred(id);
+  evalState.pending.set(deferred.id, deferred);
+  return deferred.promise;
+}
+function resolveEval(id, value) {
+  const deferred = evalState.pending.get(id);
+  if (deferred) {
+    evalState.pending.delete(id);
+    deferred.timer && window.clearTimeout(deferred.timer);
+    deferred.resolve(value);
+  } else {
+    console.warn("no eval #", id);
+  }
+}
+
+// lib/eval-snippets.ts
+var snippets = {
+  // code-based rules
+  EVAL_0: () => console.log(1),
+  EVAL_CONSENTMANAGER_1: () => window.__cmp && typeof __cmp("getCMPData") === "object",
+  EVAL_CONSENTMANAGER_2: () => !__cmp("consentStatus").userChoiceExists,
+  EVAL_CONSENTMANAGER_3: () => __cmp("setConsent", 0),
+  EVAL_CONSENTMANAGER_4: () => __cmp("setConsent", 1),
+  EVAL_CONSENTMANAGER_5: () => __cmp("consentStatus").userChoiceExists,
+  EVAL_COOKIEBOT_1: () => window.CookieConsent.hasResponse !== true,
+  EVAL_COOKIEBOT_2: () => window.Cookiebot.dialog.submitConsent(),
+  EVAL_COOKIEBOT_3: () => endCookieProcess(),
+  EVAL_COOKIEBOT_4: () => window.CookieConsent.declined === true,
+  EVAL_KLARO_1: () => klaro.getManager().config.services.every((c) => c.required || !klaro.getManager().consents[c.name]),
+  EVAL_ONETRUST_1: () => window.OnetrustActiveGroups.split(",").filter((s) => s.length > 0).length <= 1,
+  EVAL_TRUSTARC_TOP: () => window && window.truste && window.truste.eu.bindMap.prefCookie === "0",
+  // declarative rules
+  EVAL_ADROLL_0: () => !document.cookie.includes("__adroll_fpc"),
+  EVAL_AFFINITY_SERIF_COM_0: () => document.cookie.includes("serif_manage_cookies_viewed") && !document.cookie.includes("serif_allow_analytics"),
+  EVAL_AXEPTIO_0: () => document.cookie.includes("axeptio_authorized_vendors=%2C%2C"),
+  EVAL_BING_0: () => document.cookie.includes("AL=0") && document.cookie.includes("AD=0") && document.cookie.includes("SM=0"),
+  EVAL_BORLABS_0: () => !JSON.parse(decodeURIComponent(document.cookie.split(";").find((c) => c.indexOf("borlabs-cookie") !== -1).split("=", 2)[1])).consents.statistics,
+  EVAL_BUNDESREGIERUNG_DE_0: () => document.cookie.match("cookie-allow-tracking=0"),
+  EVAL_CANVA_0: () => !document.cookie.includes("gtm_fpc_engagement_event"),
+  EVAL_CLICKIO_0: () => document.cookie.includes("__lxG__consent__v2_daisybit="),
+  EVAL_CLINCH_0: () => document.cookie.includes("ctc_rejected=1"),
+  EVAL_COINBASE_0: () => JSON.parse(decodeURIComponent(document.cookie.match(/cm_(eu|default)_preferences=([0-9a-zA-Z\\{\\}\\[\\]%:]*);?/)[2])).consent.length <= 1,
+  EVAL_COMPLIANZ_BANNER_0: () => document.cookie.includes("cmplz_banner-status=dismissed"),
+  EVAL_COMPLIANZ_CATEGORIES_0: () => !!document.cookie.match(/cmplz_[^=]+=deny/),
+  EVAL_COMPLIANZ_OPTIN_0: () => !!document.cookie.match(/cookieconsent_preferences_disabled=[^;]+/),
+  EVAL_COOKIE_LAW_INFO_0: () => CLI.disableAllCookies() || CLI.reject_close() || true,
+  EVAL_COOKIE_LAW_INFO_1: () => document.cookie.indexOf("cookielawinfo-checkbox-non-necessary=yes") === -1,
+  EVAL_COOKIE_MANAGER_POPUP_0: () => JSON.parse(document.cookie.split(";").find((c) => c.trim().startsWith("CookieLevel")).split("=")[1]).social === false,
+  EVAL_COOKIEALERT_0: () => document.querySelector("body").removeAttribute("style") || true,
+  EVAL_COOKIEALERT_1: () => document.querySelector("body").removeAttribute("style") || true,
+  EVAL_COOKIEALERT_2: () => window.CookieConsent.declined === true,
+  EVAL_COOKIEFIRST_0: () => ((o) => o.performance === false && o.functional === false && o.advertising === false)(JSON.parse(decodeURIComponent(document.cookie.split(";").find((c) => c.indexOf("cookiefirst") !== -1).trim()).split("=")[1])),
+  EVAL_COOKIEFIRST_1: () => document.querySelectorAll("button[data-cookiefirst-accent-color=true][role=checkbox]:not([disabled])").forEach((i) => i.getAttribute("aria-checked") == "true" && i.click()) || true,
+  EVAL_COOKIEINFORMATION_0: () => CookieInformation.declineAllCategories() || true,
+  EVAL_COOKIEINFORMATION_1: () => CookieInformation.submitAllCategories() || true,
+  EVAL_COOKIEINFORMATION_2: () => document.cookie.includes("CookieInformationConsent="),
+  EVAL_DAILYMOTION_0: () => !!document.cookie.match("dm-euconsent-v2"),
+  EVAL_DSGVO_0: () => !document.cookie.includes("sp_dsgvo_cookie_settings"),
+  EVAL_DUNELM_0: () => document.cookie.includes("cc_functional=0") && document.cookie.includes("cc_targeting=0"),
+  EVAL_ETSY_0: () => document.querySelectorAll(".gdpr-overlay-body input").forEach((toggle) => {
+    toggle.checked = false;
+  }) || true,
+  EVAL_ETSY_1: () => document.querySelector(".gdpr-overlay-view button[data-wt-overlay-close]").click() || true,
+  EVAL_EU_COOKIE_COMPLIANCE_0: () => document.cookie.indexOf("cookie-agreed=2") === -1,
+  EVAL_EU_COOKIE_LAW_0: () => !document.cookie.includes("euCookie"),
+  EVAL_EZOIC_0: () => ezCMP.handleAcceptAllClick(),
+  EVAL_EZOIC_1: () => !!document.cookie.match(/ezCMPCookieConsent=[^;]+\|2=0\|3=0\|4=0/),
+  EVAL_GOOGLE_0: () => !!document.cookie.match(/SOCS=CAE/),
+  EVAL_IUBENDA_0: () => document.querySelectorAll(".purposes-item input[type=checkbox]:not([disabled])").forEach((x) => {
+    if (x.checked)
+      x.click();
+  }) || true,
+  EVAL_IUBENDA_1: () => !!document.cookie.match(/_iub_cs-\d+=/),
+  EVAL_JQUERY_COOKIEBAR_0: () => !document.cookie.includes("cookies-state=accepted"),
+  EVAL_MEDIAVINE_0: () => document.querySelectorAll('[data-name="mediavine-gdpr-cmp"] input[type=checkbox]').forEach((x) => x.checked && x.click()) || true,
+  EVAL_MICROSOFT_0: () => Array.from(document.querySelectorAll("div > button")).filter((el) => el.innerText.match("Reject|Ablehnen"))[0].click() || true,
+  EVAL_MICROSOFT_1: () => Array.from(document.querySelectorAll("div > button")).filter((el) => el.innerText.match("Accept|Annehmen"))[0].click() || true,
+  EVAL_MICROSOFT_2: () => !!document.cookie.match("MSCC"),
+  EVAL_MOOVE_0: () => document.querySelectorAll("#moove_gdpr_cookie_modal input").forEach((i) => {
+    if (!i.disabled && i.name !== "moove_gdpr_strict_cookies")
+      i.checked = false;
+  }) || true,
+  EVAL_ONENINETWO_0: () => document.cookie.includes("CC_ADVERTISING=NO") && document.cookie.includes("CC_ANALYTICS=NO"),
+  EVAL_PAYPAL_0: () => document.cookie.includes("cookie_prefs") === true,
+  EVAL_PRIMEBOX_0: () => !document.cookie.includes("cb-enabled=accepted"),
+  EVAL_PUBTECH_0: () => document.cookie.includes("euconsent-v2") && (document.cookie.match(/.YAAAAAAAAAAA/) || document.cookie.match(/.aAAAAAAAAAAA/) || document.cookie.match(/.YAAACFgAAAAA/)),
+  EVAL_REDDIT_0: () => document.cookie.includes("eu_cookie={%22opted%22:true%2C%22nonessential%22:false}"),
+  EVAL_SIBBO_0: () => !!window.localStorage.getItem("euconsent-v2"),
+  EVAL_SIRDATA_0: () => document.cookie.includes("euconsent-v2"),
+  EVAL_SNIGEL_0: () => !!document.cookie.match("snconsent"),
+  EVAL_STEAMPOWERED_0: () => JSON.parse(decodeURIComponent(document.cookie.split(";").find((s) => s.trim().startsWith("cookieSettings")).split("=")[1])).preference_state === 2,
+  EVAL_TARTEAUCITRON_0: () => tarteaucitron.userInterface.respondAll(false) || true,
+  EVAL_TARTEAUCITRON_1: () => tarteaucitron.userInterface.respondAll(true) || true,
+  EVAL_TARTEAUCITRON_2: () => document.cookie.match(/tarteaucitron=[^;]*/)[0].includes("false"),
+  EVAL_TEALIUM_0: () => typeof window.utag !== "undefined" && typeof utag.gdpr === "object",
+  EVAL_TEALIUM_1: () => utag.gdpr.setConsentValue(false) || true,
+  EVAL_TEALIUM_2: () => utag.gdpr.setConsentValue(true) || true,
+  EVAL_TEALIUM_3: () => utag.gdpr.getConsentState() !== 1,
+  EVAL_TESTCMP_0: () => window.results.results[0] === "button_clicked",
+  EVAL_TESTCMP_COSMETIC_0: () => window.results.results[0] === "banner_hidden",
+  EVAL_THEFREEDICTIONARY_0: () => cmpUi.showPurposes() || cmpUi.rejectAll() || true,
+  EVAL_THEFREEDICTIONARY_1: () => cmpUi.allowAll() || true,
+  EVAL_THEVERGE_0: () => document.cookie.includes("_duet_gdpr_acknowledged=1"),
+  EVAL_UBUNTU_COM_0: () => document.cookie === "_cookies_accepted=essential",
+  EVAL_UK_COOKIE_CONSENT_0: () => !document.cookie.includes("catAccCookies"),
+  EVAL_USERCENTRICS_API_0: () => typeof UC_UI === "object",
+  EVAL_USERCENTRICS_API_1: () => !!UC_UI.closeCMP(),
+  EVAL_USERCENTRICS_API_2: () => !!UC_UI.denyAllConsents(),
+  EVAL_USERCENTRICS_API_3: () => !!UC_UI.acceptAllConsents(),
+  EVAL_USERCENTRICS_API_4: () => !!UC_UI.closeCMP(),
+  EVAL_USERCENTRICS_API_5: () => UC_UI.areAllConsentsAccepted() === true,
+  EVAL_USERCENTRICS_API_6: () => UC_UI.areAllConsentsAccepted() === false,
+  EVAL_USERCENTRICS_BUTTON_0: () => JSON.parse(localStorage.getItem("usercentrics")).consents.every((c) => c.isEssential || !c.consentStatus),
+  EVAL_WAITROSE_0: () => Array.from(document.querySelectorAll("label[id$=cookies-deny-label]")).forEach((e) => e.click()) || true,
+  EVAL_WAITROSE_1: () => document.cookie.includes("wtr_cookies_advertising=0") && document.cookie.includes("wtr_cookies_analytics=0"),
+  EVAL_WP_COOKIE_NOTICE_0: () => document.cookie.includes("wpl_viewed_cookie=no"),
+  EVAL_XING_0: () => document.cookie.includes("userConsent=%7B%22marketing%22%3Afalse"),
+  EVAL_YOUTUBE_DESKTOP_0: () => !!document.cookie.match(/SOCS=CAE/),
+  EVAL_YOUTUBE_MOBILE_0: () => !!document.cookie.match(/SOCS=CAE/)
+};
+function getFunctionBody(snippetFunc) {
+  const snippetStr = snippetFunc.toString();
+  return snippetStr.substring(snippetStr.indexOf("=>") + 2);
+}
+
+// lib/cmps/base.ts
+var defaultRunContext = {
+  main: true,
+  frame: false,
+  urlPattern: ""
+};
+var AutoConsentCMPBase = class {
+  constructor(autoconsentInstance) {
+    this.runContext = defaultRunContext;
+    this.autoconsent = autoconsentInstance;
+  }
+  get hasSelfTest() {
+    throw new Error("Not Implemented");
+  }
+  get isIntermediate() {
+    throw new Error("Not Implemented");
+  }
+  get isCosmetic() {
+    throw new Error("Not Implemented");
+  }
+  mainWorldEval(snippetId) {
+    const snippet = snippets[snippetId];
+    if (!snippet) {
+      console.warn("Snippet not found", snippetId);
+      return Promise.resolve(false);
+    }
+    if (this.autoconsent.config.isMainWorld) {
+      enableLogs && console.log("inline eval:", snippetId, snippet);
+      let result = false;
+      try {
+        result = !!snippet.call(globalThis);
+      } catch (e) {
+        enableLogs && console.error("error evaluating rule", snippetId, e);
+      }
+      return Promise.resolve(result);
+    }
+    const snippetSrc = getFunctionBody(snippet);
+    enableLogs && console.log("async eval:", snippetId, snippetSrc);
+    return requestEval(snippetSrc).catch((e) => {
+      enableLogs && console.error("error evaluating rule", snippetId, e);
+      return false;
+    });
+  }
+  checkRunContext() {
+    const runCtx = {
+      ...defaultRunContext,
+      ...this.runContext
+    };
+    const isTop = window.top === window;
+    if (isTop && !runCtx.main) {
+      return false;
+    }
+    if (!isTop && !runCtx.frame) {
+      return false;
+    }
+    if (runCtx.urlPattern && !window.location.href.match(runCtx.urlPattern)) {
+      return false;
+    }
+    return true;
+  }
+  detectCmp() {
+    throw new Error("Not Implemented");
+  }
+  async detectPopup() {
+    return false;
+  }
+  optOut() {
+    throw new Error("Not Implemented");
+  }
+  optIn() {
+    throw new Error("Not Implemented");
+  }
+  openCmp() {
+    throw new Error("Not Implemented");
+  }
+  async test() {
+    return Promise.resolve(true);
+  }
+};
+var AutoConsentCMP = class extends AutoConsentCMPBase {
+  constructor(config, autoconsentInstance) {
+    super(autoconsentInstance);
+    this.config = config;
+    this.name = config.name;
+    this.runContext = config.runContext || defaultRunContext;
+  }
+  get hasSelfTest() {
+    return !!this.config.test;
+  }
+  get isIntermediate() {
+    return !!this.config.intermediate;
+  }
+  get isCosmetic() {
+    return !!this.config.cosmetic;
+  }
+  get prehideSelectors() {
+    return this.config.prehideSelectors;
+  }
+  async detectCmp() {
+    if (this.config.detectCmp) {
+      return this._runRulesParallel(this.config.detectCmp);
+    }
+    return false;
+  }
+  async detectPopup() {
+    if (this.config.detectPopup) {
+      return this._runRulesSequentially(this.config.detectPopup);
+    }
+    return false;
+  }
+  async optOut() {
+    if (this.config.optOut) {
+      enableLogs && console.log("Initiated optOut()", this.config.optOut);
+      return this._runRulesSequentially(this.config.optOut);
+    }
+    return false;
+  }
+  async optIn() {
+    if (this.config.optIn) {
+      enableLogs && console.log("Initiated optIn()", this.config.optIn);
+      return this._runRulesSequentially(this.config.optIn);
+    }
+    return false;
+  }
+  async openCmp() {
+    if (this.config.openCmp) {
+      return this._runRulesSequentially(this.config.openCmp);
+    }
+    return false;
+  }
+  async test() {
+    if (this.hasSelfTest) {
+      return this._runRulesSequentially(this.config.test);
+    }
+    return super.test();
+  }
+  async evaluateRuleStep(rule) {
+    const results = [];
+    if (rule.exists) {
+      results.push(elementExists(rule.exists));
+    }
+    if (rule.visible) {
+      results.push(elementVisible(rule.visible, rule.check));
+    }
+    if (rule.eval) {
+      const res = this.mainWorldEval(rule.eval);
+      results.push(res);
+    }
+    if (rule.waitFor) {
+      results.push(waitForElement(rule.waitFor, rule.timeout));
+    }
+    if (rule.waitForVisible) {
+      results.push(waitForVisible(rule.waitForVisible, rule.timeout, rule.check));
+    }
+    if (rule.click) {
+      results.push(click(rule.click, rule.all));
+    }
+    if (rule.waitForThenClick) {
+      results.push(waitForThenClick2(rule.waitForThenClick, rule.timeout, rule.all));
+    }
+    if (rule.wait) {
+      results.push(wait(rule.wait));
+    }
+    if (rule.hide) {
+      results.push(hide(rule.hide, rule.method));
+    }
+    if (rule.if) {
+      if (!rule.if.exists && !rule.if.visible) {
+        console.error("invalid conditional rule", rule.if);
+        return false;
+      }
+      const condition = await this.evaluateRuleStep(rule.if);
+      enableLogs && console.log("Condition is", condition);
+      if (condition) {
+        results.push(this._runRulesSequentially(rule.then));
+      } else if (rule.else) {
+        results.push(this._runRulesSequentially(rule.else));
+      }
+    }
+    if (rule.any) {
+      for (const step of rule.any) {
+        if (await this.evaluateRuleStep(step)) {
+          return true;
+        }
+      }
+      return false;
+    }
+    if (results.length === 0) {
+      enableLogs && console.warn("Unrecognized rule", rule);
+      return false;
+    }
+    const all = await Promise.all(results);
+    return all.reduce((a, b) => a && b, true);
+  }
+  async _runRulesParallel(rules) {
+    const results = rules.map((rule) => this.evaluateRuleStep(rule));
+    const detections = await Promise.all(results);
+    return detections.every((r) => !!r);
+  }
+  async _runRulesSequentially(rules) {
+    for (const rule of rules) {
+      enableLogs && console.log("Running rule...", rule);
+      const result = await this.evaluateRuleStep(rule);
+      enableLogs && console.log("...rule result", result);
+      if (!result && !rule.optional) {
+        return false;
+      }
+    }
+    return true;
+  }
+};
+
+// lib/cmps/consentomatic.ts
+var ConsentOMaticCMP = class {
+  constructor(name, config) {
+    this.name = name;
+    this.config = config;
+    this.methods = /* @__PURE__ */ new Map();
+    this.runContext = defaultRunContext;
+    this.isCosmetic = false;
+    config.methods.forEach((methodConfig) => {
+      if (methodConfig.action) {
+        this.methods.set(methodConfig.name, methodConfig.action);
+      }
+    });
+    this.hasSelfTest = false;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  checkRunContext() {
+    return true;
+  }
+  async detectCmp() {
+    return this.config.detectors.some((detectorConfig) => {
+      const presentMatchers = Array.isArray(detectorConfig.presentMatcher) ? detectorConfig.presentMatcher : [detectorConfig.presentMatcher].filter(Boolean);
+      if (!presentMatchers.length) {
+        return false;
+      }
+      return presentMatchers.every(
+        (presentMatcher) => !!matches(presentMatcher)
+      );
+    });
+  }
+  async detectPopup() {
+    return this.config.detectors.some((detectorConfig) => {
+      const showingMatchers = Array.isArray(detectorConfig.showingMatcher) ? detectorConfig.showingMatcher : [detectorConfig.showingMatcher].filter(Boolean);
+      if (!showingMatchers.length) {
+        return true;
+      }
+      return showingMatchers.every(
+        (showingMatcher) => !!matches(showingMatcher)
+      );
+    });
+  }
+  async executeAction(method, param) {
+    if (this.methods.has(method)) {
+      return executeAction(this.methods.get(method), param);
+    }
+    return true;
+  }
+  async optOut() {
+    await this.executeAction("HIDE_CMP");
+    await this.executeAction("OPEN_OPTIONS");
+    await this.executeAction("HIDE_CMP");
+    await this.executeAction("DO_CONSENT", []);
+    await this.executeAction("SAVE_CONSENT", []);
+    return true;
+  }
+  async optIn() {
+    await this.executeAction("HIDE_CMP");
+    await this.executeAction("OPEN_OPTIONS");
+    await this.executeAction("HIDE_CMP");
+    await this.executeAction("DO_CONSENT", ["D", "A", "B", "E", "F", "X"]);
+    await this.executeAction("SAVE_CONSENT", ["D", "A", "B", "E", "F", "X"]);
+    return true;
+  }
+  async openCmp() {
+    await this.executeAction("HIDE_CMP");
+    await this.executeAction("OPEN_OPTIONS");
+    return true;
+  }
+  async test() {
+    return true;
+  }
+};
+
+// lib/cmps/trustarc-top.ts
+var cookieSettingsButton = "#truste-show-consent";
+var shortcutOptOut = "#truste-consent-required";
+var shortcutOptIn = "#truste-consent-button";
+var popupContent = "#truste-consent-content";
+var bannerOverlay = "#trustarc-banner-overlay";
+var bannerContainer = "#truste-consent-track";
+var TrustArcTop = class extends AutoConsentCMPBase {
+  constructor(autoconsentInstance) {
+    super(autoconsentInstance);
+    this.name = "TrustArc-top";
+    this.prehideSelectors = [
+      ".trustarc-banner-container",
+      `.truste_popframe,.truste_overlay,.truste_box_overlay,${bannerContainer}`
+    ];
+    this.runContext = {
+      main: true,
+      frame: false
+    };
+    this._shortcutButton = null;
+    this._optInDone = false;
+  }
+  get hasSelfTest() {
+    return false;
+  }
+  get isIntermediate() {
+    if (this._optInDone) {
+      return false;
+    }
+    return !this._shortcutButton;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    const result = elementExists(`${cookieSettingsButton},${bannerContainer}`);
+    if (result) {
+      this._shortcutButton = document.querySelector(shortcutOptOut);
+    }
+    return result;
+  }
+  async detectPopup() {
+    return elementVisible(`${popupContent},${bannerOverlay},${bannerContainer}`, "all");
+  }
+  openFrame() {
+    click(cookieSettingsButton);
+  }
+  async optOut() {
+    if (this._shortcutButton) {
+      this._shortcutButton.click();
+      return true;
+    }
+    hideElements(
+      getStyleElement(),
+      [".truste_popframe", ".truste_overlay", ".truste_box_overlay", bannerContainer]
+    );
+    click(cookieSettingsButton);
+    setTimeout(() => {
+      getStyleElement().remove();
+    }, 1e4);
+    return true;
+  }
+  async optIn() {
+    this._optInDone = true;
+    return click(shortcutOptIn);
+  }
+  async openCmp() {
+    return true;
+  }
+  async test() {
+    return await this.mainWorldEval("EVAL_TRUSTARC_TOP");
+  }
+};
+
+// lib/cmps/trustarc-frame.ts
+var TrustArcFrame = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "TrustArc-frame";
+    this.runContext = {
+      main: false,
+      frame: true,
+      urlPattern: "^https://consent-pref\\.trustarc\\.com/\\?"
+    };
+  }
+  get hasSelfTest() {
+    return false;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return true;
+  }
+  async detectPopup() {
+    return elementVisible("#defaultpreferencemanager", "any") && elementVisible(".mainContent", "any");
+  }
+  async navigateToSettings() {
+    await waitFor(
+      async () => {
+        return elementExists(".shp") || elementVisible(".advance", "any") || elementExists(".switch span:first-child");
+      },
+      10,
+      500
+    );
+    if (elementExists(".shp")) {
+      click(".shp");
+    }
+    await waitForElement(".prefPanel", 5e3);
+    if (elementVisible(".advance", "any")) {
+      click(".advance");
+    }
+    return await waitFor(
+      () => elementVisible(".switch span:first-child", "any"),
+      5,
+      1e3
+    );
+  }
+  async optOut() {
+    await waitFor(() => document.readyState === "complete", 20, 100);
+    await waitForElement(".mainContent[aria-hidden=false]", 5e3);
+    if (click(".rejectAll")) {
+      return true;
+    }
+    if (elementExists(".prefPanel")) {
+      await waitForElement('.prefPanel[style="visibility: visible;"]', 3e3);
+    }
+    if (click("#catDetails0")) {
+      click(".submit");
+      waitForThenClick("#gwt-debug-close_id", 5e3);
+      return true;
+    }
+    if (click(".required")) {
+      waitForThenClick("#gwt-debug-close_id", 5e3);
+      return true;
+    }
+    await this.navigateToSettings();
+    click(".switch span:nth-child(1):not(.active)", true);
+    click(".submit");
+    waitForThenClick("#gwt-debug-close_id", 3e5);
+    return true;
+  }
+  async optIn() {
+    if (click(".call")) {
+      return true;
+    }
+    await this.navigateToSettings();
+    click(".switch span:nth-child(2)", true);
+    click(".submit");
+    waitForElement("#gwt-debug-close_id", 3e5).then(() => {
+      click("#gwt-debug-close_id");
+    });
+    return true;
+  }
+};
+
+// lib/cmps/cookiebot.ts
+var Cookiebot = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Cybotcookiebot";
+    this.prehideSelectors = ["#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookieoverlay"];
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists("#CybotCookiebotDialogBodyLevelButtonPreferences");
+  }
+  async detectPopup() {
+    return elementExists("#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookiebanner");
+  }
+  async optOut() {
+    if (click(".cookie-alert-extended-detail-link")) {
+      await waitForElement(".cookie-alert-configuration", 2e3);
+      click(".cookie-alert-configuration-input:checked", true);
+      click(".cookie-alert-extended-button-secondary");
+      return true;
+    }
+    if (elementExists("#dtcookie-container")) {
+      return click(".h-dtcookie-decline");
+    }
+    if (click(".cookiebot__button--settings")) {
+      return true;
+    }
+    if (click("#CybotCookiebotDialogBodyButtonDecline")) {
+      return true;
+    }
+    click(".cookiebanner__link--details");
+    click('.CybotCookiebotDialogBodyLevelButton:checked:enabled,input[id*="CybotCookiebotDialogBodyLevelButton"]:checked:enabled', true);
+    click("#CybotCookiebotDialogBodyButtonDecline");
+    click("input[id^=CybotCookiebotDialogBodyLevelButton]:checked", true);
+    if (elementExists("#CybotCookiebotDialogBodyButtonAcceptSelected")) {
+      click("#CybotCookiebotDialogBodyButtonAcceptSelected");
+    } else {
+      click("#CybotCookiebotDialogBodyLevelButtonAccept,#CybotCookiebotDialogBodyButtonAccept,#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection", true);
+    }
+    if (await this.mainWorldEval("EVAL_COOKIEBOT_1")) {
+      await this.mainWorldEval("EVAL_COOKIEBOT_2");
+      await wait(500);
+    }
+    if (elementExists("#cb-confirmedSettings")) {
+      await this.mainWorldEval("EVAL_COOKIEBOT_3");
+    }
+    return true;
+  }
+  async optIn() {
+    if (elementExists("#dtcookie-container")) {
+      return click(".h-dtcookie-accept");
+    }
+    click(".CybotCookiebotDialogBodyLevelButton:not(:checked):enabled", true);
+    click("#CybotCookiebotDialogBodyLevelButtonAccept");
+    click("#CybotCookiebotDialogBodyButtonAccept");
+    return true;
+  }
+  async test() {
+    return this.mainWorldEval("EVAL_COOKIEBOT_4");
+  }
+};
+
+// lib/cmps/sourcepoint-frame.ts
+var SourcePoint = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Sourcepoint-frame";
+    this.prehideSelectors = ["div[id^='sp_message_container_'],.message-overlay", "#sp_privacy_manager_container"];
+    this.ccpaNotice = false;
+    this.ccpaPopup = false;
+    this.runContext = {
+      main: false,
+      frame: true
+    };
+  }
+  get hasSelfTest() {
+    return false;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    const url = new URL(location.href);
+    if (url.searchParams.has("message_id") && url.hostname === "ccpa-notice.sp-prod.net") {
+      this.ccpaNotice = true;
+      return true;
+    }
+    if (url.hostname === "ccpa-pm.sp-prod.net") {
+      this.ccpaPopup = true;
+      return true;
+    }
+    return (url.pathname === "/index.html" || url.pathname === "/privacy-manager/index.html") && (url.searchParams.has("message_id") || url.searchParams.has("requestUUID") || url.searchParams.has("consentUUID"));
+  }
+  async detectPopup() {
+    if (this.ccpaNotice) {
+      return true;
+    }
+    if (this.ccpaPopup) {
+      return await waitForElement(".priv-save-btn", 2e3);
+    }
+    await waitForElement(".sp_choice_type_11,.sp_choice_type_12,.sp_choice_type_13,.sp_choice_type_ACCEPT_ALL", 2e3);
+    return !elementExists(".sp_choice_type_9");
+  }
+  async optIn() {
+    await waitForElement(".sp_choice_type_11,.sp_choice_type_ACCEPT_ALL", 2e3);
+    if (click(".sp_choice_type_11")) {
+      return true;
+    }
+    if (click(".sp_choice_type_ACCEPT_ALL")) {
+      return true;
+    }
+    return false;
+  }
+  isManagerOpen() {
+    return location.pathname === "/privacy-manager/index.html";
+  }
+  async optOut() {
+    if (this.ccpaPopup) {
+      const toggles = document.querySelectorAll(".priv-purpose-container .sp-switch-arrow-block a.neutral.on .right");
+      for (const t of toggles) {
+        t.click();
+      }
+      const switches = document.querySelectorAll(".priv-purpose-container .sp-switch-arrow-block a.switch-bg.on");
+      for (const t of switches) {
+        t.click();
+      }
+      return click(".priv-save-btn");
+    }
+    if (!this.isManagerOpen()) {
+      const actionable = await waitForElement(".sp_choice_type_12,.sp_choice_type_13");
+      if (!actionable) {
+        return false;
+      }
+      if (!elementExists(".sp_choice_type_12")) {
+        return click(".sp_choice_type_13");
+      }
+      click(".sp_choice_type_12");
+      await waitFor(
+        () => this.isManagerOpen(),
+        200,
+        100
+      );
+    }
+    await waitForElement(".type-modal", 2e4);
+    try {
+      const rejectSelector1 = ".sp_choice_type_REJECT_ALL";
+      const rejectSelector2 = ".reject-toggle";
+      const path = await Promise.race([
+        waitForElement(rejectSelector1, 2e3).then((success) => success ? 0 : -1),
+        waitForElement(rejectSelector2, 2e3).then((success) => success ? 1 : -1),
+        waitForElement(".pm-features", 2e3).then((success) => success ? 2 : -1)
+      ]);
+      if (path === 0) {
+        await wait(1e3);
+        return click(rejectSelector1);
+      } else if (path === 1) {
+        click(rejectSelector2);
+      } else if (path === 2) {
+        await waitForElement(".pm-features", 1e4);
+        click(".checked > span", true);
+        click(".chevron");
+      }
+    } catch (e) {
+      enableLogs && console.warn(e);
+    }
+    return click(".sp_choice_type_SAVE_AND_EXIT");
+  }
+};
+
+// lib/cmps/consentmanager.ts
+var ConsentManager = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "consentmanager.net";
+    this.prehideSelectors = ["#cmpbox,#cmpbox2"];
+    this.apiAvailable = false;
+  }
+  get hasSelfTest() {
+    return this.apiAvailable;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    this.apiAvailable = await this.mainWorldEval("EVAL_CONSENTMANAGER_1");
+    if (!this.apiAvailable) {
+      return elementExists("#cmpbox");
+    } else {
+      return true;
+    }
+  }
+  async detectPopup() {
+    if (this.apiAvailable) {
+      await wait(500);
+      return await this.mainWorldEval("EVAL_CONSENTMANAGER_2");
+    }
+    return elementVisible("#cmpbox .cmpmore", "any");
+  }
+  async optOut() {
+    await wait(500);
+    if (this.apiAvailable) {
+      return await this.mainWorldEval("EVAL_CONSENTMANAGER_3");
+    }
+    if (click(".cmpboxbtnno")) {
+      return true;
+    }
+    if (elementExists(".cmpwelcomeprpsbtn")) {
+      click(".cmpwelcomeprpsbtn > a[aria-checked=true]", true);
+      click(".cmpboxbtnsave");
+      return true;
+    }
+    click(".cmpboxbtncustom");
+    await waitForElement(".cmptblbox", 2e3);
+    click(".cmptdchoice > a[aria-checked=true]", true);
+    click(".cmpboxbtnyescustomchoices");
+    return true;
+  }
+  async optIn() {
+    if (this.apiAvailable) {
+      return await this.mainWorldEval("EVAL_CONSENTMANAGER_4");
+    }
+    return click(".cmpboxbtnyes");
+  }
+  async test() {
+    if (this.apiAvailable) {
+      return await this.mainWorldEval("EVAL_CONSENTMANAGER_5");
+    }
+  }
+};
+
+// lib/cmps/evidon.ts
+var Evidon = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Evidon";
+  }
+  get hasSelfTest() {
+    return false;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists("#_evidon_banner");
+  }
+  async detectPopup() {
+    return elementVisible("#_evidon_banner", "any");
+  }
+  async optOut() {
+    if (click("#_evidon-decline-button")) {
+      return true;
+    }
+    hideElements(getStyleElement(), ["#evidon-prefdiag-overlay", "#evidon-prefdiag-background"]);
+    click("#_evidon-option-button");
+    await waitForElement("#evidon-prefdiag-overlay", 5e3);
+    click("#evidon-prefdiag-decline");
+    return true;
+  }
+  async optIn() {
+    return click("#_evidon-accept-button");
+  }
+};
+
+// lib/cmps/onetrust.ts
+var Onetrust = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Onetrust";
+    this.prehideSelectors = ["#onetrust-banner-sdk,#onetrust-consent-sdk,.onetrust-pc-dark-filter,.js-consent-banner"];
+    this.runContext = {
+      urlPattern: "^(?!.*https://www\\.nba\\.com/)"
+    };
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists("#onetrust-banner-sdk");
+  }
+  async detectPopup() {
+    return elementVisible("#onetrust-banner-sdk", "all");
+  }
+  async optOut() {
+    if (elementExists("#onetrust-pc-btn-handler")) {
+      click("#onetrust-pc-btn-handler");
+    } else {
+      click(".ot-sdk-show-settings,button.js-cookie-settings");
+    }
+    await waitForElement("#onetrust-consent-sdk", 2e3);
+    await wait(1e3);
+    click("#onetrust-consent-sdk input.category-switch-handler:checked,.js-editor-toggle-state:checked", true);
+    await wait(1e3);
+    await waitForElement(".save-preference-btn-handler,.js-consent-save", 2e3);
+    click(".save-preference-btn-handler,.js-consent-save");
+    await waitFor(
+      () => elementVisible("#onetrust-banner-sdk", "none"),
+      10,
+      500
+    );
+    return true;
+  }
+  async optIn() {
+    return click("#onetrust-accept-btn-handler,.js-accept-cookies");
+  }
+  async test() {
+    return await this.mainWorldEval("EVAL_ONETRUST_1");
+  }
+};
+
+// lib/cmps/klaro.ts
+var Klaro = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Klaro";
+    this.prehideSelectors = [".klaro"];
+    this.settingsOpen = false;
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    if (elementExists(".klaro > .cookie-modal")) {
+      this.settingsOpen = true;
+      return true;
+    }
+    return elementExists(".klaro > .cookie-notice");
+  }
+  async detectPopup() {
+    return elementVisible(".klaro > .cookie-notice,.klaro > .cookie-modal", "any");
+  }
+  async optOut() {
+    if (click(".klaro .cn-decline")) {
+      return true;
+    }
+    if (!this.settingsOpen) {
+      click(".klaro .cn-learn-more");
+      await waitForElement(".klaro > .cookie-modal", 2e3);
+      this.settingsOpen = true;
+    }
+    if (click(".klaro .cn-decline")) {
+      return true;
+    }
+    click(".cm-purpose:not(.cm-toggle-all) > input:not(.half-checked)", true);
+    return click(".cm-btn-accept");
+  }
+  async optIn() {
+    if (click(".klaro .cm-btn-accept-all")) {
+      return true;
+    }
+    if (this.settingsOpen) {
+      click(".cm-purpose:not(.cm-toggle-all) > input.half-checked", true);
+      return click(".cm-btn-accept");
+    }
+    return click(".klaro .cookie-notice .cm-btn-success");
+  }
+  async test() {
+    return await this.mainWorldEval("EVAL_KLARO_1");
+  }
+};
+
+// lib/cmps/uniconsent.ts
+var Uniconsent = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "Uniconsent";
+  }
+  get prehideSelectors() {
+    return [".unic", ".modal:has(.unic)"];
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists(".unic .unic-box,.unic .unic-bar");
+  }
+  async detectPopup() {
+    return elementVisible(".unic .unic-box,.unic .unic-bar", "any");
+  }
+  async optOut() {
+    await waitForElement(".unic button", 1e3);
+    document.querySelectorAll(".unic button").forEach((button) => {
+      const text = button.textContent;
+      if (text.includes("Manage Options") || text.includes("Optionen verwalten")) {
+        button.click();
+      }
+    });
+    if (await waitForElement(".unic input[type=checkbox]", 1e3)) {
+      await waitForElement(".unic button", 1e3);
+      document.querySelectorAll(".unic input[type=checkbox]").forEach((c) => {
+        if (c.checked) {
+          c.click();
+        }
+      });
+      for (const b of document.querySelectorAll(".unic button")) {
+        const text = b.textContent;
+        for (const pattern of ["Confirm Choices", "Save Choices", "Auswahl speichern"]) {
+          if (text.includes(pattern)) {
+            b.click();
+            await wait(500);
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }
+  async optIn() {
+    return waitForThenClick2(".unic #unic-agree");
+  }
+  async test() {
+    await wait(1e3);
+    const res = elementExists(".unic .unic-box,.unic .unic-bar");
+    return !res;
+  }
+};
+
+// lib/cmps/conversant.ts
+var Conversant = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.prehideSelectors = [".cmp-root"];
+    this.name = "Conversant";
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists(".cmp-root .cmp-receptacle");
+  }
+  async detectPopup() {
+    return elementVisible(".cmp-root .cmp-receptacle", "any");
+  }
+  async optOut() {
+    if (!await waitForThenClick2(".cmp-main-button:not(.cmp-main-button--primary)")) {
+      return false;
+    }
+    if (!await waitForElement(".cmp-view-tab-tabs")) {
+      return false;
+    }
+    await waitForThenClick2(".cmp-view-tab-tabs > :first-child");
+    await waitForThenClick2(".cmp-view-tab-tabs > .cmp-view-tab--active:first-child");
+    for (const item of Array.from(document.querySelectorAll(".cmp-accordion-item"))) {
+      item.querySelector(".cmp-accordion-item-title").click();
+      await waitFor(() => !!item.querySelector(".cmp-accordion-item-content.cmp-active"), 10, 50);
+      const content = item.querySelector(".cmp-accordion-item-content.cmp-active");
+      content.querySelectorAll(".cmp-toggle-actions .cmp-toggle-deny:not(.cmp-toggle-deny--active)").forEach((e) => e.click());
+      content.querySelectorAll(".cmp-toggle-actions .cmp-toggle-checkbox:not(.cmp-toggle-checkbox--active)").forEach((e) => e.click());
+    }
+    await click(".cmp-main-button:not(.cmp-main-button--primary)");
+    return true;
+  }
+  async optIn() {
+    return waitForThenClick2(".cmp-main-button.cmp-main-button--primary");
+  }
+  async test() {
+    return document.cookie.includes("cmp-data=0");
+  }
+};
+
+// lib/cmps/tiktok.ts
+var Tiktok = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.name = "tiktok.com";
+    this.runContext = {
+      urlPattern: "tiktok"
+    };
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  getShadowRoot() {
+    const container = document.querySelector("tiktok-cookie-banner");
+    if (!container) {
+      return null;
+    }
+    return container.shadowRoot;
+  }
+  async detectCmp() {
+    return elementExists("tiktok-cookie-banner");
+  }
+  async detectPopup() {
+    const banner = this.getShadowRoot().querySelector(".tiktok-cookie-banner");
+    return isElementVisible(banner);
+  }
+  async optOut() {
+    const declineButton = this.getShadowRoot().querySelector(".button-wrapper button:first-child");
+    if (declineButton) {
+      enableLogs && console.log("[clicking]", declineButton);
+      declineButton.click();
+      return true;
+    } else {
+      enableLogs && console.log("no decline button found");
+      return false;
+    }
+  }
+  async optIn() {
+    const acceptButton = this.getShadowRoot().querySelector(".button-wrapper button:last-child");
+    if (acceptButton) {
+      enableLogs && console.log("[clicking]", acceptButton);
+      acceptButton.click();
+      return true;
+    } else {
+      enableLogs && console.log("no accept button found");
+      return false;
+    }
+  }
+  async test() {
+    const match = document.cookie.match(/cookie-consent=([^;]+)/);
+    if (!match) {
+      return false;
+    }
+    const value = JSON.parse(decodeURIComponent(match[1]));
+    return Object.values(value).every((x) => typeof x !== "boolean" || x === false);
+  }
+};
+
+// lib/cmps/airbnb.ts
+var Airbnb = class extends AutoConsentCMPBase {
+  constructor() {
+    super(...arguments);
+    this.runContext = {
+      urlPattern: "^https://(www\\.)?airbnb\\.[^/]+/"
+    };
+    this.prehideSelectors = [
+      "div[data-testid=main-cookies-banner-container]",
+      'div:has(> div:first-child):has(> div:last-child):has(> section [data-testid="strictly-necessary-cookies"])'
+    ];
+  }
+  get hasSelfTest() {
+    return true;
+  }
+  get isIntermediate() {
+    return false;
+  }
+  get isCosmetic() {
+    return false;
+  }
+  async detectCmp() {
+    return elementExists("div[data-testid=main-cookies-banner-container]");
+  }
+  async detectPopup() {
+    return elementVisible("div[data-testid=main-cookies-banner-container", "any");
+  }
+  async optOut() {
+    await waitForThenClick2("div[data-testid=main-cookies-banner-container] button._snbhip0");
+    let check;
+    while (check = document.querySelector("[data-testid=modal-container] button[aria-checked=true]:not([disabled])")) {
+      check.click();
+    }
+    return waitForThenClick2("button[data-testid=save-btn]");
+  }
+  async optIn() {
+    return waitForThenClick2("div[data-testid=main-cookies-banner-container] button._148dgdpk");
+  }
+  async test() {
+    return await waitFor(
+      () => !!document.cookie.match("OptanonAlertBoxClosed"),
+      20,
+      200
+    );
+  }
+};
+
+// lib/cmps/all.ts
+var dynamicCMPs = [
+  TrustArcTop,
+  TrustArcFrame,
+  Cookiebot,
+  SourcePoint,
+  ConsentManager,
+  Evidon,
+  Onetrust,
+  Klaro,
+  Uniconsent,
+  Conversant,
+  Tiktok,
+  Airbnb
+];
+
+// lib/web.ts
+function filterCMPs(rules, config) {
+  return rules.filter((cmp) => {
+    return (!config.disabledCmps || !config.disabledCmps.includes(cmp.name)) && (config.enableCosmeticRules || !cmp.isCosmetic);
+  });
+}
+var AutoConsent = class {
+  constructor(sendContentMessage, config = null, declarativeRules = null) {
+    this.id = getRandomID();
+    this.rules = [];
+    this.foundCmp = null;
+    this.state = {
+      lifecycle: "loading",
+      prehideOn: false,
+      findCmpAttempts: 0,
+      detectedCmps: [],
+      detectedPopups: [],
+      selfTest: null
+    };
+    evalState.sendContentMessage = sendContentMessage;
+    this.sendContentMessage = sendContentMessage;
+    this.rules = [];
+    enableLogs && console.log("autoconsent init", window.location.href);
+    this.updateState({ lifecycle: "loading" });
+    this.addDynamicRules();
+    if (config) {
+      this.initialize(config, declarativeRules);
+    } else {
+      if (declarativeRules) {
+        this.parseDeclarativeRules(declarativeRules);
+      }
+      const initMsg = {
+        type: "init",
+        url: window.location.href
+      };
+      sendContentMessage(initMsg);
+      this.updateState({ lifecycle: "waitingForInitResponse" });
+    }
+  }
+  initialize(config, declarativeRules) {
+    this.config = config;
+    if (!config.enabled) {
+      enableLogs && console.log("autoconsent is disabled");
+      return;
+    }
+    if (declarativeRules) {
+      this.parseDeclarativeRules(declarativeRules);
+    }
+    this.rules = filterCMPs(this.rules, config);
+    if (config.enablePrehide) {
+      if (document.documentElement) {
+        this.prehideElements();
+      } else {
+        const delayedPrehide = () => {
+          window.removeEventListener("DOMContentLoaded", delayedPrehide);
+          this.prehideElements();
+        };
+        window.addEventListener("DOMContentLoaded", delayedPrehide);
+      }
+    }
+    if (document.readyState === "loading") {
+      const onReady = () => {
+        window.removeEventListener("DOMContentLoaded", onReady);
+        this.start();
+      };
+      window.addEventListener("DOMContentLoaded", onReady);
+    } else {
+      this.start();
+    }
+    this.updateState({ lifecycle: "initialized" });
+  }
+  addDynamicRules() {
+    dynamicCMPs.forEach((cmp) => {
+      this.rules.push(new cmp(this));
+    });
+  }
+  parseDeclarativeRules(declarativeRules) {
+    Object.keys(declarativeRules.consentomatic).forEach((name) => {
+      this.addConsentomaticCMP(name, declarativeRules.consentomatic[name]);
+    });
+    declarativeRules.autoconsent.forEach((ruleset) => {
+      this.addDeclarativeCMP(ruleset);
+    });
+    enableLogs && console.log("added rules", this.rules);
+  }
+  addDeclarativeCMP(ruleset) {
+    this.rules.push(new AutoConsentCMP(ruleset, this));
+  }
+  addConsentomaticCMP(name, config) {
+    this.rules.push(new ConsentOMaticCMP(`com_${name}`, config));
+  }
+  // start the detection process, possibly with a delay
+  start() {
+    if (window.requestIdleCallback) {
+      window.requestIdleCallback(() => this._start(), { timeout: 500 });
+    } else {
+      this._start();
+    }
+  }
+  async _start() {
+    enableLogs && console.log(`Detecting CMPs on ${window.location.href}`);
+    this.updateState({ lifecycle: "started" });
+    const foundCmps = await this.findCmp(this.config.detectRetries);
+    this.updateState({ detectedCmps: foundCmps.map((c) => c.name) });
+    if (foundCmps.length === 0) {
+      enableLogs && console.log("no CMP found", location.href);
+      if (this.config.enablePrehide) {
+        this.undoPrehide();
+      }
+      this.updateState({ lifecycle: "nothingDetected" });
+      return false;
+    }
+    this.updateState({ lifecycle: "cmpDetected" });
+    let foundPopups = await this.detectPopups(foundCmps.filter((r) => !r.isCosmetic));
+    if (foundPopups.length === 0) {
+      foundPopups = await this.detectPopups(foundCmps.filter((r) => r.isCosmetic));
+    }
+    if (foundPopups.length === 0) {
+      enableLogs && console.log("no popup found");
+      if (this.config.enablePrehide) {
+        this.undoPrehide();
+      }
+      return false;
+    }
+    this.updateState({ lifecycle: "openPopupDetected" });
+    if (foundPopups.length > 1) {
+      const errorDetails = {
+        msg: `Found multiple CMPs, check the detection rules.`,
+        cmps: foundPopups.map((cmp) => cmp.name)
+      };
+      enableLogs && console.warn(errorDetails.msg, errorDetails.cmps);
+      this.sendContentMessage({
+        type: "autoconsentError",
+        details: errorDetails
+      });
+    }
+    this.foundCmp = foundPopups[0];
+    if (this.config.autoAction === "optOut") {
+      return await this.doOptOut();
+    } else if (this.config.autoAction === "optIn") {
+      return await this.doOptIn();
+    } else {
+      enableLogs && console.log("waiting for opt-out signal...", location.href);
+      return true;
+    }
+  }
+  async findCmp(retries) {
+    this.updateState({ findCmpAttempts: this.state.findCmpAttempts + 1 });
+    const foundCMPs = [];
+    for (const cmp of this.rules) {
+      try {
+        if (!cmp.checkRunContext()) {
+          continue;
+        }
+        const result = await cmp.detectCmp();
+        if (result) {
+          enableLogs && console.log(`Found CMP: ${cmp.name} ${window.location.href}`);
+          this.sendContentMessage({
+            type: "cmpDetected",
+            url: location.href,
+            cmp: cmp.name
+          });
+          foundCMPs.push(cmp);
+        }
+      } catch (e) {
+        enableLogs && console.warn(`error detecting ${cmp.name}`, e);
+      }
+    }
+    if (foundCMPs.length === 0 && retries > 0) {
+      await wait(500);
+      return this.findCmp(retries - 1);
+    }
+    return foundCMPs;
+  }
+  async detectPopups(cmps) {
+    const result = [];
+    const popupLookups = cmps.map((cmp) => this.waitForPopup(cmp).then((isOpen) => {
+      if (isOpen) {
+        this.updateState({ detectedPopups: this.state.detectedPopups.concat([cmp.name]) });
+        this.sendContentMessage({
+          type: "popupFound",
+          cmp: cmp.name,
+          url: location.href
+        });
+        result.push(cmp);
+      }
+    }).catch((e) => {
+      enableLogs && console.warn(`error waiting for a popup for ${cmp.name}`, e);
+      return null;
+    }));
+    await Promise.all(popupLookups);
+    return result;
+  }
+  async doOptOut() {
+    this.updateState({ lifecycle: "runningOptOut" });
+    let optOutResult;
+    if (!this.foundCmp) {
+      enableLogs && console.log("no CMP to opt out");
+      optOutResult = false;
+    } else {
+      enableLogs && console.log(`CMP ${this.foundCmp.name}: opt out on ${window.location.href}`);
+      optOutResult = await this.foundCmp.optOut();
+      enableLogs && console.log(`${this.foundCmp.name}: opt out result ${optOutResult}`);
+    }
+    if (this.config.enablePrehide) {
+      this.undoPrehide();
+    }
+    this.sendContentMessage({
+      type: "optOutResult",
+      cmp: this.foundCmp ? this.foundCmp.name : "none",
+      result: optOutResult,
+      scheduleSelfTest: this.foundCmp && this.foundCmp.hasSelfTest,
+      url: location.href
+    });
+    if (optOutResult && !this.foundCmp.isIntermediate) {
+      this.sendContentMessage({
+        type: "autoconsentDone",
+        cmp: this.foundCmp.name,
+        isCosmetic: this.foundCmp.isCosmetic,
+        url: location.href
+      });
+      this.updateState({ lifecycle: "done" });
+    } else {
+      this.updateState({ lifecycle: optOutResult ? "optOutSucceeded" : "optOutFailed" });
+    }
+    return optOutResult;
+  }
+  async doOptIn() {
+    this.updateState({ lifecycle: "runningOptIn" });
+    let optInResult;
+    if (!this.foundCmp) {
+      enableLogs && console.log("no CMP to opt in");
+      optInResult = false;
+    } else {
+      enableLogs && console.log(`CMP ${this.foundCmp.name}: opt in on ${window.location.href}`);
+      optInResult = await this.foundCmp.optIn();
+      enableLogs && console.log(`${this.foundCmp.name}: opt in result ${optInResult}`);
+    }
+    if (this.config.enablePrehide) {
+      this.undoPrehide();
+    }
+    this.sendContentMessage({
+      type: "optInResult",
+      cmp: this.foundCmp ? this.foundCmp.name : "none",
+      result: optInResult,
+      scheduleSelfTest: false,
+      // self-tests are only for opt-out at the moment
+      url: location.href
+    });
+    if (optInResult && !this.foundCmp.isIntermediate) {
+      this.sendContentMessage({
+        type: "autoconsentDone",
+        cmp: this.foundCmp.name,
+        isCosmetic: this.foundCmp.isCosmetic,
+        url: location.href
+      });
+      this.updateState({ lifecycle: "done" });
+    } else {
+      this.updateState({ lifecycle: optInResult ? "optInSucceeded" : "optInFailed" });
+    }
+    return optInResult;
+  }
+  async doSelfTest() {
+    let selfTestResult;
+    if (!this.foundCmp) {
+      enableLogs && console.log("no CMP to self test");
+      selfTestResult = false;
+    } else {
+      enableLogs && console.log(`CMP ${this.foundCmp.name}: self-test on ${window.location.href}`);
+      selfTestResult = await this.foundCmp.test();
+    }
+    this.sendContentMessage({
+      type: "selfTestResult",
+      cmp: this.foundCmp ? this.foundCmp.name : "none",
+      result: selfTestResult,
+      url: location.href
+    });
+    this.updateState({ selfTest: selfTestResult });
+    return selfTestResult;
+  }
+  async waitForPopup(cmp, retries = 5, interval = 500) {
+    enableLogs && console.log("checking if popup is open...", cmp.name);
+    const isOpen = await cmp.detectPopup().catch((e) => {
+      enableLogs && console.warn(`error detecting popup for ${cmp.name}`, e);
+      return false;
+    });
+    if (!isOpen && retries > 0) {
+      await wait(interval);
+      return this.waitForPopup(cmp, retries - 1, interval);
+    }
+    enableLogs && console.log(cmp.name, `popup is ${isOpen ? "open" : "not open"}`);
+    return isOpen;
+  }
+  prehideElements() {
+    const globalHidden = [
+      "#didomi-popup,.didomi-popup-container,.didomi-popup-notice,.didomi-consent-popup-preferences,#didomi-notice,.didomi-popup-backdrop,.didomi-screen-medium"
+    ];
+    const selectors = this.rules.reduce((selectorList, rule) => {
+      if (rule.prehideSelectors) {
+        return [...selectorList, ...rule.prehideSelectors];
+      }
+      return selectorList;
+    }, globalHidden);
+    this.updateState({ prehideOn: true });
+    setTimeout(() => {
+      if (this.config.enablePrehide && this.state.prehideOn && !["runningOptOut", "runningOptIn"].includes(this.state.lifecycle)) {
+        enableLogs && console.log("Process is taking too long, unhiding elements");
+        this.undoPrehide();
+      }
+    }, this.config.prehideTimeout || 2e3);
+    return prehide(selectors);
+  }
+  undoPrehide() {
+    this.updateState({ prehideOn: false });
+    return undoPrehide();
+  }
+  updateState(change) {
+    Object.assign(this.state, change);
+    this.sendContentMessage({
+      type: "report",
+      instanceId: this.id,
+      url: window.location.href,
+      mainFrame: window.top === window.self,
+      state: this.state
+    });
+  }
+  async receiveMessageCallback(message) {
+    if (enableLogs && ["evalResp", "report"].includes(message.type)) {
+      console.log("received from background", message, window.location.href);
+    }
+    switch (message.type) {
+      case "initResp":
+        this.initialize(message.config, message.rules);
+        break;
+      case "optIn":
+        await this.doOptIn();
+        break;
+      case "optOut":
+        await this.doOptOut();
+        break;
+      case "selfTest":
+        await this.doSelfTest();
+        break;
+      case "evalResp":
+        resolveEval(message.id, message.result);
+        break;
+    }
+  }
+};
