@@ -1,0 +1,8 @@
+{
+    "name": "netflix.com",
+    "detectCmp": [{ "exists": "#cookie-disclosure" }],
+    "detectPopup": [{ "visible": "#cookie-disclosure", "check": "any" }],
+    "optIn": [{ "click": "#cookie-disclosure-accept" }],
+    "optOut": [{"hide": ["#cookie-disclosure"]}, {"click": "#cookie-disclosure-reject"}]
+  }
+  

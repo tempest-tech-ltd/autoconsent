@@ -1,24 +1,24 @@
 {
     "name": "nytimes",
     "runContext": {
-        "urlPattern": "^https://nytimes.com"
+        "urlPattern": "^https://(www\\.)?nytimes.com"
     },
     "cosmetic": true,
-    "prehideSelectors": ["div.gdpr.shown"],
+    "prehideSelectors": ["#dock-container[data-testid='gdprDock']"],
     "detectCmp": [
         {
-            "exists": "div.gdpr"
+            "exists": "#dock-container[data-testid='gdprDock']"
         }
     ],
-    "detectPopup": [{ "visible": "div.gdpr.shown" }],
+    "detectPopup": [{ "visible": "#dock-container[data-testid=\"gdprDock\"]" }],
     "optIn": [
         {
-            "click": "div.gdpr.shown button[data-testid=\"GDPR-accept\"]"
+            "click": "#dock-container[data-testid=\"gdprDock\"] button:nth-child(0)"
         }
     ],
     "optOut": [
         {
-            "click": "div.gdpr.shown button[data-testid=\"GDPR-reject\"]"
+            "click": "#dock-container[data-testid=\"gdprDock\"] button:nth-child(1)"
         }
     ]
 }

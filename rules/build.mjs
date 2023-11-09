@@ -20,25 +20,40 @@ export async function buildAutoconsentRules() {
   );
 }
 
-export async function buildConsentOMaticRules() {
-  // fetch ConsentOMatic rule set and merge with our custom rules
-  const consentOMaticCommit = "master";
-  const consentOMaticUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/Rules.json`;
-  const consentOMaticInclude = [
-    'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata', 'sourcepoint_frame', 'sourcepoint', 'instagram', 'facebook', 'twitch.tv'
-  ];
-  const comRules = {};
-  const allComRules = await new Promise((resolve) => {
-    https.get(consentOMaticUrl, (res) => {
+async function fetchJson(url) {
+  return await new Promise((resolve) => {
+    https.get(url, (res) => {
       res.setEncoding("utf-8");
       let content = "";
       res.on("data", (data) => (content += data));
       res.on("end", () => resolve(JSON.parse(content)));
     });
   });
-  consentOMaticInclude.forEach((name) => {
-    comRules[name] = allComRules[name];
-  });
+}
+
+export async function buildConsentOMaticRules() {
+  // fetch ConsentOMatic rule set and merge with our custom rules
+  const consentOMaticCommit = "master";
+  const consentOMaticRulesListUrl = `https://raw.githubusercontent.com/cavi-au/Consent-O-Matic/${consentOMaticCommit}/rules-list.json`;
+  const consentOMaticInclude = [
+    'didomi.io', 'oil', 'optanon', 'quantcast2', 'springer', 'wordpress_gdpr', 'sirdata', 'sourcepoint_frame', 'sourcepoint', 'instagram', 'facebook', 'twitch.tv'
+  ];
+  const comRules = {};
+  const allComRules = (await fetchJson(consentOMaticRulesListUrl)).references;
+  await Promise.all(consentOMaticInclude.map(async (name) => {
+    const url = allComRules.find((url) => !!url.match(new RegExp(`${name}.json$`)));
+    if (url) {
+      const rule = (await fetchJson(url));
+      // find key that golhold the rule
+      const ruleKey = Object.keys(rule).find(key => rule[key].detectors !== undefined);
+      if (ruleKey) {
+        comRules[name] = rule[ruleKey];
+      }
+      return;
+    }
+
+    console.log('>>> No Consent-o-matic rule found for ', name);
+  }));
   return comRules;
 }
 
