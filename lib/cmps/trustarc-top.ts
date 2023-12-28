@@ -1,4 +1,4 @@
-import { click, doEval, elementExists, elementVisible } from "../rule-executors";
+import { click, elementExists, elementVisible } from "../rule-executors";
 import { RunContext } from "../rules";
 import { getStyleElement, hideElements } from "../utils";
 import AutoConsent from "../web";
