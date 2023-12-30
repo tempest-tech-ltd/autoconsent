@@ -565,6 +565,7 @@ function elementVisible(selector, check) {
 function waitForElement(selector, timeout = 1e4) {
   const interval = 200;
   const times = Math.ceil(timeout / interval);
+  enableLogs && console.log("[waitForElement]", selector);
   return waitFor(
     () => elementSelector(selector).length > 0,
     times,
@@ -708,21 +709,25 @@ var snippets = {
   EVAL_CONSENTMANAGER_3: () => __cmp("setConsent", 0),
   EVAL_CONSENTMANAGER_4: () => __cmp("setConsent", 1),
   EVAL_CONSENTMANAGER_5: () => __cmp("consentStatus").userChoiceExists,
-  EVAL_COOKIEBOT_1: () => window.CookieConsent.hasResponse !== true,
-  EVAL_COOKIEBOT_2: () => window.Cookiebot.dialog.submitConsent(),
-  EVAL_COOKIEBOT_3: () => endCookieProcess(),
-  EVAL_COOKIEBOT_4: () => window.CookieConsent.declined === true,
+  EVAL_COOKIEBOT_1: () => !!window.Cookiebot,
+  EVAL_COOKIEBOT_2: () => !window.Cookiebot.hasResponse && window.Cookiebot.dialog?.visible === true,
+  EVAL_COOKIEBOT_3: () => window.Cookiebot.withdraw() || true,
+  EVAL_COOKIEBOT_4: () => window.Cookiebot.hide() || true,
+  EVAL_COOKIEBOT_5: () => window.Cookiebot.declined === true,
   EVAL_KLARO_1: () => klaro.getManager().config.services.every((c) => c.required || !klaro.getManager().consents[c.name]),
   EVAL_ONETRUST_1: () => window.OnetrustActiveGroups.split(",").filter((s) => s.length > 0).length <= 1,
   EVAL_TRUSTARC_TOP: () => window && window.truste && window.truste.eu.bindMap.prefCookie === "0",
   // declarative rules
   EVAL_ADROLL_0: () => !document.cookie.includes("__adroll_fpc"),
+  EVAL_ALMACMP_0: () => document.cookie.includes('"name":"Google","consent":false'),
   EVAL_AFFINITY_SERIF_COM_0: () => document.cookie.includes("serif_manage_cookies_viewed") && !document.cookie.includes("serif_allow_analytics"),
   EVAL_AXEPTIO_0: () => document.cookie.includes("axeptio_authorized_vendors=%2C%2C"),
   EVAL_BING_0: () => document.cookie.includes("AL=0") && document.cookie.includes("AD=0") && document.cookie.includes("SM=0"),
+  EVAL_BLOCKSY_0: () => document.cookie.includes("blocksy_cookies_consent_accepted=no"),
   EVAL_BORLABS_0: () => !JSON.parse(decodeURIComponent(document.cookie.split(";").find((c) => c.indexOf("borlabs-cookie") !== -1).split("=", 2)[1])).consents.statistics,
   EVAL_BUNDESREGIERUNG_DE_0: () => document.cookie.match("cookie-allow-tracking=0"),
   EVAL_CANVA_0: () => !document.cookie.includes("gtm_fpc_engagement_event"),
+  EVAL_CC_BANNER2_0: () => !!document.cookie.match(/sncc=[^;]+D%3Dtrue/),
   EVAL_CLICKIO_0: () => document.cookie.includes("__lxG__consent__v2_daisybit="),
   EVAL_CLINCH_0: () => document.cookie.includes("ctc_rejected=1"),
   EVAL_COINBASE_0: () => JSON.parse(decodeURIComponent(document.cookie.match(/cm_(eu|default)_preferences=([0-9a-zA-Z\\{\\}\\[\\]%:]*);?/)[2])).consent.length <= 1,
@@ -740,6 +745,7 @@ var snippets = {
   EVAL_COOKIEINFORMATION_0: () => CookieInformation.declineAllCategories() || true,
   EVAL_COOKIEINFORMATION_1: () => CookieInformation.submitAllCategories() || true,
   EVAL_COOKIEINFORMATION_2: () => document.cookie.includes("CookieInformationConsent="),
+  EVAL_COOKIEYES_0: () => document.cookie.includes("advertisement:no"),
   EVAL_DAILYMOTION_0: () => !!document.cookie.match("dm-euconsent-v2"),
   EVAL_DSGVO_0: () => !document.cookie.includes("sp_dsgvo_cookie_settings"),
   EVAL_DUNELM_0: () => document.cookie.includes("cc_functional=0") && document.cookie.includes("cc_targeting=0"),
@@ -767,6 +773,7 @@ var snippets = {
       i.checked = false;
   }) || true,
   EVAL_ONENINETWO_0: () => document.cookie.includes("CC_ADVERTISING=NO") && document.cookie.includes("CC_ANALYTICS=NO"),
+  EVAL_OPERA_0: () => document.cookie.includes("cookie_consent_essential=true") && !document.cookie.includes("cookie_consent_marketing=true"),
   EVAL_PAYPAL_0: () => document.cookie.includes("cookie_prefs") === true,
   EVAL_PRIMEBOX_0: () => !document.cookie.includes("cb-enabled=accepted"),
   EVAL_PUBTECH_0: () => document.cookie.includes("euconsent-v2") && (document.cookie.match(/.YAAAAAAAAAAA/) || document.cookie.match(/.aAAAAAAAAAAA/) || document.cookie.match(/.YAAACFgAAAAA/)),
@@ -775,6 +782,7 @@ var snippets = {
   EVAL_SIRDATA_0: () => document.cookie.includes("euconsent-v2"),
   EVAL_SNIGEL_0: () => !!document.cookie.match("snconsent"),
   EVAL_STEAMPOWERED_0: () => JSON.parse(decodeURIComponent(document.cookie.split(";").find((s) => s.trim().startsWith("cookieSettings")).split("=")[1])).preference_state === 2,
+  EVAL_TAKEALOT_0: () => document.body.classList.remove("freeze") || (document.body.style = "") || true,
   EVAL_TARTEAUCITRON_0: () => tarteaucitron.userInterface.respondAll(false) || true,
   EVAL_TARTEAUCITRON_1: () => tarteaucitron.userInterface.respondAll(true) || true,
   EVAL_TARTEAUCITRON_2: () => document.cookie.match(/tarteaucitron=[^;]*/)[0].includes("false"),
@@ -1260,7 +1268,7 @@ var Cookiebot = class extends AutoConsentCMPBase {
   constructor() {
     super(...arguments);
     this.name = "Cybotcookiebot";
-    this.prehideSelectors = ["#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookieoverlay"];
+    this.prehideSelectors = ["#CybotCookiebotDialog,#CybotCookiebotDialogBodyUnderlay,#dtcookie-container,#cookiebanner,#cb-cookieoverlay,.modal--cookie-banner,#cookiebanner_outer,#CookieBanner"];
   }
   get hasSelfTest() {
     return true;
@@ -1272,44 +1280,19 @@ var Cookiebot = class extends AutoConsentCMPBase {
     return false;
   }
   async detectCmp() {
-    return elementExists("#CybotCookiebotDialogBodyLevelButtonPreferences");
+    return await this.mainWorldEval("EVAL_COOKIEBOT_1");
   }
   async detectPopup() {
-    return elementExists("#CybotCookiebotDialog,#dtcookie-container,#cookiebanner,#cb-cookiebanner");
+    return await waitFor(() => {
+      return this.mainWorldEval("EVAL_COOKIEBOT_2");
+    }, 10, 500);
   }
   async optOut() {
-    if (click(".cookie-alert-extended-detail-link")) {
-      await waitForElement(".cookie-alert-configuration", 2e3);
-      click(".cookie-alert-configuration-input:checked", true);
-      click(".cookie-alert-extended-button-secondary");
-      return true;
-    }
-    if (elementExists("#dtcookie-container")) {
-      return click(".h-dtcookie-decline");
-    }
-    if (click(".cookiebot__button--settings")) {
-      return true;
-    }
-    if (click("#CybotCookiebotDialogBodyButtonDecline")) {
-      return true;
-    }
-    click(".cookiebanner__link--details");
-    click('.CybotCookiebotDialogBodyLevelButton:checked:enabled,input[id*="CybotCookiebotDialogBodyLevelButton"]:checked:enabled', true);
-    click("#CybotCookiebotDialogBodyButtonDecline");
-    click("input[id^=CybotCookiebotDialogBodyLevelButton]:checked", true);
-    if (elementExists("#CybotCookiebotDialogBodyButtonAcceptSelected")) {
-      click("#CybotCookiebotDialogBodyButtonAcceptSelected");
-    } else {
-      click("#CybotCookiebotDialogBodyLevelButtonAccept,#CybotCookiebotDialogBodyButtonAccept,#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowallSelection", true);
-    }
-    if (await this.mainWorldEval("EVAL_COOKIEBOT_1")) {
-      await this.mainWorldEval("EVAL_COOKIEBOT_2");
-      await wait(500);
-    }
-    if (elementExists("#cb-confirmedSettings")) {
-      await this.mainWorldEval("EVAL_COOKIEBOT_3");
-    }
-    return true;
+    await wait(500);
+    let res = await this.mainWorldEval("EVAL_COOKIEBOT_3");
+    await wait(500);
+    res = res && await this.mainWorldEval("EVAL_COOKIEBOT_4");
+    return res;
   }
   async optIn() {
     if (elementExists("#dtcookie-container")) {
@@ -1321,7 +1304,8 @@ var Cookiebot = class extends AutoConsentCMPBase {
     return true;
   }
   async test() {
-    return this.mainWorldEval("EVAL_COOKIEBOT_4");
+    await wait(500);
+    return await this.mainWorldEval("EVAL_COOKIEBOT_5");
   }
 };
 
@@ -1357,7 +1341,7 @@ var SourcePoint = class extends AutoConsentCMPBase {
       this.ccpaPopup = true;
       return true;
     }
-    return (url.pathname === "/index.html" || url.pathname === "/privacy-manager/index.html") && (url.searchParams.has("message_id") || url.searchParams.has("requestUUID") || url.searchParams.has("consentUUID"));
+    return (url.pathname === "/index.html" || url.pathname === "/privacy-manager/index.html" || url.pathname === "/ccpa_pm/index.html") && (url.searchParams.has("message_id") || url.searchParams.has("requestUUID") || url.searchParams.has("consentUUID"));
   }
   async detectPopup() {
     if (this.ccpaNotice) {
@@ -1366,7 +1350,7 @@ var SourcePoint = class extends AutoConsentCMPBase {
     if (this.ccpaPopup) {
       return await waitForElement(".priv-save-btn", 2e3);
     }
-    await waitForElement(".sp_choice_type_11,.sp_choice_type_12,.sp_choice_type_13,.sp_choice_type_ACCEPT_ALL", 2e3);
+    await waitForElement(".sp_choice_type_11,.sp_choice_type_12,.sp_choice_type_13,.sp_choice_type_ACCEPT_ALL,.sp_choice_type_SAVE_AND_EXIT", 2e3);
     return !elementExists(".sp_choice_type_9");
   }
   async optIn() {
@@ -1380,7 +1364,7 @@ var SourcePoint = class extends AutoConsentCMPBase {
     return false;
   }
   isManagerOpen() {
-    return location.pathname === "/privacy-manager/index.html";
+    return location.pathname === "/privacy-manager/index.html" || location.pathname === "/ccpa_pm/index.html";
   }
   async optOut() {
     if (this.ccpaPopup) {
@@ -1410,6 +1394,7 @@ var SourcePoint = class extends AutoConsentCMPBase {
       );
     }
     await waitForElement(".type-modal", 2e4);
+    waitForThenClick2(".ccpa-stack .pm-switch[aria-checked=true] .slider", 500, true);
     try {
       const rejectSelector1 = ".sp_choice_type_REJECT_ALL";
       const rejectSelector2 = ".reject-toggle";
@@ -1561,6 +1546,9 @@ var Onetrust = class extends AutoConsentCMPBase {
     return elementVisible("#onetrust-banner-sdk", "all");
   }
   async optOut() {
+    if (elementVisible("#onetrust-reject-all-handler,.js-reject-cookies", "any")) {
+      return click("#onetrust-reject-all-handler,.js-reject-cookies");
+    }
     if (elementExists("#onetrust-pc-btn-handler")) {
       click("#onetrust-pc-btn-handler");
     } else {
@@ -1572,18 +1560,18 @@ var Onetrust = class extends AutoConsentCMPBase {
     await wait(1e3);
     await waitForElement(".save-preference-btn-handler,.js-consent-save", 2e3);
     click(".save-preference-btn-handler,.js-consent-save");
-    await waitFor(
-      () => elementVisible("#onetrust-banner-sdk", "none"),
-      10,
-      500
-    );
+    await waitForVisible("#onetrust-banner-sdk", 5e3, "none");
     return true;
   }
   async optIn() {
     return click("#onetrust-accept-btn-handler,.js-accept-cookies");
   }
   async test() {
-    return await this.mainWorldEval("EVAL_ONETRUST_1");
+    return await waitFor(
+      () => this.mainWorldEval("EVAL_ONETRUST_1"),
+      10,
+      500
+    );
   }
 };
 
@@ -1965,7 +1953,6 @@ var AutoConsent = class {
     declarativeRules.autoconsent.forEach((ruleset) => {
       this.addDeclarativeCMP(ruleset);
     });
-    enableLogs && console.log("added rules", this.rules);
   }
   addDeclarativeCMP(ruleset) {
     this.rules.push(new AutoConsentCMP(ruleset, this));
@@ -2007,6 +1994,9 @@ var AutoConsent = class {
       return false;
     }
     this.updateState({ lifecycle: "openPopupDetected" });
+    if (this.config.enablePrehide && !this.state.prehideOn) {
+      this.prehideElements();
+    }
     if (foundPopups.length > 1) {
       const errorDetails = {
         msg: `Found multiple CMPs, check the detection rules.`,
@@ -2209,7 +2199,7 @@ var AutoConsent = class {
     });
   }
   async receiveMessageCallback(message) {
-    if (enableLogs && ["evalResp", "report"].includes(message.type)) {
+    if (enableLogs && !["evalResp", "report"].includes(message.type)) {
       console.log("received from background", message, window.location.href);
     }
     switch (message.type) {

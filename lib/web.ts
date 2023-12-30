@@ -110,7 +110,6 @@ export default class AutoConsent {
     declarativeRules.autoconsent.forEach((ruleset) => {
       this.addDeclarativeCMP(ruleset);
     });
-    enableLogs && console.log("added rules", this.rules);
   }
 
   addDeclarativeCMP(ruleset: AutoConsentCMPRule) {
@@ -158,7 +157,11 @@ export default class AutoConsent {
       }
       return false;
     }
+
     this.updateState({ lifecycle: 'openPopupDetected' });
+    if (this.config.enablePrehide && !this.state.prehideOn) { // prehide might have timeouted by this time, apply it again
+      this.prehideElements();
+    }
 
     if (foundPopups.length > 1) {
       const errorDetails = {
@@ -393,7 +396,7 @@ export default class AutoConsent {
   }
 
   async receiveMessageCallback(message: BackgroundMessage) {
-    if (enableLogs && ['evalResp', 'report'].includes(message.type) /* evals are noisy */) {
+    if (enableLogs && !['evalResp', 'report'].includes(message.type) /* evals are noisy */) {
       console.log('received from background', message, window.location.href);
     }
     switch (message.type) {

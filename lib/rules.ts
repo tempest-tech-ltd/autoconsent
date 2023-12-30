@@ -1,17 +1,18 @@
 import { snippets } from "./eval-snippets"
 
 export type AutoConsentCMPRule = {
-  name: string
-  prehideSelectors?: string[]
-  runContext?: RunContext,
-  intermediate?: boolean,
-  cosmetic?: boolean,
-  detectCmp: AutoConsentRuleStep[]
-  detectPopup: AutoConsentRuleStep[]
-  optOut: AutoConsentRuleStep[]
-  optIn: AutoConsentRuleStep[]
-  openCmp?: AutoConsentRuleStep[]
-  test?: AutoConsentRuleStep[]
+  name: string;
+  vendorUrl?: string;
+  prehideSelectors?: string[];
+  runContext?: RunContext;
+  intermediate?: boolean;
+  cosmetic?: boolean;
+  detectCmp: AutoConsentRuleStep[];
+  detectPopup: AutoConsentRuleStep[];
+  optOut: AutoConsentRuleStep[];
+  optIn: AutoConsentRuleStep[];
+  openCmp?: AutoConsentRuleStep[];
+  test?: AutoConsentRuleStep[];
 }
 
 export type RunContext = {
@@ -22,9 +23,8 @@ export type RunContext = {
 
 export type ElementSelector = string | string[]
 
-export type AutoConsentRuleStep = { optional?: boolean } & Partial<
-  ElementExistsRule
-> &
+export type AutoConsentRuleStep = { optional?: boolean } &
+  Partial<ElementExistsRule> &
   Partial<ElementVisibleRule> &
   Partial<EvalRule> &
   Partial<WaitForRule> &
@@ -34,7 +34,7 @@ export type AutoConsentRuleStep = { optional?: boolean } & Partial<
   Partial<WaitRule> &
   Partial<UrlRule> &
   Partial<HideRule> &
-  Partial<IfRule> & 
+  Partial<IfRule> &
   Partial<AnyRule>
 
 export type ElementExistsRule = {
@@ -71,6 +71,7 @@ export type ClickRule = {
 export type WaitForThenClickRule = {
   waitForThenClick: ElementSelector;
   timeout?: number;
+  all?: boolean;
 };
 
 export type WaitRule = {
