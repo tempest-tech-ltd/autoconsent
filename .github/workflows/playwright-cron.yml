@@ -21,7 +21,7 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run Playwright tests
         #run: PLAYWRIGHT_JSON_OUTPUT_NAME=results.json playwright test --project chrome --reporter=json
-        run: playwright test --project chrome --reporter=html
+        run: npx playwright test --project chrome --reporter=html
       # Upload the test result artifacts
       - uses: actions/upload-artifact@v3
         if: failure()
