@@ -24,8 +24,9 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
       - name: Display latest artifact ID
-        run: echo "Artifact ID:"
-        run: echo $artifact_id
+        run: |
+          echo "Artifact ID:"
+          echo $artifact_id
       - name: Create a fake File
         run: echo "Hello world" > file.txt
       - name: Upload Artifact
