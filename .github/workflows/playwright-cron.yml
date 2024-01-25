@@ -20,16 +20,18 @@ jobs:
       # - name: Install Playwright
       #   run: npx playwright install --with-deps chromium
       - name: Download latest tests results
-        uses: actions/download-artifact@v3
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="my-artifact" > artifacts.json
       - name: Display structure of downloaded files
-        run: ls -R
+        run: ls -l artifact*
       - name: Create a fake File
-        run: echo "hello from ${{ matrix.runs-on }}" > file-${{ matrix.runs-on }}.txt
+        run: echo "hello world" > file.txt
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
           name: my-artifact
-          path: file-${{ matrix.runs-on }}.txt
+          path: file.txt
 
       # - name: Run Playwright tests
       #   run: npx playwright test --project chrome --reporter=html
