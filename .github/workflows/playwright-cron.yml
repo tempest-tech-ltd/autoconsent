@@ -21,8 +21,6 @@ jobs:
       #   run: npx playwright install --with-deps chromium
       - name: Download latest tests results
         uses: actions/download-artifact@v3
-        with:
-          name: playwright-report
       - name: Display structure of downloaded files
         run: ls -R
 
