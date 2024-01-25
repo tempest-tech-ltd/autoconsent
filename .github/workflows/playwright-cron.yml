@@ -22,15 +22,15 @@ jobs:
       - name: Download latest tests results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="my-artifact" > artifacts.json
-      - name: Display structure of downloaded files
-        run: ls -l artifact*
+        run: gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" > latest-result.json
+      - name: Display JSON response
+        run: cat latest-result.json
       - name: Create a fake File
         run: echo "hello world" > file.txt
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
-          name: my-artifact
+          name: playwright-report
           path: file.txt
 
       # - name: Run Playwright tests
