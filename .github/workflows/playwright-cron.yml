@@ -29,11 +29,11 @@ jobs:
         # artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
 
       - name: Load last result
-        if: ${{ $env.artifact_id != ''  }}
+        if: ${{ env.artifact_id != ''  }}
         run: echo "Got something!"
       
       - name: No result
-        if: ${{ $ARTIFACT_ID == '' }}
+        if: ${{ env.artifact_id == '' }}
         run: echo "No result :("
       - name: Create a fake File
         run: echo "Hello world" > file.txt
