@@ -19,6 +19,7 @@ jobs:
         run: npm ci
       # - name: Install Playwright
       #   run: npx playwright install --with-deps chromium
+
       - name: Download latest tests results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -28,7 +29,7 @@ jobs:
         # echo "artifact_id=$(cat result_id.txt)" >> $GITHUB_ENV
         # artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
 
-        - name: Download latest results
+      - name: Download latest results
         if: ${{ env.lastResult != ''  }}
         uses: suisei-cn/actions-download-file@v1.4.0
         with:
