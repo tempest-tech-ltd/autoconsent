@@ -31,12 +31,7 @@ jobs:
 
       - name: Download latest results
         if: ${{ env.lastResult != ''  }}
-        uses: suisei-cn/actions-download-file@v1.4.0
-        with:
-          url: ${{ fromJson(env.lastResult).archive_download_url }}
-          target: results/
-          auto-match: true
-          retry-times: 3
+        run: gh api '${{ fromJson(env.lastResult).archive_download_url }}' > result.zip
 
       # - name: Download latest results
       #   if: ${{ env.lastResult != ''  }}
