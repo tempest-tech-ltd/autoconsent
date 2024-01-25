@@ -23,6 +23,13 @@ jobs:
         uses: actions/download-artifact@v3
       - name: Display structure of downloaded files
         run: ls -R
+      - name: Create a fake File
+        run: echo "hello from ${{ matrix.runs-on }}" > file-${{ matrix.runs-on }}.txt
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: my-artifact
+          path: file-${{ matrix.runs-on }}.txt
 
       # - name: Run Playwright tests
       #   run: npx playwright test --project chrome --reporter=html
