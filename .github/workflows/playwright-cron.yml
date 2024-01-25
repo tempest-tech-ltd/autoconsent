@@ -23,20 +23,22 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          echo "artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0].id')" >> $GITHUB_ENV
+          echo "lastResult=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0]')" >> $GITHUB_ENV
         # echo "latest result: $(cat result_id.txt)"
         # echo "artifact_id=$(cat result_id.txt)" >> $GITHUB_ENV
         # artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
 
-      - name: Have previous result
-        if: ${{ env.artifact_id != ''  }}
-        run: echo "Got something!"
+      - name: Download latest results
+        if: ${{ env.lastResult != ''  }}
+        uses: actions/download-artifact@v3
+        with:
+          run-id: ${{ fromJson(env.lastResult).workflow_run.id }}
       
       - name: No result
-        if: ${{ env.artifact_id == '' }}
+        if: ${{ env.lastResult == '' }}
         run: echo "No result :("
       - name: Create a fake File
-        run: echo "${{ env.artifact_id }}" > file.txt
+        run: echo "${{ env.lastResult }}" > file.txt
       - name: Upload Artifact
         uses: actions/upload-artifact@v3
         with:
