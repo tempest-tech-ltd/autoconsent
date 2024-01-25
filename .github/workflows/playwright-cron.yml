@@ -32,6 +32,8 @@ jobs:
         if: ${{ env.lastResult != ''  }}
         uses: actions/download-artifact@v4
         with:
+          name: playwright-report
+          repository: tempest-tech-ltd/autoconsent
           run-id: ${{ fromJson(env.lastResult).workflow_run.id }}
       
       - name: No result
