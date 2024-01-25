@@ -23,12 +23,12 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id" > result_id.txt
-          echo "latest result: $(cat result_id.txt)"
-          echo "artifact_id=$(cat result_id.txt)" >> $GITHUB_ENV
+          gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id" >> $GITHUB_ENV
+        # echo "latest result: $(cat result_id.txt)"
+        # echo "artifact_id=$(cat result_id.txt)" >> $GITHUB_ENV
         # artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
 
-      - name: Load last result
+      - name: Have previous result
         if: ${{ env.artifact_id != ''  }}
         run: echo "Got something!"
       
