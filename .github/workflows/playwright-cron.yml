@@ -39,7 +39,7 @@ jobs:
 
       - name: Compare new results with previous
         if: failure()
-        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.js compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
+        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
 
       - name: Notify people of new errors
         if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
