@@ -103,7 +103,10 @@ function compare(previousReport: string, lastReport: string) {
 
         console.log(JSON.stringify(result));
     } else {
-        console.log('No new error');
+        console.log(JSON.stringify({
+            newErrorsCount: 0,
+            newErrorsLabel: []
+        }));
     }
 }
 
