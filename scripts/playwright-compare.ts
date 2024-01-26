@@ -78,8 +78,8 @@ function compare(previousReport: string, lastReport: string) {
 
     // Will find which websites newly failed
     if (newErrors > 0) {
-        const previousSuccessSuites = filterSuiteBySpecs(previousResults.suites ?? [], (spec) => spec.tests.every(test => test.status === "expected"));
-        const previousSuccessSpecsNames = new Set(previousSuccessSuites.reduce((acc, suite) => {
+        const previousErroredSuites = filterSuiteBySpecs(previousResults.suites ?? [], (spec) => spec.tests.some(test => test.status === "unexpected"));
+        const previousErroredSpecsNames = new Set(previousErroredSuites.reduce((acc, suite) => {
             acc.push(...suite.specs.map(spec => `${suite.title} > ${spec.title}`));
             return acc;
         }, new Array<String>()));
@@ -89,7 +89,7 @@ function compare(previousReport: string, lastReport: string) {
         const newErrored = lastErroredSuites.reduce((acc, suite) => {
             suite.specs.forEach((spec) => {
                 const label = `${suite.title} > ${spec.title}`;
-                if (previousSuccessSpecsNames.has(label)) {
+                if (!previousErroredSpecsNames.has(label)) {
                     acc.push(label);
                 }
             });
