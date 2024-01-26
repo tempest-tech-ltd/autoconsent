@@ -33,15 +33,13 @@ jobs:
         run: |
           gh api '${{ fromJson(env.lastResult).archive_download_url }}' > previousReport.zip
           unzip previousReport.zip -d previousReport
-          ls -l ./previousReport
-          echo "previousReport=$(cat ./previousReport/playwright-report.json)" >> $GITHUB_ENV
 
       - name: Run Playwright tests
         run: npm run test:report
 
       - name: Compare new results with previous
         if: failure()
-        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.js compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV"
+        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.js compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
 
       - name: Notify people of new errors
         if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
