@@ -36,7 +36,7 @@ jobs:
           echo "previousReport=$(cat ./previousReport/playwright-report.json)" >> $GITHUB_ENV
 
       - name: Run Playwright tests
-        run: npx test:report
+        run: npm run test:report
 
       - name: Compare new results with previous
         run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.js ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV"
