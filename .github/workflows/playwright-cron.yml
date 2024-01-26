@@ -23,14 +23,15 @@ jobs:
       - name: Download latest tests results
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          echo "lastResult=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0]')" >> $GITHUB_ENV
+        run: echo "lastResult=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0]')" >> $GITHUB_ENV
         # echo "latest result: $(cat result_id.txt)"
         # echo "artifact_id=$(cat result_id.txt)" >> $GITHUB_ENV
         # artifact_id=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name="playwright-report" -q ".artifacts[0].id")
 
       - name: Download latest results
         if: ${{ env.lastResult != ''  }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: gh api '${{ fromJson(env.lastResult).archive_download_url }}' > result.zip
 
       # - name: Download latest results
