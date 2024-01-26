@@ -33,7 +33,7 @@ jobs:
         run: |
           gh api '${{ fromJson(env.lastResult).archive_download_url }}' > previousReport.zip
           unzip previousReport.zip -d previousReport
-          ls -l
+          ls -l ./previousReport
           echo "previousReport=$(cat ./previousReport/playwright-report.json)" >> $GITHUB_ENV
 
       - name: Run Playwright tests
