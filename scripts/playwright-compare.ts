@@ -68,8 +68,9 @@ function compare(previousReport: string, lastReport: string) {
         brokenWebsites: [
             "Adroll > www.michiganhumane.org/ .NA optOut ",
             "192.com > 192.com .NA optOut "
-        ].join(' ')
+        ]
     }
+
     console.log(JSON.stringify(fakeResults));
 
     return;
