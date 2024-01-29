@@ -43,7 +43,7 @@ jobs:
 
       - name: Create Jira tickets
         if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
-        run: node ./scripts/jiratool.ts create-autoconsent-ticket ${{fromJson(env.compareResult).brokenWebsites}} --email ${{ secrets.JIRA_USER_EMAIL }} --token ${{ secrets.JIRA_USER_TOKEN }}
+        run: node ./scripts/jiratool.js create-autoconsent-ticket ${{fromJson(env.compareResult).brokenWebsites}} --email ${{ secrets.JIRA_USER_EMAIL }} --token ${{ secrets.JIRA_USER_TOKEN }}
 
       # - name: Notify people of new errors
       #   if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
