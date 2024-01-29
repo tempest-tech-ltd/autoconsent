@@ -44,13 +44,8 @@ jobs:
       - name: Create Jira tickets
         # if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
         run: |
-          BROKEN_SITES_ARRAY=${{fromJson(env.compareResult).newErrorsLabel}}
-          SCRIPT_PARAMETERS=()
-          for element in "${BROKEN_SITES_ARRAY[@]}"; do
-            echo "new element: $element"
-            SCRIPT_PARAMETERS+=("\"$element\"")
-          done
-          npx ts-node ./scripts/jiratool.ts create-autoconsent-ticket "${SCRIPT_PARAMETERS[@]}"
+          BROKEN_SITES=${{fromJson(env.compareResult).brokenWebsites}}
+          npx ts-node ./scripts/jiratool.ts create-autoconsent-ticket "${BROKEN_SITES}"
 
       # - name: Notify people of new errors
       #   if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
