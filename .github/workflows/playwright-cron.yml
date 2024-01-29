@@ -49,6 +49,7 @@ jobs:
         run: |
           parameters=()
           for element in "${fromJson(env.compareResult).newErrorsLabel}"; do
+            echo "new element: $element"
             parameters+=("\"$element\"")
           done
           npx ts-node ./scripts/jiratool.ts create-autoconsent-ticket "${parameters[@]}"
