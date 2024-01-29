@@ -31,67 +31,65 @@ async function createAutoconsentBrokenTicket(sites: string[], {
     return url;
   }).filter(Boolean);
 
-  const summary = 'autoconsent broken on ' + siteUrls.join(', ');
+  const summary = 'Autoconsent broken on ' + siteUrls.join(', ');
 
-  console.log('summary', summary);
+  const body = {
+    fields: {
+      issuetype: {
+        id: ISSUE_TYPES.BUG,
+      },
+      parent: {
+        key: "DES-939"
+      },
+      project: {
+        id: "10007"
+      },
+      assignee: {
+        id: '63e3c876010d35637974bb68',
+      },
+      summary,
+      description: {
+        content: [
+          {
+            content: [
+              {
+                text: "Autoconsent broken on the following websites:\n" + siteUrls.map(url => `\t- ${url}`).join('\n'),
+                type: "text",
+              },
+            ],
+            type: "paragraph",
+          },
+        ],
+        type: "doc",
+        version: 1,
+      },
+    },
+  };
 
-  // const body = {
-  //   fields: {
-  //     issuetype: {
-  //       id: ISSUE_TYPES.BUG,
-  //     },
-  //     parent: {
-  //       key: "DES-939"
-  //     },
-  //     project: {
-  //       id: "10007"
-  //     },
-  //     assignee: {
-  //       id: '63e3c876010d35637974bb68',
-  //     },
-  //     summary,
-  //     description: {
-  //       content: [
-  //         {
-  //           content: [
-  //             {
-  //               text: "Autoconsent broken on the following websites:\n" + siteUrls.map(url => `\t- ${url}`).join('\n'),
-  //               type: "text",
-  //             },
-  //           ],
-  //           type: "paragraph",
-  //         },
-  //       ],
-  //       type: "doc",
-  //       version: 1,
-  //     },
-  //   },
-  // };
+  const request = {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${Buffer.from(`${email}:${token}`).toString(
+        "base64"
+      )}`,
+      Accept: "application/json",
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(body),
+  };
 
-  // const request = {
-  //   method: "POST",
-  //   headers: {
-  //     Authorization: `Basic ${Buffer.from(`${email}:${token}`).toString(
-  //       "base64"
-  //     )}`,
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(body),
-  // };
+  const response = await fetch(
+    `https://tempest-tech.atlassian.net/rest/api/3/issue`,
+    request
+  );
+  const responseText = (await response.text()) || "{}";
+  const status = `${response.status} ${response.statusText}: ${responseText}`;
 
-  // const response = await fetch(
-  //   `https://tempest-tech.atlassian.net/rest/api/3/issue`,
-  //   request
-  // );
-  // const responseText = (await response.text()) || "{}";
-  // const status = `${response.status} ${response.statusText}: ${responseText}`;
+  if (response.ok) {
+    return JSON.parse(responseText);
+  }
 
-  // if (response.ok) {
-  //   return JSON.parse(responseText);
-  // }
-
-  // throw new Error(status);
+  throw new Error(status);
 }
 
 async function queryIssue(options: { id: string; email: string; token: string }) {
