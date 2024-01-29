@@ -63,17 +63,15 @@ function filterSuiteBySpecs(suites: PlaywrightSuite[], filterFn: (spec: Playwrig
 
 function compare(previousReport: string, lastReport: string) {
     
-    const fakeResults = {
-        newErrorsCount: 2,
-        brokenWebsites: `${[
-            "Adroll > www.michiganhumane.org/ .NA optOut ",
-            "192.com > 192.com .NA optOut "
-        ].map(elt => `"${elt}"`).join(' ')}`
-    }
+    // const fakeResults = {
+    //     newErrorsCount: 2,
+    //     brokenWebsites: `${[
+    //         "Adroll > www.michiganhumane.org/ .NA optOut ",
+    //         "192.com > 192.com .NA optOut "
+    //     ].map(elt => `"${elt}"`).join(' ')}`
+    // }
 
-    console.log(JSON.stringify(fakeResults));
-
-    return;
+    // console.log(JSON.stringify(fakeResults));
 
     if (!fs.existsSync(previousReport)) {
         console.log('Error: file not found: ', previousReport);
@@ -110,14 +108,14 @@ function compare(previousReport: string, lastReport: string) {
 
         const result = {
             newErrorsCount: newErrored.length,
-            newErrorsLabels: newErrored
+            newErrorsLabels: newErrored.map(elt => `"${elt}"`).join(' ')
         };
 
         console.log(JSON.stringify(result));
     } else {
         console.log(JSON.stringify({
             newErrorsCount: 0,
-            newErrorsLabel: []
+            newErrorsLabel: ""
         }));
     }
 }
