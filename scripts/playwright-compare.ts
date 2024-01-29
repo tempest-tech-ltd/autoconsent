@@ -65,10 +65,10 @@ function compare(previousReport: string, lastReport: string) {
     
     const fakeResults = {
         newErrorsCount: 2,
-        brokenWebsites: [
+        brokenWebsites: `${[
             "Adroll > www.michiganhumane.org/ .NA optOut ",
             "192.com > 192.com .NA optOut "
-        ]
+        ].map(elt => `"${elt}"`).join(' ')}`
     }
 
     console.log(JSON.stringify(fakeResults));
