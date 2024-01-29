@@ -1,5 +1,5 @@
 const { program } = require("commander");
-// const fetch = require("node-fetch");
+const fetch = require("node-fetch");
 
 interface autoconsentBrokenTicketArgs {
   email: string;
