@@ -10,66 +10,88 @@ interface autoconsentBrokenTicketArgs {
   brokenSites: string[];
 }
 
-async function createAutoconsentBrokenTicket({
+enum ISSUE_TYPES {
+  BUG = '10009',
+  STORY = '10006'
+}
+
+async function createAutoconsentBrokenTicket(sites: string[], {
   email,
-  token,
-  type,
-  summary,
-  description,
-  brokenSites,
+  token
 }: autoconsentBrokenTicketArgs) {
-  const url = `http://localhost:8080/rest/api/3/issue/create`;
+  const siteRegex = /.+? > (.+?) .*/;
+  const siteUrls = sites.map(site => {
+    const match = site.match(siteRegex);
 
-  const body = {
-    fields: {
-      assignee: {
-        id: 123,
-      },
-      issuetype: {
-        id: "10000",
-      },
-      description: {
-        content: [
-          {
-            content: [
-              {
-                text: "Order entry fails when selecting supplier.",
-                type: "text",
-              },
-            ],
-            type: "paragraph",
-          },
-        ],
-        type: "doc",
-        version: 1,
-      },
-    },
-  };
+    if (!match) {
+      return null;
+    }
 
-  const request = {
-    method: "POST",
-    headers: {
-      Authorization: `Basic ${Buffer.from(`${email}:${token}`).toString(
-        "base64"
-      )}`,
-      Accept: "application/json",
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(body),
-  };
+    const [_, url] = match;
+    return url;
+  }).filter(Boolean);
 
-  const response = await fetch(
-    `https://tempest-tech.atlassian.net/rest/api/3/issue`,
-    request
-  );
-  const responseText = (await response.text()) || "{}";
-  const status = `${response.status} ${response.statusText}: ${responseText}`;
+  const summary = 'autoconsent broken on ' + siteUrls.join(', ');
 
-  if (response.ok) {
-    return JSON.parse(responseText);
-  }
+  console.log('summary', summary);
 
-  throw new Error(status);
+  // const body = {
+  //   fields: {
+  //     issuetype: {
+  //       id: ISSUE_TYPES.BUG,
+  //     },
+  //     parent: {
+  //       key: "DES-939"
+  //     },
+  //     project: {
+  //       id: "10007"
+  //     },
+  //     assignee: {
+  //       id: '63e3c876010d35637974bb68',
+  //     },
+  //     summary,
+  //     description: {
+  //       content: [
+  //         {
+  //           content: [
+  //             {
+  //               text: "Autoconsent broken on the following websites:\n" + siteUrls.map(url => `\t- ${url}`).join('\n'),
+  //               type: "text",
+  //             },
+  //           ],
+  //           type: "paragraph",
+  //         },
+  //       ],
+  //       type: "doc",
+  //       version: 1,
+  //     },
+  //   },
+  // };
+
+  // const request = {
+  //   method: "POST",
+  //   headers: {
+  //     Authorization: `Basic ${Buffer.from(`${email}:${token}`).toString(
+  //       "base64"
+  //     )}`,
+  //     Accept: "application/json",
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(body),
+  // };
+
+  // const response = await fetch(
+  //   `https://tempest-tech.atlassian.net/rest/api/3/issue`,
+  //   request
+  // );
+  // const responseText = (await response.text()) || "{}";
+  // const status = `${response.status} ${response.statusText}: ${responseText}`;
+
+  // if (response.ok) {
+  //   return JSON.parse(responseText);
+  // }
+
+  // throw new Error(status);
 }
 
 async function queryIssue(options: { id: string; email: string; token: string }) {
@@ -106,15 +128,9 @@ program
   .action(queryIssue);
 
 program
-  .command("create-ticket")
-  .requiredOption("-e", "--email <user_email>", "user email")
-  .requiredOption("-t", "--token <user_token>", "user_token")
-  .requiredOption("-i", "--issueType <issue_type>", "issue type")
-  .requiredOption("-s", "--summary <ticket summary>", "Ticket summary")
-  .requiredOption("-d", "--description <ticket summary>", "Ticket summary")
-  .requiredOption("-b", "--body <ticket body>", "Ticket body")
-  .requiredOption("-p", "--parent")
-  .option("-f", "--fix-version <fix_version>", "Fix version number")
+  .command("create-autoconsent-ticket [broken-websites...]")
+  .requiredOption("--email <user_email>", "user email")
+  .requiredOption("--token <user_token>", "user_token")
   .action(createAutoconsentBrokenTicket);
 
 program.parseAsync();
