@@ -40,9 +40,18 @@ jobs:
       # - name: Run Playwright tests
       #   run: npm run test:report
 
-      # - name: Compare new results with previous
-      #   if: failure()
-      #   run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
+      - name: Compare new results with previous
+        if: failure()
+        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
+
+      - name: Create Jira tickets
+        if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
+        run: |
+          parameters=()
+          for element in "${fromJson(env.compareResult).newErrorsLabel}"; do
+            parameters+=("\"$element\"")
+          done
+          npx ts-node ./scripts/jiratool.ts create-autoconsent-ticket "${parameters[@]}"
 
       # - name: Notify people of new errors
       #   if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
