@@ -62,6 +62,17 @@ function filterSuiteBySpecs(suites: PlaywrightSuite[], filterFn: (spec: Playwrig
 }
 
 function compare(previousReport: string, lastReport: string) {
+    
+    const fakeResults = {
+        newErrorsCount: 2,
+        newErrorsLabel: [
+            "Adroll > www.michiganhumane.org/ .NA optOut ",
+            "192.com > 192.com .NA optOut "
+        ]
+    }
+    console.log(JSON.stringify(fakeResults));
+
+    return;
 
     if (!fs.existsSync(previousReport)) {
         console.log('Error: file not found: ', previousReport);
