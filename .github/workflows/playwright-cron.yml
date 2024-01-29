@@ -34,33 +34,24 @@ jobs:
           gh api '${{ fromJson(env.lastResult).archive_download_url }}' > previousReport.zip
           unzip previousReport.zip -d previousReport
 
-      - name: Run Playwright tests
-        run: npm run test:report
-
-      - name: Compare new results with previous
-        if: failure()
-        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
-
-      - name: Notify people of new errors
-        if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
-        run: echo "Found ${{ fromJson(env.compareResult).newErrorsCount }} new errors. Will notify QA :evil:"
-
-      - name: Upload last report
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-report
-          path: playwright-report.json
-          retention-days: 7
-
-
+      - name: Query Jira issue
+        run: npx ts-node ./scripts/jiratool.ts query -i DES-1797 -e "${{ secrets.JIRA_USER_EMAIL }}" -t "${{ secrets.JIRA_USER_TOKEN }}"
 
       # - name: Run Playwright tests
-      #   run: npx playwright test --project chrome --reporter=json
-      # # Upload the test result artifacts
-      # - uses: actions/upload-artifact@v3
+      #   run: npm run test:report
+
+      # - name: Compare new results with previous
       #   if: failure()
+      #   run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
+
+      # - name: Notify people of new errors
+      #   if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
+      #   run: echo "Found ${{ fromJson(env.compareResult).newErrorsCount }} new errors. Will notify QA :evil:"
+
+      # - name: Upload last report
+      #   if: always()
+      #   uses: actions/upload-artifact@v4
       #   with:
       #     name: playwright-report
-      #     path: playwright-report/
-      #     retention-days: 30
+      #     path: playwright-report.json
+      #     retention-days: 7
