@@ -108,14 +108,14 @@ function compare(previousReport: string, lastReport: string) {
 
         const result = {
             newErrorsCount: newErrored.length,
-            newErrorsLabels: newErrored.map(elt => `"${elt}"`).join(' ')
+            brokenWebsites: newErrored.map(elt => `"${elt}"`).join(' ')
         };
 
         console.log(JSON.stringify(result));
     } else {
         console.log(JSON.stringify({
             newErrorsCount: 0,
-            newErrorsLabel: ""
+            brokenWebsites: ""
         }));
     }
 }
