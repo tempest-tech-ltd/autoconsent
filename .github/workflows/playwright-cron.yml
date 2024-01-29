@@ -35,7 +35,7 @@ jobs:
           unzip previousReport.zip -d previousReport
 
       - name: Query Jira issue
-        run: npx ts-node ./scripts/jiratool.ts query -i DES-1797 -e "${{ secrets.JIRA_USER_EMAIL }}" -t "${{ secrets.JIRA_USER_TOKEN }}"
+        run: npx ts-node ./scripts/jiratool.ts query --id DES-1797 --email "${{ secrets.JIRA_USER_EMAIL }}" --token "${{ secrets.JIRA_USER_TOKEN }}"
 
       # - name: Run Playwright tests
       #   run: npm run test:report

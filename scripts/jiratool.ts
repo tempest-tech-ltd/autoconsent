@@ -1,5 +1,5 @@
 const { program } = require("commander");
-const fetch = require("node-fetch");
+// const fetch = require("node-fetch");
 
 interface autoconsentBrokenTicketArgs {
   email: string;
@@ -10,7 +10,7 @@ interface autoconsentBrokenTicketArgs {
   brokenSites: string[];
 }
 
-function createAutoconsentBrokenTicket({
+async function createAutoconsentBrokenTicket({
   email,
   token,
   type,
@@ -59,7 +59,7 @@ function createAutoconsentBrokenTicket({
   };
 
   const response = await fetch(
-    `https://tempest-tech.atlassian.net/rest/api/3/issue/${id}/${api}`,
+    `https://tempest-tech.atlassian.net/rest/api/3/issue`,
     request
   );
   const responseText = (await response.text()) || "{}";
@@ -72,7 +72,9 @@ function createAutoconsentBrokenTicket({
   throw new Error(status);
 }
 
-async function queryIssue(api: string, { id, email, token }: { id: string; email: string; token: string }) {
+async function queryIssue(options: { id: string; email: string; token: string }) {
+  const { id, email, token } = options;
+
   const request = {
     method: 'GET',
     headers: {
@@ -87,17 +89,20 @@ async function queryIssue(api: string, { id, email, token }: { id: string; email
   const status = `${response.status} ${response.statusText}: ${responseText}`;
 
   if (response.ok) {
+    console.log('issue', JSON.parse(responseText));
     return JSON.parse(responseText);
   }
+
+  console.log('ERROR', status);
 
   throw new Error(status);
 }
 
 program
   .command('query')
-  .requireOption('-i', '--id <ticket_id>')
-  .requiredOption('-e', '--email <user_email>', "user email")
-  .requiredOption('-t', '--token <user_token>', "user token")
+  .requiredOption('--id <ticket_id>', 'ticket id')
+  .requiredOption('--email <user_email>', 'user email')
+  .requiredOption('--token <user_token>', 'user token')
   .action(queryIssue);
 
 program
@@ -111,3 +116,5 @@ program
   .requiredOption("-p", "--parent")
   .option("-f", "--fix-version <fix_version>", "Fix version number")
   .action(createAutoconsentBrokenTicket);
+
+program.parseAsync();
