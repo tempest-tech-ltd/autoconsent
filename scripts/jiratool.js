@@ -19,7 +19,11 @@ async function createAutoconsentBrokenTicket(sites, {
     return url;
   }).filter(Boolean);
 
-  const summary = 'Autoconsent broken on ' + siteUrls.join(', ');
+  let summary = 'Autoconsent broken on ' + siteUrls.join(', ');
+
+  if (summary.length > 255) {
+    summary = `${summary.substring(0, 252)}...`;
+  }
 
   const body = {
     fields: {
