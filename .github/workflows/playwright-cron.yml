@@ -27,7 +27,7 @@ jobs:
         run: echo "lastResult=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0]')" >> $GITHUB_ENV
 
       - name: Download previous report
-        if: ${{ env.lastResult != '' && fromJson(en.lastResult).expired == false  }}
+        if: ${{ env.lastResult != '' && fromJson(env.lastResult).expired == false  }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
