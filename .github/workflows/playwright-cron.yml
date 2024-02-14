@@ -1,9 +1,8 @@
 name: Playwright tests
 
-on: workflow_dispatch
-  
-  #schedule: # Schedule the job to run at 12am every day
-  #   - cron: "0 0 * * *"
+on:
+  schedule: # Schedule the job to run every 5th of month
+    - cron: "* * 5 * *"
 
 jobs:
   test:
