@@ -66,12 +66,17 @@ function filterSuiteBySpecs(
 
 function compare(previousReport: string, lastReport: string) {
   if (!fs.existsSync(lastReport)) {
-    console.log("Error: file not found: ", lastReport);
+    console.log(
+      JSON.stringify({
+        newErrorsCount: 0,
+        brokenWebsites: "",
+      })
+    );
+    return;
   }
 
   const previousResults: PlaywrightReport = (() => {
     if (!fs.existsSync(previousReport)) {
-      console.log("Error: file not found: ", previousReport);
       return {
         config: [],
         suites: [],
