@@ -5,7 +5,8 @@
   "detectPopup": [{ "visible": "#cookie-law-info-bar" }],
   "optIn": [{ "click": "[data-cli_action=\"accept_all\"]" }],
   "optOut": [
-    { "hide": ["#cookie-law-info-bar"] },
+    { "click": "#cookie-law-info-bar #wt-cli-settings-btn"},
+    { "waitForThenClick": "#wt-cli-privacy-save-btn"},
     {
       "eval": "EVAL_COOKIE_LAW_INFO_0"
     }
