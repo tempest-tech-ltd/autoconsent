@@ -19,7 +19,7 @@ type TestOptions = {
 };
 const defaultOptions: TestOptions = {
   testOptOut: true,
-  testOptIn: true,
+  testOptIn: false,
   testSelfTest: true,
   skipRegions: [],
   onlyRegions: [],

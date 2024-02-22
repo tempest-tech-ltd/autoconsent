@@ -41,7 +41,7 @@ const config: PlaywrightTestConfig = {
         ...devices['Desktop Chrome'],
         proxy,
       },
-    }
+    },
   ],
 };
 export default config;
