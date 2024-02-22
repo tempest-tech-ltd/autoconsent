@@ -6,10 +6,7 @@
   "optIn": [{ "click": "[data-cli_action=\"accept_all\"]" }],
   "optOut": [
     { "click": "#cookie-law-info-bar #wt-cli-settings-btn"},
-    {
-      "wait": 100
-    },
-    { "click": "#wt-cli-privacy-save-btn"},
+    { "waitForThenClick": "#wt-cli-privacy-save-btn"},
     {
       "eval": "EVAL_COOKIE_LAW_INFO_0"
     }
