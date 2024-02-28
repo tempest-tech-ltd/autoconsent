@@ -4,21 +4,22 @@
         "urlPattern": "^https://(www\\.)?nytimes.com"
     },
     "cosmetic": true,
-    "prehideSelectors": ["#dock-container[data-testid='gdprDock']"],
+    "prehideSelectors": ["#fides-overlay"],
     "detectCmp": [
         {
-            "exists": "#dock-container[data-testid='gdprDock']"
-        }
+            "exists": "#fides-overlay"
+        },
+        {"exists": "div[data-testid=\"consent-modal\"]"}
     ],
-    "detectPopup": [{ "visible": "#dock-container[data-testid=\"gdprDock\"]" }],
+    "detectPopup": [{ "visible": "#fides-overlay" }],
     "optIn": [
         {
-            "click": "#dock-container[data-testid=\"gdprDock\"] button:nth-child(0)"
+            "click": "#fides-banner button[data-testid=\"Accept all-btn\"]"
         }
     ],
     "optOut": [
         {
-            "click": "#dock-container[data-testid=\"gdprDock\"] button:nth-child(1)"
+            "click": "#fides-banner button[data-testid=\"Reject all-btn\"]"
         }
     ]
 }
