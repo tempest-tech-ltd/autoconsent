@@ -1,0 +1,2 @@
+name: 'upstream-auto-sync'
+on: workflow_dispatch
