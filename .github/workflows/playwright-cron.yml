@@ -2,7 +2,7 @@ name: Playwright tests
 
 on:
   schedule: # Schedule the job to run every 5th of month
-    - cron: "10 10 5 * *"
+    - cron: "0 0 5 * *"
 
 jobs:
   test:
