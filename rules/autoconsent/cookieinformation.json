@@ -5,7 +5,19 @@
   "detectPopup": [{ "visible": "#cookie-information-template-wrapper" }],
   "optIn": [ { "eval": "EVAL_COOKIEINFORMATION_1"} ],
   "optOut": [
-    { "hide": ["#cookie-information-template-wrapper"], "comment": "some templates don't hide the banner automatically" },
+    {
+      "if": {
+        "exists": "#cookie-information-template-wrapper button.coi-banner__decline"
+      },
+      "then": [
+        {
+          "click": "#cookie-information-template-wrapper button.coi-banner__decline"
+        }
+      ],
+      "else": [
+        { "hide": ["#cookie-information-template-wrapper"], "comment": "some templates don't hide the banner automatically" }
+      ]
+    },
     { "eval": "EVAL_COOKIEINFORMATION_0"}
   ],
   "test": [
