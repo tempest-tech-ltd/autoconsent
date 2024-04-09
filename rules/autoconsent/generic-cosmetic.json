@@ -39,18 +39,14 @@
           ],
           "else": [
             {
-              "hide": [
-                "#js-cookie-banner,.js-cookie-banner,.cookie-banner,#cookie-banner"
-              ]
+              "hide": "#js-cookie-banner,.js-cookie-banner,.cookie-banner,#cookie-banner"
             }
           ]
         }
       ],
       "else": [
         {
-          "hide": [
-            "#js-cookie-banner,.js-cookie-banner,.cookie-banner,#cookie-banner"
-          ]
+          "hide": "#js-cookie-banner,.js-cookie-banner,.cookie-banner,#cookie-banner"
         }
       ]
     }

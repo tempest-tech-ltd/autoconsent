@@ -1,4 +1,4 @@
-import { enableLogs } from "../lib/config";
+import { snippets } from "../lib/eval-snippets";
 import { BackgroundMessage, ContentScriptMessage, DevtoolsMessage, ReportMessage } from "../lib/messages";
 import { Config, RuleBundle } from "../lib/types";
 import { manifestVersion, storageGet, storageRemove, storageSet } from "./mv-compat";
@@ -19,7 +19,7 @@ async function loadRules() {
   });
 }
 
-async function evalInTab(tabId: number, frameId: number, code: string): Promise<chrome.scripting.InjectionResult<boolean>[]> {
+async function evalInTab(tabId: number, frameId: number, code: string, snippetId?: keyof typeof snippets): Promise<chrome.scripting.InjectionResult<boolean>[]> {
   if (manifestVersion === 2) {
     return new Promise((resolve) => {
       chrome.tabs.executeScript(tabId, {
@@ -39,16 +39,7 @@ async function evalInTab(tabId: number, frameId: number, code: string): Promise<
       frameIds: [frameId],
     },
     world: "MAIN",
-    args: [code],
-    func: (code) => {
-      try {
-        return window.eval(code);
-      } catch (e) {
-        // ignore CSP errors
-        console.warn('eval error', code, e);
-        return;
-      }
-    },
+    func: snippets[snippetId],
   })
 }
 
@@ -81,14 +72,15 @@ chrome.runtime.onMessage.addListener(
   async (msg: ContentScriptMessage, sender: any) => {
     const tabId = sender.tab.id;
     const frameId = sender.frameId;
-    if (enableLogs) {
+    const autoconsentConfig: Config = await storageGet('config');
+    const logsConfig = autoconsentConfig.logs;
+    if (logsConfig.lifecycle) {
+      console.log('got config', autoconsentConfig);
       console.groupCollapsed(`${msg.type} from ${sender.origin || sender.url}`);
       console.log(msg, sender);
       console.groupEnd();
     }
     const rules: RuleBundle = await storageGet("rules");
-    const autoconsentConfig: Config = await storageGet('config');
-    enableLogs && console.log('got config', autoconsentConfig);
 
     switch (msg.type) {
       case "init":
@@ -104,8 +96,8 @@ chrome.runtime.onMessage.addListener(
         });
         break;
       case "eval":
-        evalInTab(tabId, frameId, msg.code).then(([result]) => {
-          if (enableLogs) {
+        evalInTab(tabId, frameId, msg.code, msg.snippetId).then(([result]) => {
+          if (logsConfig.evals) {
             console.groupCollapsed(`eval result for ${sender.origin || sender.url}`);
             console.log(msg.code, result.result);
             console.groupEnd();
@@ -137,7 +129,7 @@ chrome.runtime.onMessage.addListener(
         }
         break;
       case "selfTestResult":
-        enableLogs && console.log(`Self-test result ${msg.result}`);
+        logsConfig.lifecycle && console.log(`Self-test result ${msg.result}`);
         if (msg.result) {
           await showOptOutStatus(tabId, "verified", msg.cmp);
         }
@@ -149,7 +141,7 @@ chrome.runtime.onMessage.addListener(
         const selfTestFrameId = (await chrome.storage.local.get(selfTestKey))?.[selfTestKey];
 
         if (typeof selfTestFrameId === 'number') {
-          enableLogs && console.log(`Requesting self-test in ${selfTestFrameId}`);
+          logsConfig.lifecycle && console.log(`Requesting self-test in ${selfTestFrameId}`);
           storageRemove(selfTestKey);
           chrome.tabs.sendMessage(tabId, {
             type: "selfTest",
@@ -157,7 +149,7 @@ chrome.runtime.onMessage.addListener(
             frameId: selfTestFrameId,
           });
         } else {
-          enableLogs && console.log(`No self-test scheduled`);
+          logsConfig.lifecycle && console.log(`No self-test scheduled`);
         }
         break;
       }
@@ -185,7 +177,6 @@ if (manifestVersion === 2) { // MV3 handles this inside the popup
     const frameId = await storageGet(detectedKey);
     if (typeof frameId === 'number') {
       storageRemove(detectedKey);
-      enableLogs && console.log("action.onClicked", tabId, frameId);
       await showOptOutStatus(tabId, "working");
       chrome.tabs.sendMessage(tabId, {
         type: "optOut",
