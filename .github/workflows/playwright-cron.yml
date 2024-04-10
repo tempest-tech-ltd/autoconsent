@@ -1,6 +1,7 @@
 name: Playwright tests
 
 on:
+  workflow_dispatch:
   schedule: # Schedule the job to run every 5th of month
     - cron: "0 0 5 * *"
 
