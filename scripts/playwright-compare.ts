@@ -42,26 +42,20 @@ interface PlaytwrightTest {
   status: String;
 }
 
-function filterSuiteBySpecs(
-  suites: PlaywrightSuite[],
-  filterFn: (spec: PlaywrightSpec) => boolean
-): PlaywrightSuite[] {
+function extractSpecsFromSuites(suites: PlaywrightSuite[], filterFn: (spec: PlaywrightSpec) => boolean): PlaywrightSpec[] {
   return suites.reduce((acc, suite) => {
     if (suite.specs.length > 0) {
       const filteredSpecs = suite.specs.filter(filterFn);
       if (filteredSpecs.length > 0) {
-        acc.push({
-          ...suite,
-          specs: filteredSpecs,
-        });
+        acc.push(...filteredSpecs);
       }
     }
 
     if (suite.suites?.length > 0) {
-      acc.push(...filterSuiteBySpecs(suite.suites, filterFn));
+      acc.push(...extractSpecsFromSuites(suite.suites, filterFn));
     }
     return acc;
-  }, new Array<PlaywrightSuite>());
+  }, new Array<PlaywrightSpec>());
 }
 
 function compare(previousReport: string, lastReport: string) {
@@ -102,39 +96,24 @@ function compare(previousReport: string, lastReport: string) {
     (lastResults.stats?.unexpected ?? 0) -
     (previousResults.stats?.unexpected ?? 0);
 
-  // Will find which websites newly failed
   if (newErrors > 0) {
-    const previousErroredSuites = filterSuiteBySpecs(
-      previousResults.suites ?? [],
-      (spec) => spec.tests.some((test) => test.status === "unexpected")
-    );
-    const previousErroredSpecsNames = new Set(
-      previousErroredSuites.reduce((acc, suite) => {
-        acc.push(
-          ...suite.specs.map((spec) => `${suite.title} > ${spec.title}`)
-        );
-        return acc;
-      }, new Array<String>())
-    );
+    const previousFailedSpecs = extractSpecsFromSuites(previousResults.suites ?? [],
+      (spec) => spec.tests.some((test) => test.status === "unexpected"));
+    const previousSuccessSpecs = extractSpecsFromSuites(previousResults.suites ?? [], (spec) => spec.tests.every(test => test.status !== "unexpected"));
 
-    const lastErroredSuites = filterSuiteBySpecs(
-      lastResults.suites ?? [],
-      (spec) => spec.tests.some((test) => test.status === "unexpected")
-    );
+    const lastFailedSpecs = extractSpecsFromSuites(lastResults.suites ?? [],
+      (spec) => spec.tests.some((test) => test.status === "unexpected"));
 
-    const newErrored = lastErroredSuites.reduce((acc, suite) => {
-      suite.specs.forEach((spec) => {
-        const label = `${suite.title} > ${spec.title}`;
-        if (!previousErroredSpecsNames.has(label)) {
-          acc.push(label);
-        }
-      });
-      return acc;
-    }, new Array<string>());
+    // failing specs that were already present in the previous report but which were not failing
+    const existingRulesNewlyFailed = lastFailedSpecs.filter(spec => !previousFailedSpecs.includes(spec) && previousSuccessSpecs.includes(spec));
+
+    // failing specs which were not existing in the previous report (new rules that are failing)
+    const newRulesFailed = lastFailedSpecs.filter(spec => !previousFailedSpecs.includes(spec) && !previousSuccessSpecs.includes(spec));
 
     const result = {
-      newErrorsCount: newErrored.length,
-      brokenWebsites: newErrored.map((elt) => `"${elt}"`).join(" "),
+      newErrorsCount: existingRulesNewlyFailed.length + newRulesFailed.length,
+      brokenWebsites: existingRulesNewlyFailed.map(spec => `"${spec.title}"`).join(" "),
+      newRuleBrokenWebsites: newRulesFailed.map(spec => `"${spec.title}"`).join(" ")
     };
 
     console.log(JSON.stringify(result));
@@ -143,6 +122,7 @@ function compare(previousReport: string, lastReport: string) {
       JSON.stringify({
         newErrorsCount: 0,
         brokenWebsites: "",
+        newRuleBrokenWebsites: ""
       })
     );
   }

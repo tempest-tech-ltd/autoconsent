@@ -2,24 +2,34 @@ const { program } = require("commander");
 
 const BUG_ISSUE_TYPE = '10009';
 
-async function createAutoconsentBrokenTicket(sites, {
+async function createAutoconsentBrokenTicket({
+  brokenWebsites,
+  newRulesBrokenWebsites,
   email,
-  token
+  token,
 }) {
-  const { default: fetch } = await import('node-fetch');
+  const { default: fetch } = await import("node-fetch");
   const siteRegex = /.+? > (.+?) .*/;
-  const siteUrls = sites.map(site => {
-    const match = site.match(siteRegex);
 
-    if (!match) {
-      return null;
-    }
+  const [brokenWebsiteUrls, newRulesBrokenWebsiteUrls] = [
+    brokenWebsites,
+    newRulesBrokenWebsites,
+  ].map((sites) =>
+    sites
+      .map((site) => {
+        const match = site.match(siteRegex);
 
-    const [_, url] = match;
-    return url;
-  }).filter(Boolean);
+        if (!match) {
+          return null;
+        }
 
-  let summary = 'Autoconsent broken on ' + siteUrls.join(', ');
+        const [_, url] = match;
+        return url;
+      })
+      .filter(Boolean)
+  );
+
+  let summary = "Autoconsent broken on " + [...brokenWebsiteUrls, ...newRulesBrokenWebsiteUrls].join(", ");
 
   if (summary.length > 255) {
     summary = `${summary.substring(0, 252)}...`;
@@ -31,13 +41,13 @@ async function createAutoconsentBrokenTicket(sites, {
         id: BUG_ISSUE_TYPE,
       },
       parent: {
-        key: "DES-939"
+        key: "DES-939",
       },
       project: {
-        id: "10007"
+        id: "10007",
       },
       assignee: {
-        id: '63e3c876010d35637974bb68',
+        id: "63e3c876010d35637974bb68",
       },
       summary,
       description: {
@@ -45,7 +55,15 @@ async function createAutoconsentBrokenTicket(sites, {
           {
             content: [
               {
-                text: "Autoconsent broken on the following websites:\n" + siteUrls.map(url => `\t- ${url}`).join('\n'),
+                text:
+                  "These websites were succeeding in previous test and are now failing:\n" +
+                  brokenWebsiteUrls.map((url) => `\t- ${url}`).join("\n"),
+                type: "text",
+              },
+              {
+                text:
+                  "These websites were not tested in previous test and are now failing:\n" +
+                  newRulesBrokenWebsiteUrls.map((url) => `\t- ${url}`).join("\n"),
                 type: "text",
               },
             ],
@@ -118,7 +136,15 @@ program
   .action(queryIssue);
 
 program
-  .command("create-autoconsent-ticket [broken-websites...]")
+  .command("create-autoconsent-ticket")
+  .requiredOption(
+    "--broken-websites <...broken-websites>",
+    "broken websites that were succeeding in previous report"
+  )
+  .requiredOption(
+    "--new-rules-broken-websites <...new-rules-broken-websites>",
+    "broken websites that were not testing in previous report"
+  )
   .requiredOption("--email <user_email>", "user email")
   .requiredOption("--token <user_token>", "user_token")
   .action(createAutoconsentBrokenTicket);
