@@ -5,7 +5,7 @@ const proxy = process.env.PROXY_SERVER ? { server: process.env.PROXY_SERVER } : 
 const config: PlaywrightTestConfig = {
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  testDir: 'tests',
+  testDir: 'tests2',
   use: {
     trace: 'on-first-retry',
   },
