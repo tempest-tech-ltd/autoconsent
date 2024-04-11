@@ -64,6 +64,7 @@ function compare(previousReport: string, lastReport: string) {
       JSON.stringify({
         newErrorsCount: 0,
         brokenWebsites: "",
+        newRuleBrokenWebsites: ""
       })
     );
     return;
@@ -98,11 +99,11 @@ function compare(previousReport: string, lastReport: string) {
 
   if (newErrors > 0) {
     const previousFailedSpecs = extractSpecsFromSuites(previousResults.suites ?? [],
-      (spec) => spec.tests.some((test) => test.status === "unexpected"));
-    const previousSuccessSpecs = extractSpecsFromSuites(previousResults.suites ?? [], (spec) => spec.tests.every(test => test.status !== "unexpected"));
+      (spec) => spec.tests.some((test) => test.status === "unexpected")).map(spec => spec.title);
+    const previousSuccessSpecs = extractSpecsFromSuites(previousResults.suites ?? [], (spec) => spec.tests.every(test => test.status !== "unexpected")).map(spec => spec.title);
 
     const lastFailedSpecs = extractSpecsFromSuites(lastResults.suites ?? [],
-      (spec) => spec.tests.some((test) => test.status === "unexpected"));
+      (spec) => spec.tests.some((test) => test.status === "unexpected")).map(spec => spec.title);
 
     // failing specs that were already present in the previous report but which were not failing
     const existingRulesNewlyFailed = lastFailedSpecs.filter(spec => !previousFailedSpecs.includes(spec) && previousSuccessSpecs.includes(spec));
@@ -112,8 +113,8 @@ function compare(previousReport: string, lastReport: string) {
 
     const result = {
       newErrorsCount: existingRulesNewlyFailed.length + newRulesFailed.length,
-      brokenWebsites: existingRulesNewlyFailed.length > 0 ? existingRulesNewlyFailed.map(spec => `"${spec.title}"`).join(" ") : "\"\"",
-      newRuleBrokenWebsites: newRulesFailed.length > 0 ? newRulesFailed.map(spec => `"${spec.title}"`).join(" ") : "\"\""
+      brokenWebsites: existingRulesNewlyFailed.length > 0 ? existingRulesNewlyFailed.map(specTitle => `"${specTitle}"`).join(" ") : "\"\"",
+      newRuleBrokenWebsites: newRulesFailed.length > 0 ? newRulesFailed.map(specTitle => `"${specTitle}"`).join(" ") : "\"\""
     };
 
     console.log(JSON.stringify(result));
