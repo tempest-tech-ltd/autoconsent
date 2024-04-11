@@ -9,7 +9,7 @@ async function createAutoconsentBrokenTicket({
   token,
 }) {
   const { default: fetch } = await import("node-fetch");
-  const siteRegex = /.+? > (.+?) .*/;
+  const siteRegex = /(.+?) .*/;
 
   const [brokenWebsiteUrls, newRulesBrokenWebsiteUrls] = [
     brokenWebsites,
@@ -138,11 +138,11 @@ program
 program
   .command("create-autoconsent-ticket")
   .requiredOption(
-    "--broken-websites <...broken-websites>",
+    "--broken-websites <broken-websites...>",
     "broken websites that were succeeding in previous report"
   )
   .requiredOption(
-    "--new-rules-broken-websites <...new-rules-broken-websites>",
+    "--new-rules-broken-websites <new-rules-broken-websites...>",
     "broken websites that were not testing in previous report"
   )
   .requiredOption("--email <user_email>", "user email")
