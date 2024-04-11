@@ -112,8 +112,8 @@ function compare(previousReport: string, lastReport: string) {
 
     const result = {
       newErrorsCount: existingRulesNewlyFailed.length + newRulesFailed.length,
-      brokenWebsites: existingRulesNewlyFailed.map(spec => `"${spec.title}"`).join(" "),
-      newRuleBrokenWebsites: newRulesFailed.map(spec => `"${spec.title}"`).join(" ")
+      brokenWebsites: existingRulesNewlyFailed.length > 0 ? existingRulesNewlyFailed.map(spec => `"${spec.title}"`).join(" ") : "\"\"",
+      newRuleBrokenWebsites: newRulesFailed.length > 0 ? newRulesFailed.map(spec => `"${spec.title}"`).join(" ") : "\"\""
     };
 
     console.log(JSON.stringify(result));
@@ -121,8 +121,8 @@ function compare(previousReport: string, lastReport: string) {
     console.log(
       JSON.stringify({
         newErrorsCount: 0,
-        brokenWebsites: "",
-        newRuleBrokenWebsites: ""
+        brokenWebsites: "\"\"",
+        newRuleBrokenWebsites: "\"\""
       })
     );
   }
