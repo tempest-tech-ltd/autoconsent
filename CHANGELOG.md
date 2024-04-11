@@ -1,3 +1,307 @@
+# v10.0.0 (Fri Mar 01 2024)
+
+#### 💥 Breaking Change
+
+- Bump the dev-dependencies group with 4 updates [#377](https://github.com/duckduckgo/autoconsent/pull/377) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### 🚀 Enhancement
+
+- Support reject button in clinch [#375](https://github.com/duckduckgo/autoconsent/pull/375) ([@muodov](https://github.com/muodov))
+
+#### 🐛 Bug Fix
+
+- Update action-asana-sync [#378](https://github.com/duckduckgo/autoconsent/pull/378) ([@sammacbeth](https://github.com/sammacbeth))
+- Setup github status reporting for Jenkins multibranch job [#373](https://github.com/duckduckgo/autoconsent/pull/373) ([@sammacbeth](https://github.com/sammacbeth))
+- Monthly Coverage data update [#372](https://github.com/duckduckgo/autoconsent/pull/372) (dax@duckduckgo.com [@sammacbeth](https://github.com/sammacbeth))
+
+#### ⚠️ Pushed to `main`
+
+- Update asana.yml ([@sammacbeth](https://github.com/sammacbeth))
+
+#### 🔩 Dependency Updates
+
+- Bump the dev-dependencies group with 7 updates [#382](https://github.com/duckduckgo/autoconsent/pull/382) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Bump the dev-dependencies group with 5 updates [#374](https://github.com/duckduckgo/autoconsent/pull/374) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 4
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Dax the Deployer (dax@duckduckgo.com)
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+- Sam Macbeth ([@sammacbeth](https://github.com/sammacbeth))
+
+---
+
+# v9.7.2 (Fri Feb 02 2024)
+
+#### 🐛 Bug Fix
+
+- Tweak some site-specific rules to support mobile versions [#371](https://github.com/duckduckgo/autoconsent/pull/371) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.7.1 (Fri Feb 02 2024)
+
+#### 🐛 Bug Fix
+
+- Avoid :has selectors in detect rules [#370](https://github.com/duckduckgo/autoconsent/pull/370) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.7.0 (Fri Feb 02 2024)
+
+#### 🚀 Enhancement
+
+- More rules for common CMPs [#367](https://github.com/duckduckgo/autoconsent/pull/367) ([@muodov](https://github.com/muodov))
+- More site-specific pop-ups [#366](https://github.com/duckduckgo/autoconsent/pull/366) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.6.0 (Wed Jan 31 2024)
+
+#### 🚀 Enhancement
+
+- Add rule for webflow [#364](https://github.com/duckduckgo/autoconsent/pull/364) ([@muodov](https://github.com/muodov))
+- Handle Tealium implicit modal [#363](https://github.com/duckduckgo/autoconsent/pull/363) ([@muodov](https://github.com/muodov))
+- Fix reddit rule [#362](https://github.com/duckduckgo/autoconsent/pull/362) ([@muodov](https://github.com/muodov))
+
+#### 🐛 Bug Fix
+
+- regression fix: Do not run opt-out unless a pop-up is actually shown [#365](https://github.com/duckduckgo/autoconsent/pull/365) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.5.0 (Wed Jan 31 2024)
+
+#### 🚀 Enhancement
+
+- Fix Ketch and eu-cookie-compliance [#351](https://github.com/duckduckgo/autoconsent/pull/351) ([@muodov](https://github.com/muodov))
+- Bump the dev-dependencies group with 7 updates [#360](https://github.com/duckduckgo/autoconsent/pull/360) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+- Add rule for fides CMP [#359](https://github.com/duckduckgo/autoconsent/pull/359) ([@muodov](https://github.com/muodov))
+- More site-specific rules [#358](https://github.com/duckduckgo/autoconsent/pull/358) ([@muodov](https://github.com/muodov))
+- Support another version of uniconsent [#355](https://github.com/duckduckgo/autoconsent/pull/355) ([@muodov](https://github.com/muodov))
+- Improve Consentmanager.net [#353](https://github.com/duckduckgo/autoconsent/pull/353) ([@muodov](https://github.com/muodov))
+- Improve cookie-law-info rule [#352](https://github.com/duckduckgo/autoconsent/pull/352) ([@muodov](https://github.com/muodov))
+
+#### 🐛 Bug Fix
+
+- fix: paypal-us [#361](https://github.com/duckduckgo/autoconsent/pull/361) ([@seia-soto](https://github.com/seia-soto))
+
+#### Authors: 3
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.4.0 (Fri Jan 26 2024)
+
+#### 🚀 Enhancement
+
+- Improve Osano rule [#350](https://github.com/duckduckgo/autoconsent/pull/350) ([@muodov](https://github.com/muodov))
+- Increase timeout in the sourcepoint rule [#349](https://github.com/duckduckgo/autoconsent/pull/349) ([@muodov](https://github.com/muodov))
+- Complianz regression fixes [#347](https://github.com/duckduckgo/autoconsent/pull/347) ([@muodov](https://github.com/muodov))
+- Add rule for bahn.de [#348](https://github.com/duckduckgo/autoconsent/pull/348) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.3.0 (Fri Jan 26 2024)
+
+#### 🚀 Enhancement
+
+- Add rules from Jan 10 Ghostery fixes [#341](https://github.com/duckduckgo/autoconsent/pull/341) ([@seia-soto](https://github.com/seia-soto))
+- Fix the Canonical rule [#345](https://github.com/duckduckgo/autoconsent/pull/345) ([@muodov](https://github.com/muodov))
+- Update the EZoic rule [#344](https://github.com/duckduckgo/autoconsent/pull/344) ([@muodov](https://github.com/muodov))
+
+#### Authors: 2
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.2.1 (Fri Jan 26 2024)
+
+#### 🐛 Bug Fix
+
+- Handle absence of structuredClone() [#356](https://github.com/duckduckgo/autoconsent/pull/356) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v9.2.0 (Thu Jan 25 2024)
+
+#### 🚀 Enhancement
+
+- Handle popup right after first popup detected (#326) [#327](https://github.com/duckduckgo/autoconsent/pull/327) ([@seia-soto](https://github.com/seia-soto))
+
+#### Authors: 1
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+
+---
+
+# v9.1.0 (Thu Jan 11 2024)
+
+#### 🚀 Enhancement
+
+- Add a rule for lightbox CMP [#329](https://github.com/duckduckgo/autoconsent/pull/329) ([@seia-soto](https://github.com/seia-soto))
+
+#### Authors: 1
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+
+---
+
+# v9.0.0 (Thu Jan 11 2024)
+
+#### 💥 Breaking Change
+
+- Configurable logs [#332](https://github.com/duckduckgo/autoconsent/pull/332) ([@muodov](https://github.com/muodov))
+
+#### 🔩 Dependency Updates
+
+- Bump the dev-dependencies group with 3 updates [#335](https://github.com/duckduckgo/autoconsent/pull/335) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v8.2.0 (Thu Jan 11 2024)
+
+#### 🚀 Enhancement
+
+- Klaro: fix toggle selectors [#339](https://github.com/duckduckgo/autoconsent/pull/339) ([@sammacbeth](https://github.com/sammacbeth))
+
+#### Authors: 1
+
+- Sam Macbeth ([@sammacbeth](https://github.com/sammacbeth))
+
+---
+
+# v8.1.0 (Wed Jan 10 2024)
+
+#### 🚀 Enhancement
+
+- Add a rule for ing.de [#337](https://github.com/duckduckgo/autoconsent/pull/337) ([@seia-soto](https://github.com/seia-soto))
+- Add a rule for hema.com [#319](https://github.com/duckduckgo/autoconsent/pull/319) ([@seia-soto](https://github.com/seia-soto) [@muodov](https://github.com/muodov))
+
+#### 🐛 Bug Fix
+
+- Only use sites where the popup is open by default as examples [#336](https://github.com/duckduckgo/autoconsent/pull/336) ([@sammacbeth](https://github.com/sammacbeth))
+- Test a subset of sites found in the coverage crawl in CI [#323](https://github.com/duckduckgo/autoconsent/pull/323) ([@sammacbeth](https://github.com/sammacbeth))
+
+#### Authors: 3
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+- Sam Macbeth ([@sammacbeth](https://github.com/sammacbeth))
+
+---
+
+# v8.0.0 (Sat Jan 06 2024)
+
+#### 💥 Breaking Change
+
+- single selector in hide rules [#334](https://github.com/duckduckgo/autoconsent/pull/334) ([@muodov](https://github.com/muodov))
+
+#### 🔩 Dependency Updates
+
+- Bump the dev-dependencies group with 4 updates [#328](https://github.com/duckduckgo/autoconsent/pull/328) ([@dependabot[bot]](https://github.com/dependabot[bot]))
+
+#### Authors: 2
+
+- [@dependabot[bot]](https://github.com/dependabot[bot])
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v7.1.0 (Wed Jan 03 2024)
+
+#### 🚀 Enhancement
+
+- iWink rule [#123](https://github.com/duckduckgo/autoconsent/pull/123) ([@Tomassie91](https://github.com/Tomassie91) [@muodov](https://github.com/muodov))
+- Improve Tealium support [#315](https://github.com/duckduckgo/autoconsent/pull/315) ([@muodov](https://github.com/muodov))
+
+#### 🐛 Bug Fix
+
+- Monthly Coverage data update [#330](https://github.com/duckduckgo/autoconsent/pull/330) (dax@duckduckgo.com [@sammacbeth](https://github.com/sammacbeth))
+
+#### Authors: 4
+
+- [@Tomassie91](https://github.com/Tomassie91)
+- Dax the Deployer (dax@duckduckgo.com)
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+- Sam Macbeth ([@sammacbeth](https://github.com/sammacbeth))
+
+---
+
+# v7.0.0 (Thu Dec 28 2023)
+
+#### 💥 Breaking Change
+
+- Fix CSP errors when running eval rules in MV3 extension [#318](https://github.com/duckduckgo/autoconsent/pull/318) ([@muodov](https://github.com/muodov))
+
+#### Authors: 1
+
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v6.7.0 (Thu Dec 28 2023)
+
+#### 🚀 Enhancement
+
+- Add a rule for ciaopeople.it [#320](https://github.com/duckduckgo/autoconsent/pull/320) ([@seia-soto](https://github.com/seia-soto) [@muodov](https://github.com/muodov))
+- Add a rule for roofingmegastore.co.uk [#325](https://github.com/duckduckgo/autoconsent/pull/325) ([@seia-soto](https://github.com/seia-soto))
+- Add a rule for csu-landtag.de [#324](https://github.com/duckduckgo/autoconsent/pull/324) ([@seia-soto](https://github.com/seia-soto))
+
+#### Authors: 2
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+- Maxim Tsoy ([@muodov](https://github.com/muodov))
+
+---
+
+# v6.6.1 (Wed Dec 27 2023)
+
+#### 🐛 Bug Fix
+
+- Add a deferred check for usercentrics [#322](https://github.com/duckduckgo/autoconsent/pull/322) ([@seia-soto](https://github.com/seia-soto))
+
+#### Authors: 1
+
+- HoJeong Go ([@seia-soto](https://github.com/seia-soto))
+
+---
+
 # v6.6.0 (Wed Dec 20 2023)
 
 #### 🚀 Enhancement

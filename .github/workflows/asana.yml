@@ -4,12 +4,15 @@ on: workflow_dispatch
 jobs:
   sync:
     runs-on: ubuntu-latest
+    environment: development
     concurrency: 'asana-${{ github.repository }}'
     steps:
       - uses: actions/checkout@v3
-      - uses: sammacbeth/action-asana-sync@v3
+      - uses: sammacbeth/action-asana-sync@v4
         with:
           ASANA_ACCESS_TOKEN: ${{ secrets.ASANA_ACCESS_TOKEN }}
           ASANA_WORKSPACE_ID: ${{ secrets.ASANA_WORKSPACE_ID }}
           ASANA_PROJECT_ID: '1203409672862476'
           move_to_section_id: '1203409672862480'
+          USER_MAP: ${{ vars.USER_MAP }}
+          NO_AUTOCLOSE_PROJECTS: '1203409672862476'
