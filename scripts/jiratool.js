@@ -62,7 +62,7 @@ async function createAutoconsentBrokenTicket({
               },
               {
                 text:
-                  "These websites were not tested in previous test and are now failing:\n" +
+                  "\n\nThese websites were not tested in previous test and are now failing:\n" +
                   newRulesBrokenWebsiteUrls.map((url) => `\t- ${url}`).join("\n"),
                 type: "text",
               },
