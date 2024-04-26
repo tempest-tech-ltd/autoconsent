@@ -1,0 +1,41 @@
+{
+    "name": "aliexpress.com",
+    "runContext": {
+      "urlPattern": "^https://([a-z0-9-]+\\.)?aliexpress\\.com/"
+    },
+    "cosmetic": true,
+    "prehideSelectors": [".global-gdpr-container-y2023"],
+    "detectCmp": [{ "exists": ".global-gdpr-container-y2023" }],
+    "detectPopup": [{ "visible": ".global-gdpr-container-y2023" }],
+    "optIn": [
+      {
+        "click": "div.global-gdpr-container-y2023 div.global-gdpr-btn-wrap button[data-role=\"gdpr-accept\"]"
+      }
+    ],
+    "optOut": [
+      {
+        "if": {
+          "visible": "div.global-gdpr-container-y2023 div.global-gdpr-btn-wrap button[data-role=\"gdpr-reject\"]"
+        },
+        "then": [
+          {
+            "click": "div.global-gdpr-container-y2023 div.global-gdpr-btn-wrap button[data-role=\"gdpr-reject\"]"
+          }
+        ],
+        "else": [
+          {
+            "click": "div.global-gdpr-container-y2023 div.global-gdpr-btn-wrap button.btn-more"
+          },
+          {
+            "click": "div.gdpr-dialog-wrap-y2023 .gdpr-content .gdpr-dialog-switcher.switcher-on",
+            "optional": true,
+            "all": true
+          },
+          {
+            "click": "div.gdpr-dialog-wrap-y2023 .gdpr-dialog-btn-group button.btn-save"
+          }
+        ]
+      }
+    ]
+  }
+  

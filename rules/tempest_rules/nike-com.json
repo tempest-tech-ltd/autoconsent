@@ -1,0 +1,36 @@
+{
+    "name": "nike.com",
+    "runContext": {
+        "urlPattern": "^https://www\\.nike\\.com/"
+      },
+    "cosmetic": true,
+    "prehideSelectors": ["div.cookie-dialog-base, div.pre-modal-window.is-active"],
+    "detectCmp": [{ "exists": "div.cookie-dialog-base, div.pre-cookie-modal-body:not([data-sq-exempt])" }],
+    "detectPopup": [{ "visible": "div.cookie-dialog-base, div.pre-cookie-modal-body:not([data-sq-exempt])", "check": "any" }],
+    "optIn": [
+      {
+        "if": { "visible": "div.cookie-dialog-base" },
+        "then": [
+          { "click": "div.cookie-dialog-base button.dialog-actions-accept-btn" }
+        ],
+        "else": [
+          { "click": "div.pre-cookie-modal-body button[data-var=\"acceptBtn2\"]" }
+        ]
+      }
+    ],
+    "optOut": [
+      {
+        "if": { "visible": "div.cookie-dialog-base" },
+        "then": [
+          {
+            "click": "div.cookie-dialog-base button.dialog-actions-decline-btn"
+          }
+        ],
+        "else": [
+          {
+            "click": "div.pre-cookie-modal-body button[data-var=\"rejectBtn\"]"
+          }
+        ]
+      }
+    ]
+}

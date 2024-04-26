@@ -1,0 +1,25 @@
+{
+    "name": "nytimes",
+    "runContext": {
+        "urlPattern": "^https://(www\\.)?nytimes.com"
+    },
+    "cosmetic": true,
+    "prehideSelectors": ["#fides-overlay"],
+    "detectCmp": [
+        {
+            "exists": "#fides-overlay"
+        },
+        {"exists": "div[data-testid=\"consent-modal\"]"}
+    ],
+    "detectPopup": [{ "visible": "#fides-overlay" }],
+    "optIn": [
+        {
+            "click": "#fides-banner button[data-testid=\"Accept all-btn\"]"
+        }
+    ],
+    "optOut": [
+        {
+            "click": "#fides-banner button[data-testid=\"Reject all-btn\"]"
+        }
+    ]
+}
