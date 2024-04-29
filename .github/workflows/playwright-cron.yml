@@ -1,0 +1,58 @@
+name: Playwright tests
+
+on:
+  workflow_dispatch:
+  schedule: # Schedule the job to run every 5th of month
+    - cron: "0 0 5 * *"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js 16.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.x
+          cache: 'npm'
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright
+        run: npx playwright install --with-deps chromium
+
+      - name: Look for previous Playwright report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: echo "lastResult=$(gh api -X GET '/repos/tempest-tech-ltd/autoconsent/actions/artifacts' -F per_page=1 -F name='playwright-report' -q '.artifacts[0]')" >> $GITHUB_ENV
+
+      - name: Download previous report
+        if: ${{ env.lastResult != '' && fromJson(env.lastResult).expired == false  }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api '${{ fromJson(env.lastResult).archive_download_url }}' > previousReport.zip
+          unzip previousReport.zip -d previousReport
+
+      - name: Run Playwright tests
+        run: npm run test:report
+
+      - name: Compare new results with previous
+        if: failure()
+        run: echo "compareResult=$(npx ts-node ./scripts/playwright-compare.ts compare ./previousReport/playwright-report.json ./playwright-report.json)" >> $GITHUB_ENV
+
+      - name: Create Jira tickets
+        if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
+        run: node ./scripts/jiratool.js create-autoconsent-ticket --broken-websites ${{fromJson(env.compareResult).brokenWebsites}} --new-rules-broken-websites ${{fromJson(env.compareResult).newRuleBrokenWebsites}} --email ${{ secrets.JIRA_USER_EMAIL }} --token ${{ secrets.JIRA_USER_TOKEN }}
+
+      # - name: Notify people of new errors
+      #   if: ${{ failure() && fromJson(env.compareResult).newErrorsCount > 0 }}
+      #   run: echo "Found ${{ fromJson(env.compareResult).newErrorsCount }} new errors. Will notify QA :evil:"
+
+      - name: Upload last report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report.json
+          retention-days: 45
