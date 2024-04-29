@@ -33,6 +33,7 @@
   "author": "Sam Macbeth",
   "license": "MPL-2.0",
   "devDependencies": {
+    "@evilmartians/lefthook": "^1.6.10",
     "@playwright/test": "^1.17.1",
     "@puppeteer/replay": "^3.0.0",
     "@types/chai": "^4.3.1",
