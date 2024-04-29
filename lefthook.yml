@@ -8,4 +8,4 @@ pre-commit:
   parallel: false
   commands:
     generate_rules_list:
-      run: npx ts-node generate-tempest-rules-list.ts && git add rules/tempest_rules/rules.json
+      run: npx ts-node scripts/generate-tempest-rules-list.ts && git add rules/tempest_rules/rules.json
