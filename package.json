@@ -18,6 +18,7 @@
     "test:firefox": "playwright test --project firefox",
     "test:chrome": "playwright test --project chrome",
     "test:lib": "playwright test tests/dom-actions.spec.ts",
+    "test:report": "PLAYWRIGHT_JSON_OUTPUT_NAME=playwright-report.json playwright test --project chrome --reporter=json",
     "test:sample": "playwright test tests/_sample-test.spec.ts --project webkit",
     "fetch-fanboy-list": "wget https://www.fanboy.co.nz/fanboy-cookiemonster.txt",
     "fetch-site-list": "curl https://s3.amazonaws.com/cdn.cliqz.com/re-consent/supported_sites.txt > sites.txt",
