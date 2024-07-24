@@ -1,6 +1,9 @@
 {
-    "name": "messenger.com",
-    "detectCmp": [{ "exists": "div[aria-labelledby=\"manage_cookies_title\"]" }],
-    "detectPopup": [{ "exists": "div[aria-labelledby=\"manage_cookies_title\"]" }],
-    "optOut": [{ "click": "[data-cookiebanner=\"accept_only_essential_button\"]" }]
-  }
+  "name": "messenger.com",
+  "runContext": {
+    "urlPattern": "^https://([a-z0-9-]+\\.)?messenger\\.com/"
+  },
+  "detectCmp": [{ "exists": "div[aria-labelledby=\"manage_cookies_title\"]" }],
+  "detectPopup": [{ "exists": "div[aria-labelledby=\"manage_cookies_title\"]" }],
+  "optOut": [{ "click": "[data-cookiebanner=\"accept_only_essential_button\"]" }]
+}
