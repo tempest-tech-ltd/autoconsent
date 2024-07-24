@@ -1,0 +1,31 @@
+{
+  "name": "cybot",
+  "vendorUrl": "https://www.cybot.com/",
+  "cosmetic": false,
+  "runContext": {
+    "main": true,
+    "frame": false,
+    "urlPattern": ""
+  },
+  "prehideSelectors": [],
+  "detectCmp": [
+    {
+      "exists": "#CybotCookiebotDialog"
+    }
+  ],
+  "detectPopup": [
+    {
+      "visible": "#CybotCookiebotDialog.CybotCookiebotDialogActive"
+    }
+  ],
+  "optIn": [
+    {
+      "waitForThenClick": "#CybotCookiebotDialogBodyLevelButtonLevelOptinAllowAll"
+    }
+  ],
+  "optOut": [
+    {
+      "waitForThenClick": "#CybotCookiebotDialogBodyButtonDecline"
+    }
+  ]
+}
