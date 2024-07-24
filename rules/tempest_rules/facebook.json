@@ -1,0 +1,19 @@
+{
+  "name": "facebook",
+  "runContext": {
+    "urlPattern": "^https://([a-z0-9-]+\\.)?facebook\\.com/"
+  },
+  "prehideSelectors": ["div[data-testid=\"cookie-policy-manage-dialog\"]"],
+  "detectCmp": [
+    { "exists": "div[data-testid=\"cookie-policy-manage-dialog\"]" }
+  ],
+  "detectPopup": [
+    { "visible": "div[data-testid=\"cookie-policy-manage-dialog\"]" }
+  ],
+  "optIn": [
+    { "waitForThenClick": "[data-testid=\"cookie-policy-manage-dialog\"] [role=\"button\"]:has(+ [aria-hidden])" }
+  ],
+  "optOut": [
+    { "waitForThenClick": "[data-testid=\"cookie-policy-manage-dialog\"] [aria-hidden] + [role=\"button\"]" }
+  ]
+}
