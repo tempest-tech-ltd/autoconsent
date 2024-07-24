@@ -1,1 +1,16 @@
-["aliexpress-com.json","cookie-law-info.json","cookieinformation.json","ecosia-org.json","generic-cosmetic.json","google-consent-standalone.json","messenger-com.json","netflix-com.json","nike-com.json","nytimes-com.json","pornhub.json","reddit.json"]
+[
+  "aliexpress-com.json",
+  "cookie-law-info.json",
+  "cookieinformation.json",
+  "cybot.json",
+  "ecosia-org.json",
+  "facebook.json",
+  "generic-cosmetic.json",
+  "google-consent-standalone.json",
+  "messenger-com.json",
+  "netflix-com.json",
+  "nike-com.json",
+  "nytimes-com.json",
+  "pornhub.json",
+  "reddit.json"
+]
